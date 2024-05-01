@@ -1,14 +1,13 @@
 <script setup>
-import { useLanguageStore } from '@/stores/language'
-
-const langStore = useLanguageStore()
+import { FormKit } from '@formkit/vue'
+// import { useLanguageStore } from '@/stores/language'
+// const langStore = useLanguageStore()
 </script>
 
 <template>
   <main>
-    <h1>
-      {{ langStore.t('Home page', 'Domovska stranka') }}
-    </h1>
-    <div class="h-48 w-48 bg-red-400"></div>
+    <FormKit type="form" submit-label="Enter">
+      <FormKit label="Question code" type="text"></FormKit>
+    </FormKit>
   </main>
 </template>
