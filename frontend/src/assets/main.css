@@ -22,7 +22,7 @@ input {
   border: 2px solid var(--color-bg-mute);
   background-color: var(--color-bg);
   border-radius: 8px;
-  @apply p-1 mb-2 transition-all;
+  @apply p-1 mb-2 transition-all min-w-60;
 }
 
 input:focus {
