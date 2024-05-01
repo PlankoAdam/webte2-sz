@@ -16,10 +16,22 @@
     display: flex;
     place-items: center;
   }
+}
 
-  /* #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  } */
+input {
+  border: 2px solid var(--color-bg-mute);
+  background-color: var(--color-bg);
+  border-radius: 8px;
+  @apply p-1 mb-2 transition-all;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--color-text);
+}
+
+button {
+  @apply p-1 px-4 mt-4 rounded-lg transition-all font-bold border-4 hover:bg-transparent;
+  @apply bg-emerald-600 border-emerald-600 text-emerald-50 hover:text-emerald-600;
+  /* @apply dark:bg-emerald-700 dark:border-emerald-700; */
 }

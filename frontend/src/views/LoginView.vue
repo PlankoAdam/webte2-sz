@@ -8,8 +8,10 @@
         </FormKit>
       </div>
       <div class="text-sm">
-        <span>Don't have an account?</span>
-        <RouterLink to="/signup">Sign up</RouterLink>
+        <span class="text-slate-500 me-2">Don't have an account?</span>
+        <RouterLink to="/signup" class="hover:text-[var(--color-heading)] transition-all"
+          >Sign up</RouterLink
+        >
       </div>
     </div>
   </main>

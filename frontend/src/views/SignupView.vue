@@ -10,8 +10,10 @@
         </FormKit>
       </div>
       <div class="text-sm">
-        <span>Already have an account?</span>
-        <RouterLink to="/login">Log in</RouterLink>
+        <span class="text-slate-500 me-2">Already have an account?</span>
+        <RouterLink to="/login" class="hover:text-[var(--color-heading)] transition-all"
+          >Log in</RouterLink
+        >
       </div>
     </div>
   </main>
