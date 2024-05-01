@@ -1,10 +1,3 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { useLanguageStore } from '@/stores/language'
-
-const langStore = useLanguageStore()
-</script>
-
 <template>
   <nav class="h-20 w-full fixed top-0 left-0 px-16">
     <div class="grid grid-cols-2 h-full content-center">
@@ -17,10 +10,18 @@ const langStore = useLanguageStore()
       </div>
       <div class="flex flex-row justify-end space-x-6 items-center">
         <RouterLink
+          v-if="!userStore.user"
           to="/login"
           class="inline-block uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
           >{{ langStore.t('log in', 'prihlásenie') }}</RouterLink
         >
+        <h1
+          v-if="userStore.user"
+          @click="userStore.logout"
+          class="min-w-8 text-center cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
+        >
+          {{ langStore.t('log out', 'log out') }}
+        </h1>
         <h1
           @click="langStore.change"
           class="min-w-8 text-center cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
@@ -35,6 +36,15 @@ const langStore = useLanguageStore()
     <RouterView />
   </div>
 </template>
+
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+import { useLanguageStore } from '@/stores/language'
+import { useUserStore } from '@/stores/user'
+
+const langStore = useLanguageStore()
+const userStore = useUserStore()
+</script>
 
 <style scoped>
 nav {
