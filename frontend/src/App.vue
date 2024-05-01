@@ -15,7 +15,12 @@ const langStore = useLanguageStore()
           >Home</RouterLink
         >
       </div>
-      <div class="text-end text-xl content-center">
+      <div class="flex flex-row justify-end space-x-6 items-center">
+        <RouterLink
+          to="/login"
+          class="inline-block hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
+          >LOG IN</RouterLink
+        >
         <h1
           @click="langStore.change"
           class="cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
