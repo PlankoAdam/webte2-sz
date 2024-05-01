@@ -2,7 +2,7 @@
 
 ## TODOs
 
-[ ] Language switching
-[ ] Logged out user view
-[ ] Registration and Login
-[ ] Admin login
+[ ] Language switching  
+[ ] Logged out user view  
+[ ] Registration and Login  
+[ ] Admin login  
