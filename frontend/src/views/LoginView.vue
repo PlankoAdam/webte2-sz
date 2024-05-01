@@ -1,6 +1,6 @@
 <template>
   <main class="flex justify-center">
-    <div class="bg-gradient-to-b from-[var(--color-background-soft)] p-8 rounded-xl">
+    <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
       <div class="mb-8">
         <FormKit type="form" action="">
           <FormKit type="text" label="User name"></FormKit>
