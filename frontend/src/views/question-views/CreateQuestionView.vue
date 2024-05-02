@@ -59,5 +59,8 @@ const submitHandler = (formData) => {
   }
 
   console.log(parsed)
+
+  // TODO get unique code from server
+  // TODO get QR code from server
 }
 </script>
