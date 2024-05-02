@@ -3,6 +3,7 @@
     <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
       <FormKit type="form" @submit="submitHandler">
         <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
+        <FormKit name="subject" label="Subject" type="text" validation="required"></FormKit>
         <FormKit
           name="nans"
           v-model="nans"
@@ -55,6 +56,7 @@ const data = reactive({
 const submitHandler = (formData) => {
   const parsed = {
     question: formData.question,
+    subject: formData.subject,
     answers: Object.keys(formData.answers).map((key) => formData.answers[key])
   }
 
