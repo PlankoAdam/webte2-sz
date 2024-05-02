@@ -1,6 +1,6 @@
 <template>
   <main class="flex justify-center">
-    <div class="bg-gradient-to-r from-[var(--color-bg-soft)] p-8 rounded-xl">
+    <div class="bg-[var(--color-bg-soft)] p-8 rounded-xl">
       <RouterLink to="/questions/create">
         <div class="create-new mb-16">
           <div class="plus-sign">
@@ -45,6 +45,30 @@ const questions = ref([
     question: 'Dolor sit amet?',
     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
     active: false
+  },
+  {
+    code: '1594f',
+    question: 'Qsdohsdgsdf?',
+    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+    active: true
+  },
+  {
+    code: '1594f',
+    question: 'Qsdohsdgsdf?',
+    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+    active: true
+  },
+  {
+    code: '1594f',
+    question: 'Qsdohsdgsdf?',
+    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+    active: true
+  },
+  {
+    code: '1594f',
+    question: 'Qsdohsdgsdf?',
+    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+    active: true
   },
   {
     code: '1594f',
