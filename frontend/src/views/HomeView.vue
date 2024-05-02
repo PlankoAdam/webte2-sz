@@ -20,6 +20,7 @@ const langStore = useLanguageStore()
         name="code"
         :label="langStore.t('Question code', 'Kód otázky')"
         type="text"
+        validation="required|length:5,5"
       ></FormKit>
     </FormKit>
   </main>
