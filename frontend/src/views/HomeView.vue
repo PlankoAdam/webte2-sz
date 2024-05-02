@@ -1,10 +1,3 @@
-<script setup>
-import { FormKit } from '@formkit/vue'
-import { useLanguageStore } from '@/stores/language'
-
-const langStore = useLanguageStore()
-</script>
-
 <template>
   <main class="flex justify-center">
     <div class="flex flex-col items-center">
@@ -36,8 +29,19 @@ const langStore = useLanguageStore()
           type="text"
           validation="required|length:5,5"
         ></FormKit>
-        <FormKit label="Enter" type="submit" :disabled="!valid" input-class="m-0" />
+        <FormKit
+          :label="langStore.t('Enter', 'Vstúpiť')"
+          type="submit"
+          :disabled="!valid"
+          input-class="m-0"
+        />
       </FormKit>
     </div>
   </main>
 </template>
+
+<script setup>
+import { FormKit } from '@formkit/vue'
+import { useLanguageStore } from '@/stores/language'
+const langStore = useLanguageStore()
+</script>

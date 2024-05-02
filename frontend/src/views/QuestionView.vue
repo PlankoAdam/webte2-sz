@@ -18,7 +18,7 @@
       </div>
       <div v-else>
         <FormKit
-          label="Your answer"
+          :label="langStore.t('Your answer', 'Vaša odpoveď')"
           :v-model="selAnswer"
           type="text"
           input-class="min-w-96"
@@ -36,6 +36,9 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import AnswerOption from '@/components/AnswerOption.vue'
+
+import { useLanguageStore } from '@/stores/language'
+const langStore = useLanguageStore()
 
 const route = useRoute()
 const code = route.params.code
