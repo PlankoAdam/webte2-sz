@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignupView from '@/views/SignupView.vue'
-import QuestionsView from '@/views/QuestionsView.vue'
+import QuestionsListView from '@/views/QuestionsListView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import ChangePasswordView from '@/views/dashboard-views/ChangePasswordView.vue'
 import CreateQuestionView from '@/views/question-views/CreateQuestionView.vue'
@@ -29,7 +29,7 @@ const router = createRouter({
     {
       path: '/questions',
       name: 'questions',
-      component: QuestionsView
+      component: QuestionsListView
     },
     {
       path: '/questions/create',
