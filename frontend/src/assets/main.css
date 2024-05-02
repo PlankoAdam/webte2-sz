@@ -19,7 +19,7 @@ textarea {
   border: 2px solid var(--color-bg-mute);
   background-color: var(--color-bg);
   border-radius: 8px;
-  @apply p-1 mb-2 transition-colors min-w-60;
+  @apply p-1 mb-6 transition-colors min-w-60;
 }
 
 input[type='checkbox'] {
@@ -33,7 +33,25 @@ textarea:focus {
 }
 
 button {
-  @apply p-1 px-4 mt-4 rounded-lg transition-all font-bold border-4 hover:bg-transparent;
-  @apply bg-emerald-600 border-emerald-600 text-emerald-50 hover:text-emerald-600;
-  /* @apply dark:bg-emerald-700 dark:border-emerald-700; */
+  @apply p-1 px-4 mt-4 rounded-lg transition-all font-bold border-4;
+}
+
+button:not(:disabled) {
+  @apply bg-emerald-600 border-emerald-600 text-emerald-50 hover:text-emerald-600 hover:bg-transparent;
+}
+
+button:disabled {
+  @apply bg-neutral-500 text-neutral-200 border-transparent;
+}
+
+.formkit-outer[data-invalid='true'] input {
+  @apply border-red-500;
+}
+
+.formkit-outer[data-invalid='true'] ul {
+  @apply absolute text-red-500 -translate-y-6 text-sm truncate hover:max-w-fit max-w-60 select-none;
+}
+
+.formkit-wrapper button {
+  @apply min-w-60;
 }

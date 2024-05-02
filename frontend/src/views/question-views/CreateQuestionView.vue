@@ -1,7 +1,7 @@
 <template>
   <main class="flex justify-center">
     <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
-      <FormKit type="form" @submit="submitHandler">
+      <FormKit type="form" @submit="submitHandler" :actions="false" #default="{ state: { valid } }">
         <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
         <FormKit name="subject" label="Subject" type="text" validation="required"></FormKit>
         <FormKit
@@ -17,6 +17,7 @@
         <FormKit name="answers" type="group">
           <FormKitSchema :schema="schema" :data="data"></FormKitSchema>
         </FormKit>
+        <FormKit label="Create" type="submit" :disabled="!valid" />
       </FormKit>
     </div>
   </main>

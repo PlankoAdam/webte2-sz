@@ -10,6 +10,8 @@ const langStore = useLanguageStore()
     <FormKit
       type="form"
       submit-label="Enter"
+      :actions="false"
+      #default="{ state: { valid } }"
       @submit="
         (formData) => {
           $router.push(`/${formData.code}`)
@@ -22,6 +24,7 @@ const langStore = useLanguageStore()
         type="text"
         validation="required|length:5,5"
       ></FormKit>
+      <FormKit type="submit" :disabled="!valid" input-class="m-0" />
     </FormKit>
   </main>
 </template>

@@ -7,6 +7,8 @@
           type="form"
           @submit="userStore.login"
           :submit-label="langStore.t('Log in', 'Prihlásiť sa')"
+          :actions="false"
+          #default="{ state: { valid } }"
         >
           <FormKit
             name="username"
@@ -20,6 +22,7 @@
             validation="required"
             :label="langStore.t('Password', 'Heslo')"
           ></FormKit>
+          <FormKit label="Log in" type="submit" :disabled="!valid" />
         </FormKit>
       </div>
       <div class="text-sm text-center">
