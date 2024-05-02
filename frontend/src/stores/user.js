@@ -3,11 +3,10 @@ import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
 
 export const useUserStore = defineStore('user', () => {
-  const user = useStorage('user', null)
+  const user = useStorage('user', {})
 
   const login = (userData) => {
     // user login demo
-    console.log(userData)
 
     user.value = {
       username: userData.username,

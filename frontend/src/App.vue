@@ -8,7 +8,7 @@
           >{{ langStore.t('Home', 'Domov') }}</RouterLink
         >
         <RouterLink
-          v-if="userStore.user"
+          v-if="userStore.user.username"
           to="/questions"
           class="inline-block hover:text-[var(--color-heading)] hover:-translate-y-1 hover:drop-shadow-[0_0_10px_var(--color-text)] transition-all"
           >{{ langStore.t('Questions', 'Otázky') }}</RouterLink
@@ -16,20 +16,20 @@
       </div>
       <div class="flex flex-row justify-end space-x-6 items-center">
         <RouterLink
-          v-if="userStore.user"
+          v-if="userStore.user.username"
           to="/dashboard"
           class="min-w-8 text-center cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
         >
           {{ userStore.user.username }}
         </RouterLink>
         <RouterLink
-          v-if="!userStore.user"
+          v-if="!userStore.user.username"
           to="/login"
           class="inline-block uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
           >{{ langStore.t('log in', 'prihlásenie') }}</RouterLink
         >
         <h1
-          v-if="userStore.user"
+          v-if="userStore.user.username"
           @click="userStore.logout"
           class="min-w-8 text-center cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
         >
