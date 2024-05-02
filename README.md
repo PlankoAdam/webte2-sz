@@ -4,7 +4,7 @@
 
 [✓] Language switching  
 [✓] Logged out user view  
-[] Registration and Login  
+[-] Registration and Login - FE done  
 [] User database  
 [] Question database  
 [] Admin view  
