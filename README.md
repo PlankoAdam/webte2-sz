@@ -9,8 +9,8 @@
 [] Question database  
 [] Admin view  
 [✓] Logged in user view  
-[~] Change password - FE done  
-[~] Create quiz - FE done  
+[-] Change password - FE done  
+[-] Create quiz - FE done  
 [] Quiz settings  
 [] Word cloud  
 [] Unnumbered list  
