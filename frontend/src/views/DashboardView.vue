@@ -1,0 +1,22 @@
+<template>
+  <main class="flex justify-center">
+    <div class="grid grid-cols-2">
+      <div class="border-e-2 border-[var(--color-text)] min-h-48 content-center">
+        <div class="flex flex-row me-4 justify-end">
+          <RouterLink
+            to="/dashboard/change-password"
+            class="text-xl cursor-pointer hover:text-[var(--color-heading)] transition-all"
+            >Change password</RouterLink
+          >
+        </div>
+      </div>
+      <div class="ms-8">
+        <RouterView></RouterView>
+      </div>
+    </div>
+  </main>
+</template>
+
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>

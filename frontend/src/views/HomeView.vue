@@ -7,8 +7,21 @@ const langStore = useLanguageStore()
 
 <template>
   <main>
-    <FormKit type="form" submit-label="Enter">
-      <FormKit :label="langStore.t('Question code', 'Kód otázky')" type="text"></FormKit>
+    <FormKit
+      type="form"
+      submit-label="Enter"
+      @submit="
+        (formData) => {
+          $router.push(`/${formData.code}`)
+        }
+      "
+    >
+      <FormKit
+        name="code"
+        :label="langStore.t('Question code', 'Kód otázky')"
+        type="text"
+        validation="required|length:5,5"
+      ></FormKit>
     </FormKit>
   </main>
 </template>

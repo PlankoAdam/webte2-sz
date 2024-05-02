@@ -2,6 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignupView from '@/views/SignupView.vue'
+import QuestionsListView from '@/views/QuestionsListView.vue'
+import DashboardView from '@/views/DashboardView.vue'
+import ChangePasswordView from '@/views/dashboard-views/ChangePasswordView.vue'
+import CreateQuestionView from '@/views/question-views/CreateQuestionView.vue'
+import EditQuestionView from '@/views/question-views/EditQuestionView.vue'
+import QuestionView from '@/views/QuestionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +18,11 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/:code',
+      name: 'question',
+      component: QuestionView
+    },
+    {
       path: '/login',
       name: 'login',
       component: LoginView
@@ -20,6 +31,32 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignupView
+    },
+    {
+      path: '/questions',
+      name: 'questions',
+      component: QuestionsListView
+    },
+    {
+      path: '/questions/create',
+      name: 'questions-create',
+      component: CreateQuestionView
+    },
+    {
+      path: '/questions/edit/:id',
+      name: 'questions-edit',
+      component: EditQuestionView
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: DashboardView,
+      children: [
+        {
+          path: 'change-password',
+          component: ChangePasswordView
+        }
+      ]
     }
   ]
 })
