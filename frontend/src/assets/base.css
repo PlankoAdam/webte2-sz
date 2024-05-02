@@ -8,7 +8,7 @@
   --vt-c-white-soft: rgb(203 213 225);
   --vt-c-white-mute: rgb(148 163 184);
 
-  --vt-c-black: rgb(15 23 42);
+  --vt-c-black: rgb(15, 23, 42);
   --vt-c-black-soft: rgb(30 41 59);
   --vt-c-black-mute: rgb(51 65 85);
 
@@ -21,6 +21,18 @@
   --vt-c-text-light-2: var(--vt-c-divider-dark-1);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: var(--vt-c-white-mute);
+
+  --ac050: var(--color-shakespeare-50);
+  --ac100: var(--color-shakespeare-100);
+  --ac200: var(--color-shakespeare-200);
+  --ac300: var(--color-shakespeare-300);
+  --ac400: var(--color-shakespeare-400);
+  --ac500: var(--color-shakespeare-500);
+  --ac600: var(--color-shakespeare-600);
+  --ac700: var(--color-shakespeare-700);
+  --ac800: var(--color-shakespeare-800);
+  --ac900: var(--color-shakespeare-900);
+  --ac950: var(--color-shakespeare-950);
 }
 
 /* semantic color variables for this project */

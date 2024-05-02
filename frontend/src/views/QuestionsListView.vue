@@ -1,12 +1,12 @@
 <template>
   <main class="flex justify-center">
-    <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
+    <div class="bg-gradient-to-r from-[var(--color-bg-soft)] p-8 rounded-xl">
       <RouterLink to="/questions/create">
         <div class="create-new mb-16">
           <div class="plus-sign">
             <v-icon name="fa-plus" scale="4"></v-icon>
           </div>
-          <div class="content-center text-3xl">
+          <div class="content-center text-3xl font-light">
             {{ langStore.t('Create new question', 'Vytvoriť novú otázku') }}
           </div>
         </div>
@@ -59,29 +59,40 @@ const questions = ref([
 .create-new {
   @apply flex flex-row space-x-8 rounded-lg w-[32rem] p-4 transition-all duration-300 cursor-pointer;
 
-  background-image: linear-gradient(
-    180deg,
-    var(--color-bg-mute),
-    var(--color-bg-mute) 51%,
-    var(--color-text)
-  );
-  background-position: 0 var(--y, 0);
+  color: var(--ac950);
+  background-image: linear-gradient(180deg, var(--ac300), var(--ac400) 51%, var(--ac400));
+  @media (prefers-color-scheme: dark) {
+    color: var(--ac050);
+    background-image: linear-gradient(180deg, var(--ac600), var(--ac700) 51%, var(--ac700));
+  }
+  background-position: 0 var(--y, 100%);
   background-size: 200% 200%;
 }
 
 .create-new:hover {
-  color: var(--color-heading);
-  @apply shadow-black shadow-xl;
-  --y: 100%;
+  color: var(--ac950);
+  @media (prefers-color-scheme: dark) {
+    color: white;
+  }
+  @apply shadow-black shadow-lg;
+  --y: 0;
 }
 
-.create-new:hover > .plus-sign {
-  color: var(--color-text);
-}
+/* .create-new:hover > .plus-sign {
+  color: var(--ac400);
+  @media (prefers-color-scheme: dark) {
+    color: var(--ac600);
+  }
+} */
 
 .plus-sign {
   background-color: var(--color-bg);
-  color: var(--color-bg-mute);
-  @apply min-w-24 min-h-24 rounded-lg content-center text-center transition-all duration-500;
+
+  color: var(--ac400);
+  @media (prefers-color-scheme: dark) {
+    color: var(--ac700);
+  }
+
+  @apply min-w-24 min-h-24 rounded-lg content-center text-center;
 }
 </style>

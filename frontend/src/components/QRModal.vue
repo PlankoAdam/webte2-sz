@@ -1,7 +1,7 @@
 <template>
   <div
     @click="$emit('close')"
-    class="fixed z-50 min-w-full min-h-full bg-black bg-opacity-50 top-0 left-0 flex flex-col justify-center items-center"
+    class="fixed z-50 min-w-[100vw] min-h-[100vh] bg-black bg-opacity-50 top-0 left-0 flex flex-col justify-center items-center"
   >
     <div
       @click.stop=""
