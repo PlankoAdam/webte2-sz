@@ -19,23 +19,27 @@
     <div class="flex flex-col justify-center">
       <span class="text-3xl font-light text-[var(--color-heading)]">{{ props.question }} </span>
       <div class="text-lg mb-2 flex flex-row space-x-2">
-        <div>Code:</div>
+        <div>{{ langStore.t('Code', 'Kód') }}</div>
         <div class="text-[var(--color-heading)] font-mono">{{ props.code }}</div>
       </div>
       <div class="flex flex-row space-x-4">
-        <p href="" class="hover:text-[var(--color-heading)] transition-all cursor-pointer">Edit</p>
         <p href="" class="hover:text-[var(--color-heading)] transition-all cursor-pointer">
-          Activate
+          {{ langStore.t('Edit', 'Upraviť') }}
         </p>
-        <p href="" class="hover:text-[var(--color-heading)] transition-all cursor-pointer">Show</p>
+        <p href="" class="hover:text-[var(--color-heading)] transition-all cursor-pointer">
+          {{ langStore.t('Activate', 'Aktivovať') }}
+        </p>
+        <p href="" class="hover:text-[var(--color-heading)] transition-all cursor-pointer">
+          {{ langStore.t('Show', 'Ukázať') }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// import { useLanguageStore } from '@/stores/language'
-// const langStore = useLanguageStore()
+import { useLanguageStore } from '@/stores/language'
+const langStore = useLanguageStore()
 
 import { ref } from 'vue'
 import QRModal from './QRModal.vue'
