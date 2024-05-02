@@ -13,45 +13,12 @@
       </RouterLink>
       <div class="flex flex-col space-y-4">
         <QuestionListItem
-          code="abc12"
-          question="Lorem ipsum?"
-          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-          active
-        ></QuestionListItem>
-        <QuestionListItem
-          code="345de"
-          question="Dolor sit amet?"
-          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-        ></QuestionListItem>
-        <QuestionListItem
-          code="67hj1"
-          question="Question?"
-          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-          active
-        ></QuestionListItem>
-        <QuestionListItem
-          code="67hj1"
-          question="Question?"
-          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-          active
-        ></QuestionListItem>
-        <QuestionListItem
-          code="67hj1"
-          question="Question?"
-          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-          active
-        ></QuestionListItem>
-        <QuestionListItem
-          code="67hj1"
-          question="Question?"
-          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-          active
-        ></QuestionListItem>
-        <QuestionListItem
-          code="67hj1"
-          question="Question?"
-          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-          active
+          v-for="q in questions"
+          :key="q.code"
+          :code="q.code"
+          :question="q.question"
+          :qrsrc="q.qrsrc"
+          :active="q.active"
         ></QuestionListItem>
       </div>
     </div>
@@ -62,8 +29,30 @@
 import { useLanguageStore } from '@/stores/language'
 import QuestionListItem from '@/components/QuestionListItem.vue'
 import { RouterLink } from 'vue-router'
+import { ref } from 'vue'
 
 const langStore = useLanguageStore()
+
+const questions = ref([
+  {
+    code: 'abc12',
+    question: 'Lorem ipsum?',
+    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+    active: true
+  },
+  {
+    code: 'gdr34',
+    question: 'Dolor sit amet?',
+    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+    active: false
+  },
+  {
+    code: '1594f',
+    question: 'Qsdohsdgsdf?',
+    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+    active: true
+  }
+])
 </script>
 
 <style scoped>
