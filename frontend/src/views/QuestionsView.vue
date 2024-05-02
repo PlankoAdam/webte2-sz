@@ -10,9 +10,21 @@
         </div>
       </div>
       <div class="flex flex-col space-y-4">
-        <QuestionListItem></QuestionListItem>
-        <QuestionListItem></QuestionListItem>
-        <QuestionListItem></QuestionListItem>
+        <QuestionListItem
+          code="abc12"
+          question="Lorem ipsum?"
+          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
+        ></QuestionListItem>
+        <QuestionListItem
+          code="345de"
+          question="Dolor sit amet?"
+          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
+        ></QuestionListItem>
+        <QuestionListItem
+          code="67hj1"
+          question="Question?"
+          qrsrc="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
+        ></QuestionListItem>
       </div>
     </div>
   </main>

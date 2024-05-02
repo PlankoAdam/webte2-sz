@@ -7,8 +7,15 @@
       @click.stop=""
       class="bg-[var(--color-bg-soft)] p-4 rounded-lg size-fit shadow-2xl shadow-black"
     >
-      <div class="h-[min(80vh,80vw)] w-[min(80vh,80vw)] bg-green-400 mb-4"></div>
-      <h1 class="text-6xl text-[var(--color-heading)] font-mono text-center">abc123</h1>
+      <img :src="props.qrsrc" class="size-[min(80vh,80vw)] mb-4" />
+      <h1 class="text-6xl text-[var(--color-heading)] font-mono text-center">{{ props.code }}</h1>
     </div>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  qrsrc: String,
+  code: String
+})
+</script>
