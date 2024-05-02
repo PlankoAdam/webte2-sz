@@ -2,15 +2,15 @@
 
 ## TODOs
 
-[x] Language switching  
-[x] Logged out user view  
-[ ] Registration and Login  
+[✓] Language switching  
+[✓] Logged out user view  
+[] Registration and Login  
 [] User database  
 [] Question database  
 [] Admin view  
-[] Logged in user view  
-[] Change password  
-[] Create quiz  
+[✓] Logged in user view  
+[~] Change password - FE done  
+[~] Create quiz - FE done  
 [] Quiz settings  
 [] Word cloud  
 [] Unnumbered list  
@@ -19,7 +19,7 @@
 [] Tags - aký predmet  
 [] QR code generation  
 [] 5 character code generation  
-[] Question show  
+[✓] Question show  
 [] Question filter  
 [] Question edit  
 [] Question delete  
