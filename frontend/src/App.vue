@@ -1,5 +1,5 @@
 <template>
-  <nav class="h-20 w-full fixed top-0 left-0 px-16">
+  <nav class="h-20 w-full fixed top-0 left-0 px-16 bg-[var(--color-bg)] z-20">
     <div class="grid grid-cols-2 h-full content-center">
       <div class="flex flex-row text-3xl space-x-8">
         <RouterLink
