@@ -1,14 +1,16 @@
 <template>
   <main class="flex justify-center">
     <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
-      <div class="create-new mb-16">
-        <div class="plus-sign">
-          <v-icon name="fa-plus" scale="4"></v-icon>
+      <RouterLink to="/questions/create">
+        <div class="create-new mb-16">
+          <div class="plus-sign">
+            <v-icon name="fa-plus" scale="4"></v-icon>
+          </div>
+          <div class="content-center text-3xl">
+            {{ langStore.t('Create new question', 'Vytvoriť novú otázku') }}
+          </div>
         </div>
-        <div class="content-center text-3xl">
-          {{ langStore.t('Create new question', 'Vytvoriť novú otázku') }}
-        </div>
-      </div>
+      </RouterLink>
       <div class="flex flex-col space-y-4">
         <QuestionListItem
           code="abc12"
@@ -33,6 +35,7 @@
 <script setup>
 import { useLanguageStore } from '@/stores/language'
 import QuestionListItem from '@/components/QuestionListItem.vue'
+import { RouterLink } from 'vue-router'
 
 const langStore = useLanguageStore()
 </script>

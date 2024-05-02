@@ -5,6 +5,7 @@ import SignupView from '@/views/SignupView.vue'
 import QuestionsView from '@/views/QuestionsView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import ChangePasswordView from '@/views/dashboard-views/ChangePasswordView.vue'
+import CreateQuestionView from '@/views/question-views/CreateQuestionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/questions',
       name: 'questions',
       component: QuestionsView
+    },
+    {
+      path: '/questions/create',
+      name: 'questions-create',
+      component: CreateQuestionView
     },
     {
       path: '/dashboard',

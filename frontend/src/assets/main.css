@@ -25,6 +25,10 @@ input {
   @apply p-1 mb-2 transition-all min-w-60;
 }
 
+input[type='checkbox'] {
+  @apply min-w-0 max-w-min max-h-min me-2 cursor-pointer;
+}
+
 input:focus {
   outline: none;
   border-color: var(--color-text);
