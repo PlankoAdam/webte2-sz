@@ -1,9 +1,9 @@
 import router from '@/router'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref(null)
+  const user = useStorage('user', null)
 
   const login = (userData) => {
     // user login demo
