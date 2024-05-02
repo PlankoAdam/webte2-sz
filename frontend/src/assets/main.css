@@ -14,18 +14,20 @@
   }
 }
 
-input {
+input,
+textarea {
   border: 2px solid var(--color-bg-mute);
   background-color: var(--color-bg);
   border-radius: 8px;
-  @apply p-1 mb-2 transition-all min-w-60;
+  @apply p-1 mb-2 transition-colors min-w-60;
 }
 
 input[type='checkbox'] {
   @apply min-w-0 max-w-min max-h-min me-2 cursor-pointer;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
   outline: none;
   border-color: var(--color-text);
 }
