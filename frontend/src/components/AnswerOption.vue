@@ -1,8 +1,9 @@
 <template>
   <div
-    class="w-96 rounded-lg bg-[var(--color-bg-soft)] text-[var(--color-heading)] text-xl p-2 ps-4 capitalize transition-all cursor-pointer border-4"
+    class="w-full rounded-lg bg-[var(--color-bg-soft)] text-xl p-2 ps-4 capitalize transition-all cursor-pointer border-4"
     :class="{
-      'border-sky-500 dark:bg-sky-900 bg-sky-700 text-white': props.selected,
+      'border-[var(--acc600)] dark:bg-[var(--acc700)] bg-[var(--acc500)] dark:text-[var(--acc050)] text-[var(--acc950)]':
+        props.selected,
       'border-transparent hover:bg-[var(--color-bg-mute)]': !props.selected
     }"
   >

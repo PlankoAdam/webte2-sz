@@ -1,13 +1,16 @@
 <template>
   <main class="flex justify-center">
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center px-8 min-w-72">
       <div class="flex flex-col mb-32">
         <div class="text-6xl font-light text-[var(--color-heading)] mb-4">
           {{ questionData.question }}
         </div>
-        <div class="text-lg font-mono ms-8">{{ questionData.code }}</div>
+        <div class="text-lg font-mono">{{ questionData.code }}</div>
       </div>
-      <div v-if="questionData.answers.length > 0" class="flex flex-col space-y-4">
+      <div
+        v-if="questionData.answers.length > 0"
+        class="flex flex-col space-y-4 mb-8 w-full max-w-96 items-center"
+      >
         <AnswerOption
           v-for="ans in questionData.answers"
           :key="ans"
@@ -16,18 +19,16 @@
           :selected="selAnswer == ans"
         ></AnswerOption>
       </div>
-      <div v-else>
+      <div v-else class="w-full max-w-96">
         <FormKit
           :label="langStore.t('Your answer', 'Vaša odpoveď')"
           :v-model="selAnswer"
           type="text"
-          input-class="min-w-96"
+          input-class="w-full"
           validation="required"
         ></FormKit>
       </div>
-      <div>
-        <button class="min-w-96 mt-16">Submit</button>
-      </div>
+      <button class="w-full max-w-96">Submit</button>
     </div>
   </main>
 </template>
@@ -48,7 +49,8 @@ const code = route.params.code
 const questionData = ref({
   code,
   question: 'Lorem ipsum dolor sit amet?',
-  answers: []
+  // answers: []
+  answers: ['answer 1', 'answer 2', 'answer 3']
 })
 
 const selAnswer = ref('')
