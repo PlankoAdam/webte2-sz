@@ -45,3 +45,15 @@ import { FormKit } from '@formkit/vue'
 import { useLanguageStore } from '@/stores/language'
 const langStore = useLanguageStore()
 </script>
+
+<!-- <style>
+body {
+  background: linear-gradient(
+    180deg,
+    var(--color-bg) 5%,
+    var(--color-indigo-950) 20%,
+    var(--color-fuchsia-900) 40%,
+    var(--color-amber-400) 100%
+  );
+}
+</style> -->

@@ -3,7 +3,7 @@
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
     <div class="flex justify-center items-center w-full h-full">
-      <div class="max-w-fit bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
+      <div class="max-w-fit bg-[var(--color-bg-soft)] p-8 rounded-xl">
         <FormKit
           type="form"
           @submit="submitHandler"
@@ -13,9 +13,11 @@
           <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
           <FormKit name="subject" label="Subject" type="text" validation="required"></FormKit>
           <h1 class="mb-2">Answers:</h1>
-          <div class="flex flex-row space-x-2 mb-4 text-xl">
-            <button @click.prevent="nans--" class="mt-0 flex-1">-</button>
-            <h1 class="content-center px-2">{{ data.answers.length }}</h1>
+          <div class="flex flex-row space-x-2 mb-4">
+            <button @click.prevent="nans--" class="mt-0 flex-1">
+              <v-icon name="fa-minus" scale="2"></v-icon>
+            </button>
+            <h1 class="content-center px-2 text-2xl">{{ data.answers.length }}</h1>
             <button
               @click.prevent="
                 () => {
@@ -24,7 +26,7 @@
               "
               class="mt-0 flex-1"
             >
-              +
+              <v-icon name="fa-plus" scale="2"></v-icon>
             </button>
           </div>
           <!-- <FormKit

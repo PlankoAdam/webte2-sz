@@ -1,6 +1,6 @@
 <template>
   <main class="flex justify-center">
-    <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
+    <div class="bg-[var(--color-bg-soft)] p-8 rounded-xl">
       <h1 class="mb-8 text-2xl font-light uppercase">{{ langStore.t('log in', 'prihlásenie') }}</h1>
       <div class="mb-8">
         <FormKit

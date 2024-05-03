@@ -46,9 +46,11 @@
             validation="required"
           ></FormKit>
           <h1 class="mb-2">Answers:</h1>
-          <div class="flex flex-row space-x-2 mb-4 text-xl">
-            <button @click.prevent="data.answers.pop()" class="mt-0 flex-1">-</button>
-            <h1 class="content-center px-2">{{ data.answers.length }}</h1>
+          <div class="flex flex-row space-x-2 mb-4">
+            <button @click.prevent="data.answers.pop()" class="mt-0 flex-1">
+              <v-icon name="fa-minus" scale="2"></v-icon>
+            </button>
+            <h1 class="content-center px-2 text-2xl">{{ data.answers.length }}</h1>
             <button
               @click.prevent="
                 () => {
@@ -57,7 +59,7 @@
               "
               class="mt-0 flex-1"
             >
-              +
+              <v-icon name="fa-plus" scale="2"></v-icon>
             </button>
           </div>
           <FormKit type="group" label="Answers">

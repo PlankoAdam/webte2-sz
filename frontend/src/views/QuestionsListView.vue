@@ -1,11 +1,15 @@
 <template>
   <main class="flex lg:flex-row flex-col lg:min-w-[100vw]">
     <div
-      class="p-4 mt-[var(--nav-h)] items-center lg:min-w-[28rem] min-w-[100vw] lg:bg-gradient-to-l from-[var(--color-bg-soft)] fixed top-0 bottom-0 overflow-y-scroll"
+      class="p-4 mt-[var(--nav-h)] items-center lg:min-w-[28rem] min-w-[100vw] fixed top-0 bottom-0 overflow-y-scroll bg-[var(--prim300)] dark:bg-[var(--prim800)]"
     >
       <RouterLink to="/questions/create">
-        <div class="create-new mb-12">
-          <div class="plus-sign">
+        <div
+          class="flex flex-row justify-center items-center space-x-4 w-full h-24 p-4 transition-all cursor-pointer hover:scale-[103%] ease-out duration-100 mb-8"
+        >
+          <div
+            class="bg-[var(--color-text)] text-[var(--prim300)] dark:text-[var(--prim800)] rounded-md"
+          >
             <v-icon name="fa-plus" scale="3"></v-icon>
           </div>
           <div class="content-center text-3xl font-light">
@@ -65,45 +69,3 @@ const questions = ref([
   ...dummyData
 ])
 </script>
-
-<style scoped>
-.create-new {
-  @apply flex flex-row items-center space-x-8 rounded-lg w-full h-24 p-4 transition-all duration-300 cursor-pointer;
-
-  color: var(--prim950);
-  background-image: linear-gradient(180deg, var(--prim300), var(--prim400) 51%, var(--prim400));
-  @media (prefers-color-scheme: dark) {
-    color: var(--prim050);
-    background-image: linear-gradient(180deg, var(--prim600), var(--prim700) 51%, var(--prim700));
-  }
-  background-position: 0 var(--y, 100%);
-  background-size: 200% 200%;
-}
-
-.create-new:hover {
-  color: var(--prim950);
-  @media (prefers-color-scheme: dark) {
-    color: white;
-  }
-  @apply shadow-black shadow-lg;
-  --y: 0;
-}
-
-/* .create-new:hover > .plus-sign {
-  color: var(--prim400);
-  @media (prefers-color-scheme: dark) {
-    color: var(--prim600);
-  }
-} */
-
-.plus-sign {
-  background-color: var(--color-bg);
-
-  color: var(--prim400);
-  @media (prefers-color-scheme: dark) {
-    color: var(--prim700);
-  }
-
-  @apply size-16 rounded-md content-center text-center;
-}
-</style>
