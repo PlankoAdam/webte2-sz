@@ -45,13 +45,12 @@ const router = createRouter({
         {
           path: '/questions/create',
           component: CreateQuestionView
+        },
+        {
+          path: '/questions/edit/:id',
+          component: EditQuestionView
         }
       ]
-    },
-    {
-      path: '/questions/edit/:id',
-      name: 'questions-edit',
-      component: EditQuestionView
     },
     {
       path: '/dashboard',

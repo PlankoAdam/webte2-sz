@@ -12,7 +12,22 @@
         >
           <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
           <FormKit name="subject" label="Subject" type="text" validation="required"></FormKit>
-          <FormKit
+          <h1 class="mb-2">Answers:</h1>
+          <div class="flex flex-row space-x-2 mb-4 text-xl">
+            <button @click.prevent="nans--" class="mt-0 flex-1">-</button>
+            <h1 class="content-center px-2">{{ data.answers.length }}</h1>
+            <button
+              @click.prevent="
+                () => {
+                  if (nans < 6) nans++
+                }
+              "
+              class="mt-0 flex-1"
+            >
+              +
+            </button>
+          </div>
+          <!-- <FormKit
             name="nans"
             v-model="nans"
             label="Number of answers"
@@ -21,7 +36,7 @@
             validation="required"
             min="0"
             max="6"
-          ></FormKit>
+          ></FormKit> -->
           <FormKit name="answers" type="group">
             <FormKitSchema :schema="schema" :data="data"></FormKitSchema>
           </FormKit>
@@ -76,3 +91,17 @@ const submitHandler = (formData) => {
   // TODO get QR code from server
 }
 </script>
+
+<style scoped>
+button {
+  background-color: var(--color-bg-soft);
+  color: var(--color-text);
+  border: none;
+  @apply p-1 w-24 xl:w-full;
+}
+
+button:hover {
+  background-color: var(--color-bg-mute);
+  color: var(--color-heading);
+}
+</style>

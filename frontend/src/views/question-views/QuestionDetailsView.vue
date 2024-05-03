@@ -8,7 +8,7 @@
   <main
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
-    <div class="flex flex-col xl:flex-row xl:space-x-12 xl:justify-center items-center p-8">
+    <div class="flex flex-col xl:flex-row xl:space-x-20 xl:justify-center items-center p-8">
       <div class="flex flex-col items-center mb-16 xl:m-0">
         <div
           @click="
@@ -37,13 +37,13 @@
           <button @click="data.active = !data.active">
             {{ data.active ? 'Deactivate' : 'Activate' }}
           </button>
-          <button>{{ 'Edit' }}</button>
+          <button @click="$router.push(`/questions/edit/${data.code}`)">{{ 'Edit' }}</button>
           <button class="btn-danger">{{ 'Delete' }}</button>
         </div>
       </div>
       <div class="flex flex-col">
-        <h1 class="text-6xl font-light mb-8">{{ data.question }}</h1>
-        <ul class="flex flex-col space-y-2">
+        <h1 class="text-6xl font-light mb-8 max-w-[32rem] min-w-fit">{{ data.question }}</h1>
+        <ul class="flex flex-col space-y-2 max-w-96">
           <li
             v-for="ans in data.answers"
             :key="ans"
@@ -68,10 +68,10 @@ const route = useRoute()
 
 const dummyData = {
   code: route.params.id,
-  question: 'Lorem ipsum?',
+  question: 'Is this a really long question for testing?',
   qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
   active: false,
-  answers: ['ans1', 'ans2', 'ans3']
+  answers: ['answer 1', 'ans2', 'ans3']
 }
 
 // TODO update data on route change
