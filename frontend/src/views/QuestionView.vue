@@ -45,7 +45,7 @@ const code = route.params.code
 const questionData = ref({
   code,
   question: 'Lorem ipsum dolor sit amet?',
-  answers: []
+  answers: ['asd', 'asd', 'trz']
 })
 
 const selAnswer = ref('')
