@@ -83,18 +83,18 @@ const questions = ref([
 .create-new {
   @apply flex flex-row space-x-8 rounded-lg w-[32rem] p-4 transition-all duration-300 cursor-pointer;
 
-  color: var(--ac950);
-  background-image: linear-gradient(180deg, var(--ac300), var(--ac400) 51%, var(--ac400));
+  color: var(--prim950);
+  background-image: linear-gradient(180deg, var(--prim300), var(--prim400) 51%, var(--prim400));
   @media (prefers-color-scheme: dark) {
-    color: var(--ac050);
-    background-image: linear-gradient(180deg, var(--ac600), var(--ac700) 51%, var(--ac700));
+    color: var(--prim050);
+    background-image: linear-gradient(180deg, var(--prim600), var(--prim700) 51%, var(--prim700));
   }
   background-position: 0 var(--y, 100%);
   background-size: 200% 200%;
 }
 
 .create-new:hover {
-  color: var(--ac950);
+  color: var(--prim950);
   @media (prefers-color-scheme: dark) {
     color: white;
   }
@@ -103,18 +103,18 @@ const questions = ref([
 }
 
 /* .create-new:hover > .plus-sign {
-  color: var(--ac400);
+  color: var(--prim400);
   @media (prefers-color-scheme: dark) {
-    color: var(--ac600);
+    color: var(--prim600);
   }
 } */
 
 .plus-sign {
   background-color: var(--color-bg);
 
-  color: var(--ac400);
+  color: var(--prim400);
   @media (prefers-color-scheme: dark) {
-    color: var(--ac700);
+    color: var(--prim700);
   }
 
   @apply min-w-24 min-h-24 rounded-lg content-center text-center;

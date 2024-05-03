@@ -7,10 +7,10 @@
       :code="props.code"
     ></QRModal>
     <div
-      class="flex flex-row space-x-8 rounded-lg w-[32rem] p-4 text-[var(--ac400)] dark:text-[var(--ac500)] transition-all"
+      class="flex flex-row space-x-8 rounded-lg w-[32rem] p-4 text-[var(--prim400)] dark:text-[var(--prim500)] transition-all"
       :class="{
         active: props.active,
-        'bg-[var(--ac200)] dark:bg-[var(--ac900)]': !props.active
+        'bg-[var(--prim200)] dark:bg-[var(--prim900)]': !props.active
       }"
     >
       <div
@@ -95,12 +95,12 @@ const showQRmodal = ref(false)
 
 <style scoped>
 .active {
-  @apply text-[var(--ac950)] dark:text-[var(--ac050)];
+  @apply text-[var(--prim950)] dark:text-[var(--prim050)];
 
-  background-image: linear-gradient(180deg, var(--ac300), var(--ac400) 51%, var(--ac400));
+  background-image: linear-gradient(180deg, var(--prim300), var(--prim400) 51%, var(--prim400));
   @media (prefers-color-scheme: dark) {
-    color: var(--ac050);
-    background-image: linear-gradient(180deg, var(--ac600), var(--ac700) 51%, var(--ac700));
+    color: var(--prim050);
+    background-image: linear-gradient(180deg, var(--prim600), var(--prim700) 51%, var(--prim700));
   }
   background-position: 0 var(--y, 100%);
   background-size: 200% 200%;
@@ -111,8 +111,8 @@ const showQRmodal = ref(false)
 }
 
 .active p {
-  @apply text-[var(--ac950)] hover:bg-[var(--ac500)];
-  @apply dark:text-[var(--ac050)] dark:hover:bg-[var(--ac500)];
+  @apply text-[var(--prim950)] hover:bg-[var(--prim500)];
+  @apply dark:text-[var(--prim050)] dark:hover:bg-[var(--prim500)];
 }
 
 div p {
@@ -120,7 +120,7 @@ div p {
 }
 
 .activate-btn {
-  @apply text-[var(--ac950)] hover:bg-[var(--ac400)];
-  @apply dark:text-[var(--ac050)] dark:hover:bg-[var(--ac600)];
+  @apply text-[var(--prim950)] hover:bg-[var(--prim400)];
+  @apply dark:text-[var(--prim050)] dark:hover:bg-[var(--prim600)];
 }
 </style>

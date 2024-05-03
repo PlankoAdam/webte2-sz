@@ -37,7 +37,9 @@ button {
 }
 
 button:not(:disabled) {
-  @apply bg-emerald-600 border-emerald-600 text-emerald-50 hover:text-emerald-600 hover:bg-transparent;
+  background-color: var(--color-good);
+  border-color: var(--color-good);
+  @apply text-white hover:bg-transparent hover:text-[var(--color-good)];
 }
 
 button:disabled {
@@ -45,11 +47,12 @@ button:disabled {
 }
 
 .formkit-outer[data-invalid='true'] input {
-  @apply border-red-500;
+  border-color: var(--color-bad);
 }
 
 .formkit-outer[data-invalid='true'] ul {
-  @apply absolute text-red-500 -translate-y-6 text-sm truncate hover:max-w-fit max-w-60 select-none;
+  color: var(--color-bad);
+  @apply absolute -translate-y-6 text-sm truncate hover:max-w-fit max-w-60 select-none;
 }
 
 .formkit-wrapper button {

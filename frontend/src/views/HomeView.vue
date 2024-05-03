@@ -4,7 +4,7 @@
       <div class="mb-16">
         <h1 class="text-9xl text-center font-light text-[var(--color-heading)] mb-4 select-none">
           interact<span
-            class="text-[var(--ac500)] dark:text-[var(--ac400)] hover:drop-shadow-[0_0_10px_var(--ac400)] dark:hover:drop-shadow-[0_0_10px_var(--ac500)] transition-all duration-700"
+            class="text-[var(--acc500)] dark:text-[var(--acc400)] hover:drop-shadow-[0_0_10px_var(--acc400)] dark:hover:drop-shadow-[0_0_10px_var(--acc500)] transition-all duration-700"
             >ED</span
           >
         </h1>
