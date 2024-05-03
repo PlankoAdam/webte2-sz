@@ -55,7 +55,15 @@ const dummyData = [
     active: true
   }
 ]
-const questions = ref([...dummyData, ...dummyData, ...dummyData, ...dummyData, ...dummyData])
+const questions = ref([
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData
+])
 </script>
 
 <style scoped>

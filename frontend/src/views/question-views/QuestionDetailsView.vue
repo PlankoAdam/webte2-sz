@@ -2,10 +2,10 @@
   <main
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
-    <div class="flex flex-col p-8">
+    <div class="flex flex-col items-center p-8 w-full h-full">
       <div class="size-96 bg-white"></div>
       <div>{{ $route.params.id }}</div>
-      <div class="text-lg">
+      <div class="text-lg hidden">
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium nulla amet recusandae
         voluptatibus ipsa tempora fugiat facilis non dolores, facere nostrum officia obcaecati
         voluptas voluptates ut optio officiis saepe impedit alias ad necessitatibus vel. Praesentium
@@ -35,3 +35,7 @@
     </div>
   </main>
 </template>
+
+<script setup>
+// TODO get data from server
+</script>

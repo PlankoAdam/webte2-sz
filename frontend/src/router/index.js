@@ -41,13 +41,12 @@ const router = createRouter({
         {
           path: '/questions/:id',
           component: QuestionDetailsView
+        },
+        {
+          path: '/questions/create',
+          component: CreateQuestionView
         }
       ]
-    },
-    {
-      path: '/questions/create',
-      name: 'questions-create',
-      component: CreateQuestionView
     },
     {
       path: '/questions/edit/:id',
