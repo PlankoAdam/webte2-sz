@@ -9,16 +9,37 @@
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
     <div class="flex flex-col xl:flex-row xl:space-x-12 xl:justify-center items-center p-8">
-      <div class="flex flex-col mb-16 xl:m-0">
+      <div class="flex flex-col items-center mb-16 xl:m-0">
         <div
-          @click="showModal = true"
-          class="size-fit bg-white p-2 rounded-md mb-2 hover:cursor-pointer hover:scale-110 transition-all ease-out"
+          @click="
+            () => {
+              if (data.active) showModal = true
+            }
+          "
+          class="size-fit bg-white p-2 rounded-md mb-2 transition-all ease-out"
+          :class="{
+            'hover:cursor-pointer hover:scale-110': data.active,
+            'opacity-40': !data.active
+          }"
         >
           <img :src="data.qrsrc" alt="QR code" class="size-full" />
         </div>
-        <h1 class="text-center text-4xl text-[var(--color-heading)] font-mono font-bold">
-          {{ $route.params.id }}
+        <h1
+          class="text-center text-4xl font-mono font-bold transition-colors"
+          :class="{
+            'text-[var(--color-heading)]': data.active,
+            'text-[var(--color-bg-mute)]': !data.active
+          }"
+        >
+          {{ data.code }}
         </h1>
+        <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
+          <button @click="data.active = !data.active">
+            {{ data.active ? 'Deactivate' : 'Activate' }}
+          </button>
+          <button>{{ 'Edit' }}</button>
+          <button class="btn-danger">{{ 'Delete' }}</button>
+        </div>
       </div>
       <div class="flex flex-col">
         <h1 class="text-6xl font-light mb-8">{{ data.question }}</h1>
@@ -49,7 +70,7 @@ const dummyData = {
   code: route.params.id,
   question: 'Lorem ipsum?',
   qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-  active: true,
+  active: false,
   answers: ['ans1', 'ans2', 'ans3']
 }
 
@@ -62,3 +83,17 @@ watch(
 const data = ref(dummyData)
 const showModal = ref(false)
 </script>
+
+<style scoped>
+button {
+  background-color: var(--color-bg-soft);
+  color: var(--color-text);
+  border: none;
+  @apply p-1 w-24 xl:w-full;
+}
+
+button:hover {
+  background-color: var(--color-bg-mute);
+  color: var(--color-heading);
+}
+</style>

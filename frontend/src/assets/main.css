@@ -60,3 +60,12 @@ button:disabled {
 .formkit-wrapper button {
   @apply min-w-60;
 }
+
+.btn-danger {
+  background-color: var(--color-red-600) !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+  background-color: var(--color-red-700) !important;
+}
