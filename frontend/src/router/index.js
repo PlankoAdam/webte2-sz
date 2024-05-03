@@ -8,6 +8,7 @@ import ChangePasswordView from '@/views/dashboard-views/ChangePasswordView.vue'
 import CreateQuestionView from '@/views/question-views/CreateQuestionView.vue'
 import EditQuestionView from '@/views/question-views/EditQuestionView.vue'
 import QuestionView from '@/views/QuestionView.vue'
+import QuestionDetailsView from '@/views/question-views/QuestionDetailsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +36,13 @@ const router = createRouter({
     {
       path: '/questions',
       name: 'questions',
-      component: QuestionsListView
+      component: QuestionsListView,
+      children: [
+        {
+          path: '/questions/:id',
+          component: QuestionDetailsView
+        }
+      ]
     },
     {
       path: '/questions/create',

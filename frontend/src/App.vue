@@ -1,5 +1,5 @@
 <template>
-  <nav class="h-20 w-full fixed top-0 left-0 px-16 bg-[var(--color-bg)] z-20">
+  <nav class="h-16 w-full fixed top-0 left-0 px-16 bg-[var(--color-bg)] z-20">
     <div class="grid grid-cols-2 h-full content-center">
       <div class="flex flex-row text-3xl space-x-8">
         <RouterLink
@@ -45,7 +45,7 @@
     </div>
   </nav>
 
-  <div class="mt-20">
+  <div>
     <RouterView />
   </div>
 </template>
@@ -60,9 +60,9 @@ const userStore = useUserStore()
 </script>
 
 <style scoped>
-nav {
+/* nav {
   border-bottom: 2px solid;
   border-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--color-border), rgba(0, 0, 0, 0))
     30;
-}
+} */
 </style>

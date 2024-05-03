@@ -47,6 +47,8 @@
   --vt-c-text-light-2: var(--vt-c-divider-dark-1);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: var(--vt-c-white-mute);
+
+  --nav-h: 4rem;
 }
 
 /* semantic color variables for this project */
