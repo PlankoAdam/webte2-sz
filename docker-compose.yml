@@ -2,21 +2,23 @@ version: "3.8"
 
 # Services
 services:
-  # # Nginx Service
-  # nginx:
-  #   image: nginx:1.21
-  #   ports:
-  #     - 80:80
-  #   volumes:
-  #     - ./src:/var/www/php
-  #     - ./.docker/nginx/conf.d:/etc/nginx/conf.d
-  #   depends_on:
-  #     - php
+  # Nginx Service
+  nginx:
+    image: nginx:1.21
+    ports:
+      - 80:80
+    volumes:
+      - ./backend:/var/www/php
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
 
   # PHP Service
   php:
-    build: ./.docker/php
+    build: ./backend
     working_dir: /var/www/php
+    # ports:
+    #   - 8087:8888
     volumes:
       - ./backend:/var/www/php
     depends_on:
