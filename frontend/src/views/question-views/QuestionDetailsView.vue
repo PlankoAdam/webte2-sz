@@ -8,13 +8,13 @@
   <main
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
-    <div class="flex flex-col items-center p-8">
-      <div class="flex flex-col mb-16">
+    <div class="flex flex-col xl:flex-row xl:space-x-12 xl:justify-center items-center p-8">
+      <div class="flex flex-col mb-16 xl:m-0">
         <div
           @click="showModal = true"
-          class="size-fit bg-white p-2 rounded-md mb-2 hover:cursor-pointer"
+          class="size-fit bg-white p-2 rounded-md mb-2 hover:cursor-pointer hover:scale-110 transition-all ease-out"
         >
-          <img :src="data.qrsrc" alt="QR code" class="size-96" />
+          <img :src="data.qrsrc" alt="QR code" class="size-full" />
         </div>
         <h1 class="text-center text-4xl text-[var(--color-heading)] font-mono font-bold">
           {{ $route.params.id }}
