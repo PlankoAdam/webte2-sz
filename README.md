@@ -27,3 +27,4 @@
 [] Question close  
 [] Question export  
 [] User CRUD
+[✓] Dockerize backend
