@@ -1,22 +1,50 @@
 <template>
-  <main class="flex justify-center">
-    <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
-      <FormKit type="form" @submit="submitHandler">
-        <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
+  <main
+    class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
+  >
+    <div class="flex justify-center items-center w-full h-full">
+      <div class="max-w-fit bg-[var(--color-bg-soft)] p-8 rounded-xl">
         <FormKit
-          name="nans"
-          v-model="nans"
-          label="Number of answers"
-          type="number"
-          value="0"
-          validation="required"
-          min="0"
-          max="6"
-        ></FormKit>
-        <FormKit name="answers" type="group">
-          <FormKitSchema :schema="schema" :data="data"></FormKitSchema>
+          type="form"
+          @submit="submitHandler"
+          :actions="false"
+          #default="{ state: { valid } }"
+        >
+          <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
+          <FormKit name="subject" label="Subject" type="text" validation="required"></FormKit>
+          <h1 class="mb-2">Answers:</h1>
+          <div class="flex flex-row space-x-2 mb-4">
+            <button @click.prevent="nans--" class="mt-0 flex-1">
+              <v-icon name="fa-minus" scale="2"></v-icon>
+            </button>
+            <h1 class="content-center px-2 text-2xl">{{ data.answers.length }}</h1>
+            <button
+              @click.prevent="
+                () => {
+                  if (nans < 6) nans++
+                }
+              "
+              class="mt-0 flex-1"
+            >
+              <v-icon name="fa-plus" scale="2"></v-icon>
+            </button>
+          </div>
+          <!-- <FormKit
+            name="nans"
+            v-model="nans"
+            label="Number of answers"
+            type="number"
+            value="0"
+            validation="required"
+            min="0"
+            max="6"
+          ></FormKit> -->
+          <FormKit name="answers" type="group">
+            <FormKitSchema :schema="schema" :data="data"></FormKitSchema>
+          </FormKit>
+          <FormKit label="Create" type="submit" :disabled="!valid" />
         </FormKit>
-      </FormKit>
+      </div>
     </div>
   </main>
 </template>
@@ -55,6 +83,7 @@ const data = reactive({
 const submitHandler = (formData) => {
   const parsed = {
     question: formData.question,
+    subject: formData.subject,
     answers: Object.keys(formData.answers).map((key) => formData.answers[key])
   }
 
@@ -64,3 +93,17 @@ const submitHandler = (formData) => {
   // TODO get QR code from server
 }
 </script>
+
+<style scoped>
+button {
+  background-color: var(--color-bg-soft);
+  color: var(--color-text);
+  border: none;
+  @apply p-1 w-24 xl:w-full;
+}
+
+button:hover {
+  background-color: var(--color-bg-mute);
+  color: var(--color-heading);
+}
+</style>

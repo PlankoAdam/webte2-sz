@@ -2,25 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --vt-c-white: rgb(248 250 252);
-  --vt-c-white-soft: rgb(203 213 225);
-  --vt-c-white-mute: rgb(148 163 184);
+  --prim050: var(--color-slate-50);
+  --prim100: var(--color-slate-100);
+  --prim200: var(--color-slate-200);
+  --prim300: var(--color-slate-300);
+  --prim400: var(--color-slate-400);
+  --prim500: var(--color-slate-500);
+  --prim600: var(--color-slate-600);
+  --prim700: var(--color-slate-700);
+  --prim800: var(--color-slate-800);
+  --prim900: var(--color-slate-900);
+  --prim950: var(--color-slate-950);
 
-  --vt-c-black: rgb(15 23 42);
-  --vt-c-black-soft: rgb(30 41 59);
-  --vt-c-black-mute: rgb(51 65 85);
+  --acc050: var(--color-amber-50);
+  --acc100: var(--color-amber-100);
+  --acc200: var(--color-amber-200);
+  --acc300: var(--color-amber-300);
+  --acc400: var(--color-amber-400);
+  --acc500: var(--color-amber-500);
+  --acc600: var(--color-amber-600);
+  --acc700: var(--color-amber-700);
+  --acc800: var(--color-amber-800);
+  --acc900: var(--color-amber-900);
+  --acc950: var(--color-amber-950);
 
-  --vt-c-divider-light-1: rgb(148 163 184);
-  --vt-c-divider-light-2: rgb(148 163 184);
-  --vt-c-divider-dark-1: rgb(71 85 105);
-  --vt-c-divider-dark-2: rgb(100 116 139);
+  --color-good: var(--color-emerald-600);
+  --color-bad: var(--color-red-500);
+
+  --vt-c-white: var(--prim050);
+  --vt-c-white-soft: var(--prim300);
+  --vt-c-white-mute: var(--prim400);
+
+  --vt-c-black: var(--prim950);
+  --vt-c-black-soft: var(--prim800);
+  --vt-c-black-mute: var(--prim700);
+
+  --vt-c-divider-light-1: var(--vt-c-white-mute);
+  --vt-c-divider-light-2: var(--vt-c-white-mute);
+  --vt-c-divider-dark-1: var(--vt-c-black-mute);
+  --vt-c-divider-dark-2: var(--vt-c-black-mute);
 
   --vt-c-text-light-1: var(--vt-c-black);
-  --vt-c-text-light-2: var(--vt-c-divider-dark-1);
+  --vt-c-text-light-2: var(--vt-c-black-soft);
   --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: var(--vt-c-white-mute);
+  --vt-c-text-dark-2: var(--vt-c-white-soft);
+
+  --nav-h: 4rem;
 }
 
 /* semantic color variables for this project */

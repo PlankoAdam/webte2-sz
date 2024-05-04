@@ -6,7 +6,7 @@
           <RouterLink
             to="/dashboard/change-password"
             class="text-xl cursor-pointer hover:text-[var(--color-heading)] transition-all"
-            >Change password</RouterLink
+            >{{ langStore.t('Change password', 'Zmeniť heslo') }}</RouterLink
           >
         </div>
       </div>
@@ -19,4 +19,6 @@
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { useLanguageStore } from '@/stores/language'
+const langStore = useLanguageStore()
 </script>

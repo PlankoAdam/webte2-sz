@@ -1,4 +1,10 @@
 <template>
+  <QRModal
+    v-if="showModal"
+    @close="showModal = false"
+    :qrsrc="data.qrsrc"
+    :code="data.code"
+  ></QRModal>
   <main
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
@@ -28,57 +34,31 @@
           {{ data.code }}
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="$router.push(`/questions/${data.code}`)">{{ 'Cancel' }}</button>
+          <button @click="data.active = !data.active">
+            {{ data.active ? 'Deactivate' : 'Activate' }}
+          </button>
+          <button @click="$router.push(`/questions/edit/${data.code}`)">{{ 'Edit' }}</button>
+          <button class="btn-danger">{{ 'Delete' }}</button>
         </div>
       </div>
       <div class="flex flex-col">
-        <FormKit type="form" @submit="() => {}" :actions="false" #default="{ state: { valid } }">
-          <FormKit
-            name="question"
-            label="Question"
-            :value="data.question"
-            validation="required"
-          ></FormKit>
-          <FormKit
-            name="subject"
-            label="Subject"
-            :value="data.subject"
-            validation="required"
-          ></FormKit>
-          <h1 class="mb-2">Answers:</h1>
-          <div class="flex flex-row space-x-2 mb-4">
-            <button @click.prevent="data.answers.pop()" class="mt-0 flex-1">
-              <v-icon name="fa-minus" scale="2"></v-icon>
-            </button>
-            <h1 class="content-center px-2 text-2xl">{{ data.answers.length }}</h1>
-            <button
-              @click.prevent="
-                () => {
-                  if (data.answers.length < 6) data.answers.push('')
-                }
-              "
-              class="mt-0 flex-1"
-            >
-              <v-icon name="fa-plus" scale="2"></v-icon>
-            </button>
-          </div>
-          <FormKit type="group" label="Answers">
-            <FormKit
-              v-for="ans in data.answers"
-              :key="ans"
-              :value="ans"
-              validation="required"
-              validation-label="Answer"
-            ></FormKit>
-          </FormKit>
-          <FormKit label="Save" type="submit" :disabled="!valid" />
-        </FormKit>
+        <h1 class="text-6xl font-light mb-8 max-w-[32rem] min-w-fit">{{ data.question }}</h1>
+        <ul class="flex flex-col space-y-2 max-w-96">
+          <li
+            v-for="ans in data.answers"
+            :key="ans"
+            class="p-1 px-4 rounded-sm bg-[var(--color-bg-soft)]"
+          >
+            {{ ans }}
+          </li>
+        </ul>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
+import QRModal from '@/components/QRModal.vue'
 import { watch } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -88,11 +68,10 @@ const route = useRoute()
 
 const dummyData = {
   code: route.params.id,
-  question: 'Lorem ipsum?',
-  subject: 'webte',
+  question: 'Is this a really long question for testing?',
   qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
   active: false,
-  answers: ['ans1', 'ans2', 'ans3']
+  answers: ['answer 1', 'ans2', 'ans3']
 }
 
 // TODO update data on route change
