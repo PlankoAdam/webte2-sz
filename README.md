@@ -26,5 +26,5 @@
 [] Question copy  
 [] Question close  
 [] Question export  
-[] User CRUD
+[] User CRUD  
 [✓] Dockerize backend
