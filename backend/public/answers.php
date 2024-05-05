@@ -42,3 +42,18 @@ $app->post('/answer', function (Request $request, Response $response) use ($pdo)
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 });
+
+// GET route to retrieve all answers with a specific code
+$app->get('/answer/{code}', function (Request $request, Response $response, $args) use ($pdo) {
+    $code = $args['code'];
+    $sql = "SELECT * FROM answers WHERE code = :code";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':code' => $code]);
+    $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Return response as JSON
+    $response->getBody()->write(json_encode($answers));
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus(200);
+});
