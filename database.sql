@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: May 04, 2024 at 10:54 PM
+-- Generation Time: May 05, 2024 at 03:09 PM
 -- Server version: 8.0.32
 -- PHP Version: 8.2.8
 
@@ -40,7 +40,8 @@ CREATE TABLE `answers` (
 INSERT INTO `answers` (`code`, `answer`, `date_created`) VALUES
 ('asdfg', '[value-2]', '2024-05-05 00:43:30'),
 ('qwert', 'answer baby', '2024-05-04 22:49:38'),
-('qwery', 'answer baby 2', '2024-05-05 00:52:52');
+('qwery', 'answer baby 2', '2024-05-05 00:52:52'),
+('qwery', 'answer baby 2', '2024-05-05 13:41:58');
 
 -- --------------------------------------------------------
 
@@ -58,6 +59,15 @@ CREATE TABLE `questions` (
   `date_end` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `questions`
+--
+
+INSERT INTO `questions` (`id`, `code`, `subject_id`, `user_id`, `question`, `date_start`, `date_end`) VALUES
+(4, 'abcde', 1, 1, '[value-4]', '2000-01-01 00:00:00', '2000-01-01 00:00:00'),
+(5, 'abcde', 1, 1, '[value-4]', '2000-01-01 00:00:00', '2024-05-05 15:58:21'),
+(6, 'qwert', 2, 3, 'preco ja?', '2024-05-05 15:21:43', '9999-12-31 23:59:59');
+
 -- --------------------------------------------------------
 
 --
@@ -66,8 +76,18 @@ CREATE TABLE `questions` (
 
 CREATE TABLE `subjects` (
   `id` int NOT NULL,
-  `subject` varchar(3) NOT NULL
+  `subject` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `subjects`
+--
+
+INSERT INTO `subjects` (`id`, `subject`) VALUES
+(1, 'WEBTE2'),
+(2, 'VSA'),
+(3, 'UHD'),
+(4, 'AS');
 
 -- --------------------------------------------------------
 
@@ -122,13 +142,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
