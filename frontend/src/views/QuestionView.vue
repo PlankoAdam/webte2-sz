@@ -49,7 +49,7 @@ const code = route.params.code
 const questionData = ref({
   code,
   question: 'Lorem ipsum dolor sit amet?',
-  // answers: []
+  // answers: [],
   answers: ['answer 1', 'answer 2', 'answer 3']
 })
 

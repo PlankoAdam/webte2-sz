@@ -27,4 +27,6 @@
 [] Question close  
 [] Question export  
 [] User CRUD  
-[✓] Dockerize backend
+[✓] Dockerize backend  
+  
+SWAGGER LINK: https://app.swaggerhub.com/apis-docs/JURIKFLORIAN/webte2_sz/1.0.0
