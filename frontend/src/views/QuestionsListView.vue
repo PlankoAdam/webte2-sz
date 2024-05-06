@@ -1,27 +1,33 @@
 <template>
-  <main class="flex justify-center">
-    <div class="bg-gradient-to-b from-[var(--color-bg-soft)] p-8 rounded-xl">
+  <main class="flex lg:flex-row flex-col lg:min-w-[100vw]">
+    <div
+      class="p-4 mt-[var(--nav-h)] items-center lg:min-w-[28rem] min-w-[100vw] fixed top-0 bottom-0 overflow-y-scroll bg-[var(--prim300)] dark:bg-[var(--prim800)]"
+    >
       <RouterLink to="/questions/create">
-        <div class="create-new mb-16">
-          <div class="plus-sign">
-            <v-icon name="fa-plus" scale="4"></v-icon>
+        <div
+          class="flex flex-row justify-center items-center space-x-4 w-full h-24 p-4 transition-all cursor-pointer hover:scale-[103%] ease-out duration-100 mb-8"
+        >
+          <div
+            class="bg-[var(--color-text)] text-[var(--prim300)] dark:text-[var(--prim800)] rounded-md"
+          >
+            <v-icon name="fa-plus" scale="3"></v-icon>
           </div>
-          <div class="content-center text-3xl">
+          <div class="content-center text-3xl font-light">
             {{ langStore.t('Create new question', 'Vytvoriť novú otázku') }}
           </div>
         </div>
       </RouterLink>
       <div class="flex flex-col space-y-4">
-        <QuestionListItem
-          v-for="q in questions"
-          :key="q.code"
-          :code="q.code"
-          :question="q.question"
-          :qrsrc="q.qrsrc"
-          :active="q.active"
-        ></QuestionListItem>
+        <RouterLink v-for="q in questions" :key="q.code" :to="`/questions/${q.code}`">
+          <QuestionListItem
+            :code="q.code"
+            :question="q.question"
+            :active="q.active"
+          ></QuestionListItem>
+        </RouterLink>
       </div>
     </div>
+    <RouterView></RouterView>
   </main>
 </template>
 
@@ -33,7 +39,7 @@ import { ref } from 'vue'
 
 const langStore = useLanguageStore()
 
-const questions = ref([
+const dummyData = [
   {
     code: 'abc12',
     question: 'Lorem ipsum?',
@@ -52,36 +58,14 @@ const questions = ref([
     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
     active: true
   }
+]
+const questions = ref([
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData,
+  ...dummyData
 ])
 </script>
-
-<style scoped>
-.create-new {
-  @apply flex flex-row space-x-8 rounded-lg w-[32rem] p-4 transition-all duration-300 cursor-pointer;
-
-  background-image: linear-gradient(
-    180deg,
-    var(--color-bg-mute),
-    var(--color-bg-mute) 51%,
-    var(--color-text)
-  );
-  background-position: 0 var(--y, 0);
-  background-size: 200% 200%;
-}
-
-.create-new:hover {
-  color: var(--color-heading);
-  @apply shadow-black shadow-xl;
-  --y: 100%;
-}
-
-.create-new:hover > .plus-sign {
-  color: var(--color-text);
-}
-
-.plus-sign {
-  background-color: var(--color-bg);
-  color: var(--color-bg-mute);
-  @apply min-w-24 min-h-24 rounded-lg content-center text-center transition-all duration-500;
-}
-</style>

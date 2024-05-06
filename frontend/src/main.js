@@ -5,9 +5,9 @@ import { createPinia } from 'pinia'
 import { plugin, defaultConfig } from '@formkit/vue'
 
 import { OhVueIcon, addIcons } from 'oh-vue-icons'
-import { FaPlus } from 'oh-vue-icons/icons'
+import { FaPlus, FaMinus } from 'oh-vue-icons/icons'
 
-addIcons(FaPlus)
+addIcons(FaPlus, FaMinus)
 
 import App from './App.vue'
 import router from './router'
