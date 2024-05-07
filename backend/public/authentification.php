@@ -3,7 +3,6 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 
 
 function getErrorResponse(Response $response, int $code, string $message) {
@@ -53,7 +52,7 @@ $app->post('/login', function (Request $request, Response $response) use ($pdo, 
 });
 
 
-
+// POST route to register a new user
 $app->post('/register', function (Request $request, Response $response) use ($pdo) {
     $body = $request->getBody()->getContents();
     $data = json_decode($body, true);
