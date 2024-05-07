@@ -1,5 +1,12 @@
 # WEBTE2 - Semestrálne Zadanie
 
+## How to deploy
+
+```
+cd webte2-sz
+docker compose up -d --build
+```
+
 ## TODOs
 
 [✓] Language switching  
