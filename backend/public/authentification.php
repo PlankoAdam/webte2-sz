@@ -51,3 +51,39 @@ $app->post('/login', function (Request $request, Response $response) use ($pdo, 
         return getErrorResponse($response, 500, 'Database error.');
     }
 });
+
+
+
+$app->post('/register', function (Request $request, Response $response) use ($pdo) {
+    $body = $request->getBody()->getContents();
+    $data = json_decode($body, true);
+
+    if (!isset($array['email']) || !isset($array['name']) || !isset($array['surname']) || !isset($array['password'])) {
+        return getErrorResponse($response, 400, 'The format of the request body is invalid.');
+    }
+
+    $hashed_password = password_hash($data['password'], PASSWORD_ARGON2ID);
+
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return getErrorResponse($response, 400, 'Email already in use.');
+        }
+
+        $stmt = $pdo->prepare("INSERT INTO users (name, surname, email, password) VALUES (:name, :surname, :email, :password)");
+        $stmt->bindParam(":name", $data['name'], PDO::PARAM_STR);
+        $stmt->bindParam(":surname", $data['surname'], PDO::PARAM_STR);
+        $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
+        $stmt->bindParam(":password", $hashed_password, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $response->getBody()->write(json_encode(['message' => "Registration was successful."]));
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(201);
+    } catch (PDOException $e) {
+        return getErrorResponse($response, 500, 'Database error.');
+    }
+});
