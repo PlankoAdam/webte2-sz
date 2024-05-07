@@ -10,7 +10,7 @@ use Firebase\JWT\Key;
 // Middleware for checking JWT in the request header
 // if JWT is valid, adds attribute "user_id" to the request and passes it to the handler method
 // else returns 401 with error message to the client
-class ExampleBeforeMiddleware
+class JWTAuthMiddleware
 {
 
     public static $secretKey;
