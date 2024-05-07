@@ -2,6 +2,10 @@ version: "3.8"
 
 # Services
 services:
+  frontend:
+    build: ./frontend
+    ports:
+      - 7777:80
   # Nginx Service
   nginx:
     image: nginx:1.21
