@@ -54,9 +54,12 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useLanguageStore } from '@/stores/language'
 import { useUserStore } from '@/stores/user'
+import http from './http'
 
 const langStore = useLanguageStore()
 const userStore = useUserStore()
+
+http.get('/question').then((res) => console.log(res.data))
 </script>
 
 <style scoped>
