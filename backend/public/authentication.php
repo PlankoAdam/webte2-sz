@@ -18,7 +18,7 @@ $app->post('/login', function (Request $request, Response $response) use ($pdo, 
     $body = $request->getBody()->getContents();
     $data = json_decode($body, true);
 
-    if (!isset($array['email']) || !isset($array['password'])) {
+    if (!isset($data['email']) || !isset($data['password'])) {
         return getErrorResponse($response, 400, 'The format of the request body is invalid.');
     }
 
@@ -57,7 +57,7 @@ $app->post('/register', function (Request $request, Response $response) use ($pd
     $body = $request->getBody()->getContents();
     $data = json_decode($body, true);
 
-    if (!isset($array['email']) || !isset($array['name']) || !isset($array['surname']) || !isset($array['password'])) {
+    if (!isset($data['email']) || !isset($data['name']) || !isset($data['surname']) || !isset($data['password'])) {
         return getErrorResponse($response, 400, 'The format of the request body is invalid.');
     }
 

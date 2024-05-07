@@ -9,7 +9,7 @@ date_default_timezone_set('Europe/Bratislava');
 
 $secretKey = base64_encode(random_bytes(32));
 
-require __DIR__ . '/connection.php';
+require __DIR__ . '/auth_middleware.php';
 
 JWTAuthMiddleware::$secretKey = $secretKey;
 
