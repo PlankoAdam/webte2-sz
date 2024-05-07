@@ -28,7 +28,7 @@
           {{ data.code }}
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="$router.push(`/questions/${data.code}`)">{{ 'Cancel' }}</button>
+          <button @click="$router.push(`/questions/${data.id}`)">{{ 'Cancel' }}</button>
         </div>
       </div>
       <div class="flex flex-col">
@@ -36,13 +36,13 @@
           <FormKit
             name="question"
             label="Question"
-            :value="data.question"
+            v-model="data.question"
             validation="required"
           ></FormKit>
           <FormKit
             name="subject"
             label="Subject"
-            :value="data.subject"
+            v-model="data.subject"
             validation="required"
           ></FormKit>
           <h1 class="mb-2">Answers:</h1>
@@ -82,27 +82,40 @@
 import { watch } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import http from '@/http'
 // TODO get data from server
 
 const route = useRoute()
 
-const dummyData = {
-  code: route.params.id,
-  question: 'Lorem ipsum?',
-  subject: 'webte',
-  qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-  active: false,
-  answers: ['ans1', 'ans2', 'ans3']
+// TODO update data on route change
+
+const data = ref({
+  answers: []
+})
+const showModal = ref(false)
+
+const getData = async (id) => {
+  const allQuestions = (await http.get('/question')).data
+  const newData = allQuestions.filter((el) => el.id == id)[0]
+  const answers = (await http.get(`/answer/${newData.code}`)).data.map((el) => el.answer)
+  newData.answers = answers ? answers : []
+
+  newData.subject = 'TODO'
+
+  newData.active = Date.parse(newData.date_end) > Date.now()
+  newData.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${newData.code}`
+
+  data.value = newData
 }
 
-// TODO update data on route change
+getData(route.params.id)
+
 watch(
   () => route.params.id,
-  (newId) => (dummyData.code = newId)
+  (newId) => {
+    getData(newId)
+  }
 )
-
-const data = ref(dummyData)
-const showModal = ref(false)
 </script>
 
 <style scoped>

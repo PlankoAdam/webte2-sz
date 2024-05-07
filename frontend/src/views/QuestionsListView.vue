@@ -18,11 +18,11 @@
         </div>
       </RouterLink>
       <div class="flex flex-col space-y-4">
-        <RouterLink v-for="q in questions" :key="q.code" :to="`/questions/${q.code}`">
+        <RouterLink v-for="q in questions" :key="q.code" :to="`/questions/${q.id}`">
           <QuestionListItem
             :code="q.code"
             :question="q.question"
-            :active="q.active"
+            :active="Date.parse(q.date_end) > Date.now()"
           ></QuestionListItem>
         </RouterLink>
       </div>
@@ -36,36 +36,34 @@ import { useLanguageStore } from '@/stores/language'
 import QuestionListItem from '@/components/QuestionListItem.vue'
 import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
+import http from '@/http'
 
 const langStore = useLanguageStore()
 
-const dummyData = [
-  {
-    code: 'abc12',
-    question: 'Lorem ipsum?',
-    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-    active: true
-  },
-  {
-    code: 'gdr34',
-    question: 'Dolor sit amet?',
-    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-    active: false
-  },
-  {
-    code: '1594f',
-    question: 'Qsdohsdgsdf?',
-    qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-    active: true
-  }
-]
-const questions = ref([
-  ...dummyData,
-  ...dummyData,
-  ...dummyData,
-  ...dummyData,
-  ...dummyData,
-  ...dummyData,
-  ...dummyData
-])
+// const dummyData = [
+//   {
+//     code: 'abc12',
+//     question: 'Lorem ipsum?',
+//     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+//     active: true
+//   },
+//   {
+//     code: 'gdr34',
+//     question: 'Dolor sit amet?',
+//     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+//     active: false
+//   },
+//   {
+//     code: '1594f',
+//     question: 'Qsdohsdgsdf?',
+//     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+//     active: true
+//   }
+// ]
+
+const questions = ref([])
+
+http.get('/question').then((res) => {
+  questions.value = res.data
+})
 </script>

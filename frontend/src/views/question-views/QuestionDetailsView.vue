@@ -37,7 +37,7 @@
           <button @click="data.active = !data.active">
             {{ data.active ? 'Deactivate' : 'Activate' }}
           </button>
-          <button @click="$router.push(`/questions/edit/${data.code}`)">{{ 'Edit' }}</button>
+          <button @click="$router.push(`/questions/edit/${data.id}`)">{{ 'Edit' }}</button>
           <button class="btn-danger">{{ 'Delete' }}</button>
         </div>
       </div>
@@ -62,26 +62,45 @@ import QRModal from '@/components/QRModal.vue'
 import { watch } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import http from '@/http'
 // TODO get data from server
 
 const route = useRoute()
 
-const dummyData = {
-  code: route.params.id,
-  question: 'Is this a really long question for testing?',
-  qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-  active: false,
-  answers: ['answer 1', 'ans2', 'ans3']
-}
+// const dummyData = {
+//   code: route.params.id,
+//   question: 'Is this a really long question for testing?',
+//   qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
+//   active: false,
+//   answers: ['answer 1', 'ans2', 'ans3']
+// }
 
 // TODO update data on route change
+const data = ref({})
+const showModal = ref(false)
+
+const getData = async (id) => {
+  const allQuestions = (await http.get('/question')).data
+  const newData = allQuestions.filter((el) => el.id == id)[0]
+  const answers = (await http.get(`/answer/${newData.code}`)).data.map((el) => el.answer)
+  newData.answers = answers ? answers : []
+
+  newData.subject = 'TODO'
+
+  newData.active = Date.parse(newData.date_end) > Date.now()
+  newData.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${newData.code}`
+
+  data.value = newData
+}
+
+getData(route.params.id)
+
 watch(
   () => route.params.id,
-  (newId) => (dummyData.code = newId)
+  (newId) => {
+    getData(newId)
+  }
 )
-
-const data = ref(dummyData)
-const showModal = ref(false)
 </script>
 
 <style scoped>
