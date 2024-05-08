@@ -88,3 +88,25 @@ $app->put('/question/{id}', function (Request $request, Response $response, $arg
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 });
+
+// GET route to retrieve a question by code
+$app->get('/question/{code}', function (Request $request, Response $response, $args) use ($pdo) {
+    $code = $args['code'];
+
+    $sql = "SELECT * FROM questions WHERE code = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$code]);
+    $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!$questions) {
+        // If no questions with the given code are found, return 404 Not Found
+        $response->getBody()->write(json_encode(["error" => "No questions found with the given code"]));
+        return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+    }
+
+    // Return response as JSON
+    $response->getBody()->write(json_encode($questions));
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus(200);
+});
