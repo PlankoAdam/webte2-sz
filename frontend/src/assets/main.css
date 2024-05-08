@@ -17,6 +17,7 @@ body {
 /* } */
 
 input,
+select,
 textarea {
   border: 2px solid var(--color-bg-mute);
   background-color: var(--color-bg);
@@ -29,6 +30,7 @@ input[type='checkbox'] {
 }
 
 input:focus,
+select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--color-text);

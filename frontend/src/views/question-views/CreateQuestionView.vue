@@ -15,6 +15,7 @@
             name="subject_id"
             label="Subject"
             type="select"
+            placeholder="Select a subject"
             :options="
               subjects.map((el) => {
                 return {
@@ -42,16 +43,6 @@
               <v-icon name="fa-plus" scale="2"></v-icon>
             </button>
           </div>
-          <!-- <FormKit
-            name="nans"
-            v-model="nans"
-            label="Number of answers"
-            type="number"
-            value="0"
-            validation="required"
-            min="0"
-            max="6"
-          ></FormKit> -->
           <FormKit name="answers" type="group">
             <FormKitSchema :schema="schema" :data="data"></FormKitSchema>
           </FormKit>
