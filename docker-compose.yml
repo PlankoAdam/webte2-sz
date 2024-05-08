@@ -28,6 +28,9 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    environment:
+      - SECRET_JWT_KEY=velice_tajny_klucik
+    command: php ./db/admins.php
 
   # MySQL Service
   mysql:

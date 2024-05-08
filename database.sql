@@ -100,6 +100,7 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `admin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -107,10 +108,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `name`, `surname`, `admin`) VALUES
-(1, 'eyo', 'John', 'Doe', 1),
-(3, '[value-1]', '[value-3]', '[value-4]', 0),
-(4, 'example@example.com', 'John', 'Doe', 0);
+INSERT INTO `users` (`id`, `email`, `name`, `surname`, `password`, `admin`) VALUES
+(1, 'eyo', 'John', 'Doe', 'hashed_heslo1', 1),
+(3, '[value-1]', '[value-3]', '[value-4]', 'hashed_heslo2', 0),
+(4, 'example@example.com', 'John', 'Doe', 'hashed_heslo3', 0);
 
 --
 -- Indexes for dumped tables
