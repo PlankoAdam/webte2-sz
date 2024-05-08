@@ -10,7 +10,6 @@ $app->post('/users', function (Request $request, Response $response) use ($pdo) 
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-
     $sql = "INSERT INTO users (email, name, surname, admin) VALUES (:email, :name, :surname, :admin)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -19,14 +18,22 @@ $app->post('/users', function (Request $request, Response $response) use ($pdo) 
         ':surname' => $data['surname'],
         ':admin' => $data['admin']
     ]);
-    // Encode the response data as JSON
-    $response->getBody()->write(json_encode(['message' => 'User created']));
+
+    // Get the ID of the newly inserted user
+    $newUserId = $pdo->lastInsertId();
+
+    // Encode the response data as JSON including the ID of the newly inserted user
+    $responseData = [
+        'id' => $newUserId
+    ];
+    $response->getBody()->write(json_encode($responseData));
 
     // Set the response headers and status code
     return $response
-    ->withHeader('Content-Type', 'application/json')
-    ->withStatus(200);
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus(200);
 });
+
 
 // Get all users
 $app->get('/users', function (Request $request, Response $response) use ($pdo) {

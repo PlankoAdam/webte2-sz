@@ -38,7 +38,6 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-
     // Set current time as date_start
     $date_start = date('Y-m-d H:i:s');
 
@@ -58,12 +57,20 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
         ':date_end' => $date_end
     ]);
 
-    // Return success message
-    $response->getBody()->write(json_encode(['message' => 'Question created']));
+    // Get the ID of the newly inserted question
+    $newQuestionId = $pdo->lastInsertId();
+
+    // Return a message with the ID of the newly inserted question
+    $responseData = [
+        'id' => $newQuestionId
+    ];
+    $response->getBody()->write(json_encode($responseData));
+    
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 });
+
 
 
 // PUT route to update the date_end of a question by ID
