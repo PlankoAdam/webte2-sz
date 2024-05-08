@@ -10,8 +10,8 @@ export const useUserStore = defineStore('user', () => {
 
     user.value = {
       username: userData.username,
-      email: 'example@todo.com',
-      admin: false
+      email: 'example@todo.com', // TODO
+      admin: userData.username == 'admin' // TODO
     }
 
     router.push('/')

@@ -13,6 +13,12 @@
             class="text-xl cursor-pointer hover:text-[var(--color-heading)] transition-all"
             >{{ langStore.t('Change password', 'Zmeniť heslo') }}</RouterLink
           >
+          <RouterLink
+            v-if="userStore.user.admin"
+            to="/dashboard/users"
+            class="text-xl cursor-pointer hover:text-[var(--color-heading)] transition-all"
+            >{{ langStore.t('List of users', 'Zoznam používateľov') }}</RouterLink
+          >
         </div>
       </div>
       <div class="ms-8">
@@ -25,5 +31,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { useLanguageStore } from '@/stores/language'
+import { useUserStore } from '@/stores/user'
+
 const langStore = useLanguageStore()
+const userStore = useUserStore()
 </script>
