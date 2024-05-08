@@ -8,18 +8,27 @@
         <FormKit
           type="form"
           :submit-label="langStore.t('Sign up', 'Zaregistrovať')"
+          @submit="signUp"
           :actions="false"
           #default="{ state: { valid } }"
         >
           <FormKit
+            name="email"
             type="email"
             :label="langStore.t('E-mail', 'E-mail')"
             validation="required|email"
           ></FormKit>
           <FormKit
+            name="name"
             type="text"
-            :label="langStore.t('User name', 'Používateľské meno')"
-            validation="required|length:4,16"
+            :label="langStore.t('First name', 'Meno')"
+            validation="required"
+          ></FormKit>
+          <FormKit
+            name="surname"
+            type="text"
+            :label="langStore.t('Last name', 'Priezvisko')"
+            validation="required"
           ></FormKit>
           <FormKit
             name="password"
@@ -51,6 +60,24 @@
 <script setup>
 import { FormKit } from '@formkit/vue'
 import { useLanguageStore } from '@/stores/language'
+import { useUserStore } from '@/stores/user'
+import router from '@/router'
 
 const langStore = useLanguageStore()
+const userStore = useUserStore()
+
+const signUp = async (formData, node) => {
+  const statusCode = await userStore.register(formData)
+  console.log(statusCode)
+
+  if (statusCode == 400) {
+    node.setErrors([], {
+      email: 'That email is already registered'
+    })
+  } else if (statusCode == 201) {
+    router.push('/login')
+  } else {
+    console.error(statusCode)
+  }
+}
 </script>

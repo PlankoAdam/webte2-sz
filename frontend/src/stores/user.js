@@ -1,20 +1,25 @@
 import router from '@/router'
 import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
+import http from '@/http'
 
 export const useUserStore = defineStore('user', () => {
   const user = useStorage('user', {})
 
-  const login = (userData) => {
+  const login = async (userData) => {
     // user login demo
+    const res = await http.post('/user/login')
 
-    user.value = {
-      username: userData.username,
-      email: 'example@todo.com', // TODO
-      admin: userData.username == 'admin' // TODO
+    if (res.status == 200) {
+      user.value = {
+        email: userData.email, // TODO
+        admin: false // TODO
+      }
+      router.push('/')
+    } else {
+      console.error(res)
+      return false
     }
-
-    router.push('/')
   }
 
   const logout = () => {
@@ -22,5 +27,20 @@ export const useUserStore = defineStore('user', () => {
     router.push('/')
   }
 
-  return { user, login, logout }
+  const register = async (userData) => {
+    const res = await http
+      .post('/user/register', {
+        email: userData.email,
+        name: userData.name,
+        surname: userData.surname,
+        password: userData.password
+      })
+      .catch((err) => {
+        return err.response
+      })
+
+    return res.status
+  }
+
+  return { user, login, logout, register }
 })

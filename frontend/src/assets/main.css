@@ -54,7 +54,8 @@ button:disabled {
   border-color: var(--color-bad);
 }
 
-.formkit-outer[data-invalid='true'] ul {
+.formkit-outer[data-invalid='true'] ul,
+.formkit-outer[data-errors='true'] ul {
   color: var(--color-bad);
   @apply absolute -translate-y-6 text-sm truncate hover:max-w-fit max-w-60 select-none;
 }
