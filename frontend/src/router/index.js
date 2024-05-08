@@ -9,6 +9,7 @@ import CreateQuestionView from '@/views/question-views/CreateQuestionView.vue'
 import EditQuestionView from '@/views/question-views/EditQuestionView.vue'
 import QuestionView from '@/views/QuestionView.vue'
 import QuestionDetailsView from '@/views/question-views/QuestionDetailsView.vue'
+import UserProfileView from '@/views/dashboard-views/UserProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +61,10 @@ const router = createRouter({
         {
           path: 'change-password',
           component: ChangePasswordView
+        },
+        {
+          path: 'profile',
+          component: UserProfileView
         }
       ]
     }

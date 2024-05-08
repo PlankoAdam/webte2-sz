@@ -10,6 +10,7 @@ export const useUserStore = defineStore('user', () => {
 
     user.value = {
       username: userData.username,
+      email: 'example@todo.com',
       admin: false
     }
 
