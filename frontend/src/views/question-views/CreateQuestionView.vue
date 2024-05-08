@@ -11,7 +11,20 @@
           #default="{ state: { valid } }"
         >
           <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
-          <FormKit name="subject" label="Subject" type="text" validation="required"></FormKit>
+          <FormKit
+            name="subject_id"
+            label="Subject"
+            type="select"
+            :options="
+              subjects.map((el) => {
+                return {
+                  label: el.subject,
+                  value: el.id
+                }
+              })
+            "
+            validation="required"
+          ></FormKit>
           <h1 class="mb-2">Answers:</h1>
           <div class="flex flex-row space-x-2 mb-4">
             <button @click.prevent="nans--" class="mt-0 flex-1">
@@ -50,6 +63,7 @@
 </template>
 
 <script setup>
+import http from '@/http'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { reactive } from 'vue'
@@ -69,6 +83,12 @@ const schema = [
 ]
 
 const nans = ref(0)
+const subjects = ref([])
+
+http.get('/subject').then((res) => {
+  subjects.value = res.data
+  console.log(subjects.value)
+})
 
 const data = reactive({
   answers: computed(() => {
@@ -81,13 +101,26 @@ const data = reactive({
 })
 
 const submitHandler = (formData) => {
+  const testCode = 'TODO1'
+  const testUserId = 1
+
   const parsed = {
     question: formData.question,
-    subject: formData.subject,
-    answers: Object.keys(formData.answers).map((key) => formData.answers[key])
+    subject_id: formData.subject_id,
+    code: testCode,
+    user_id: testUserId
   }
-
+  http.post('/question', parsed)
   console.log(parsed)
+
+  const answers = Object.keys(formData.answers).map((key) => formData.answers[key])
+  answers.forEach((ans) => {
+    http.post('/answer', {
+      code: testCode,
+      answer: ans
+    })
+    console.log(ans)
+  })
 
   // TODO get unique code from server
   // TODO get QR code from server
