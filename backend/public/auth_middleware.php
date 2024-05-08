@@ -3,12 +3,13 @@
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Response as ResponseObj;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 
 // Middleware for checking JWT in the request header
-// if JWT is valid, adds attribute "user_id" to the request and passes it to the handler method
+// if JWT is valid, adds attribute "user_id" to the request and passes it to the handler method (retrieve like this: $user_id = $request->getAttribute('user_id');)
 // else returns 401 with error message to the client
 // add this middleware to a route like this:
 // $app->get('/', function () { ... })->add(new JWTAuthMiddleware());
@@ -24,7 +25,8 @@ class JWTAuthMiddleware
 
         if ($jwt) {
             try {
-                $decoded_jwt = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
+                $decoded_jwt = JWT::decode($jwt, new Key(self::$secretKey, 'HS256'));
+                $decoded_jwt = (array) $decoded_jwt;
                 if ($decoded_jwt['expiration'] < time()) {
                     return $this->getErrorResponse(401, 'Authentication token is expired');
                 }
@@ -38,8 +40,9 @@ class JWTAuthMiddleware
         }
     }
 
-    function getErrorResponse(int $code, string $message) {
-        $response = new Response();
+    function getErrorResponse(int $code, string $message): Response
+    {
+        $response = new ResponseObj();
         $response->getBody()->write(json_encode(['message' => $message]));
         return $response
             ->withHeader('Content-Type', 'application/json')

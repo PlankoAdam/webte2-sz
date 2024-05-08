@@ -7,7 +7,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 date_default_timezone_set('Europe/Bratislava');
 
-$secretKey = base64_encode(random_bytes(32));
+$secretKey = $_ENV['SECRET_JWT_KEY'];
 
 require __DIR__ . '/auth_middleware.php';
 

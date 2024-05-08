@@ -4,7 +4,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Firebase\JWT\JWT;
 
-
 function getErrorResponse(Response $response, int $code, string $message) {
     $response->getBody()->write(json_encode(['message' => $message]));
     return $response
@@ -23,11 +22,11 @@ $app->post('/login', function (Request $request, Response $response) use ($pdo, 
     }
 
     try {
-        $stmt = $pdo->prepare("SELECT name, surname, email, password FROM users WHERE email = :email");
+        $stmt = $pdo->prepare("SELECT id, name, surname, email, password FROM users WHERE email = :email");
         $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
         $stmt->execute();
         if ($stmt->rowCount() == 1) {
-            $row = $stmt->fetch();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $hashed_password = $row['password'];
 
             if (password_verify($data['password'], $hashed_password)) {
@@ -71,7 +70,7 @@ $app->post('/register', function (Request $request, Response $response) use ($pd
             return getErrorResponse($response, 400, 'Email already in use.');
         }
 
-        $stmt = $pdo->prepare("INSERT INTO users (name, surname, email, password) VALUES (:name, :surname, :email, :password)");
+        $stmt = $pdo->prepare("INSERT INTO users (name, surname, email, password, admin) VALUES (:name, :surname, :email, :password, 0)");
         $stmt->bindParam(":name", $data['name'], PDO::PARAM_STR);
         $stmt->bindParam(":surname", $data['surname'], PDO::PARAM_STR);
         $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
@@ -86,3 +85,4 @@ $app->post('/register', function (Request $request, Response $response) use ($pd
         return getErrorResponse($response, 500, 'Database error.');
     }
 });
+
