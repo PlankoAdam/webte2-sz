@@ -44,12 +44,15 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     // Set dummy value for date_end
     $date_end = '9999-12-31 23:59:59';
 
+    // Generate a unique 5-character code
+    $code = generateUniqueCode($pdo);
+
     // Insert new question into the database
     $sql = "INSERT INTO questions (code, subject_id, user_id, question, date_start, date_end) 
             VALUES (:code, :subject_id, :user_id, :question, :date_start, :date_end)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':code' => $data['code'],
+        ':code' => $code,
         ':subject_id' => $data['subject_id'],
         ':user_id' => $data['user_id'],
         ':question' => $data['question'],
@@ -62,7 +65,8 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
 
     // Return a message with the ID of the newly inserted question
     $responseData = [
-        'id' => $newQuestionId
+        'id' => $newQuestionId,
+        'code' => $code
     ];
     $response->getBody()->write(json_encode($responseData));
     
@@ -70,6 +74,33 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 });
+
+// Function to generate a unique 5-character code consisting of letters and numbers
+function generateUniqueCode($pdo) {
+    $code = null;
+    do {
+        // Generate a random 5-character code consisting of letters and numbers
+        $code = generateRandomString(5);
+        // Check if the code already exists in the database
+        $sql = "SELECT COUNT(*) FROM questions WHERE code = :code";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':code' => $code]);
+        $count = $stmt->fetchColumn();
+    } while ($count > 0); // If code already exists, generate another one
+    return $code;
+}
+
+// Function to generate a random string of specified length consisting of letters and numbers
+function generateRandomString($length) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    $max = strlen($characters) - 1;
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[mt_rand(0, $max)];
+    }
+    return $randomString;
+}
+
 
 
 
