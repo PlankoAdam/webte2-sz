@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 // if user is admin, passes the request to the handler method
 // else returns 401 with error message to the client
 // add this middleware to a route like this:
-// $app->get('/', function () { ... })->add(new JWTAuthMiddleware())->add(new AdminAuthMiddleware());
+// $app->get('/', function () { ... })->add(new AdminAuthMiddleware())->add(new JWTAuthMiddleware());
 class AdminAuthMiddleware
 {
     public function __invoke(Request $request, RequestHandler $handler): Response
