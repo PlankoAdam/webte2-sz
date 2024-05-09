@@ -28,19 +28,19 @@ class JWTAuthMiddleware
                 $decoded_jwt = JWT::decode($jwt, new Key(self::$secretKey, 'HS256'));
                 $decoded_jwt = (array) $decoded_jwt;
                 if ($decoded_jwt['expiration'] < time()) {
-                    return $this->getErrorResponse(401, 'Authentication token is expired');
+                    return self::getErrorResponse(401, 'Authentication token is expired');
                 }
                 $request = $request->withAttribute('user_id', $decoded_jwt['user_id']);
                 return $handler->handle($request);
             } catch (\Exception $e) {
-                return $this->getErrorResponse(401, 'Authentication token is invalid');
+                return self::getErrorResponse(401, 'Authentication token is invalid');
             }
         } else {
-            return $this->getErrorResponse(401, 'Authentication token missing');
+            return self::getErrorResponse(401, 'Authentication token missing');
         }
     }
 
-    function getErrorResponse(int $code, string $message): Response
+    public static function getErrorResponse(int $code, string $message): Response
     {
         $response = new ResponseObj();
         $response->getBody()->write(json_encode(['message' => $message]));
