@@ -22,7 +22,7 @@ $app->post('/user/login', function (Request $request, Response $response) use ($
     }
 
     try {
-        $stmt = $pdo->prepare("SELECT id, name, surname, email, password FROM users WHERE email = :email");
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
         $stmt->execute();
         if ($stmt->rowCount() == 1) {
@@ -35,7 +35,16 @@ $app->post('/user/login', function (Request $request, Response $response) use ($
                     'expiration' => time() + 3600
                 ];
                 $jwt = JWT::encode($jwt_payload, $secretKey, 'HS256');
-                $response->getBody()->write(json_encode(['jwt' => $jwt]));
+                $response->getBody()->write(json_encode([
+                    'jwt' => $jwt,
+                    'user' => [
+                        'name' => $row['name'],
+                        'surname' => $row['surname'],
+                        'email' => $row['email'],
+                        'admin' => $row['admin']
+                    ]
+
+                ]));
                 return $response
                     ->withHeader('Content-Type', 'application/json')
                     ->withStatus(200);
