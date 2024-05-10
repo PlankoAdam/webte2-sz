@@ -104,28 +104,35 @@ function generateRandomString($length) {
 
 
 
-// PUT route to update the date_end of a question by ID
+// PUT route to update the date_end and question of a question by ID
 $app->put('/question/{id}', function (Request $request, Response $response, $args) use ($pdo) {
     $id = $args['id'];
+
+    // Get the request body contents
+    $body = $request->getBody()->getContents();
+
+    // Decode the JSON data into an associative array
+    $data = json_decode($body, true);
 
     // Set current time as date_end
     $date_end = date('Y-m-d H:i:s');
 
-    // Update the date_end of the question in the database
-    $sql = "UPDATE questions SET date_end = :date_end WHERE id = :id";
+    // Update the question and date_end in the database
+    $sql = "UPDATE questions SET question = :question, date_end = :date_end WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':date_end' => $date_end,
+        ':question' => $data['question'], // Updated question
+        ':date_end' => $date_end, // Updated date_end
         ':id' => $id
     ]);
 
-
     // Return success message
-    $response->getBody()->write(json_encode(['message' => 'date_end updated!']));
+    $response->getBody()->write(json_encode(['message' => 'Question and date_end updated!']));
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 });
+
 
 // GET route to retrieve a question by code
 $app->get('/question/{code}', function (Request $request, Response $response, $args) use ($pdo) {
