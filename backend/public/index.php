@@ -22,6 +22,6 @@ require __DIR__ . '/../handlers/users.php';
 require __DIR__ . '/../handlers/answers.php';
 require __DIR__ . '/../handlers/questions.php';
 require __DIR__ . '/../handlers/subjects.php';
-require __DIR__ . '/../handlers/authentication.php';
+require __DIR__ . '/../handlers/account.php';
 
 $app->run();
