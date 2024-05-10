@@ -95,6 +95,22 @@ $app->post('/account/register', function (Request $request, Response $response) 
     }
 });
 
+// GET route for user to retrieve their account details
+$app->get('/account', function (Request $request, Response $response) use ($pdo) {
+    try {
+        $stmt = $pdo->prepare("SELECT email, name, surname, admin FROM users WHERE id = :id");
+        $stmt->bindValue(":id", $request->getAttribute('user_id'), PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $response->getBody()->write(json_encode($user));
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+    } catch (PDOException $e) {
+        return getJsonMessageResponse($response, 500, 'Database error.');
+    }
+})->add(new JWTAuthMiddleware());
+
 
 // PUT route for user to change their account details
 $app->put('/account', function (Request $request, Response $response) use ($pdo) {
@@ -149,6 +165,7 @@ $app->put('/account', function (Request $request, Response $response) use ($pdo)
 $app->put('/account/password', function (Request $request, Response $response) use ($pdo) {
     $body = $request->getBody()->getContents();
     $data = json_decode($body, true);
+    $user_id = $request->getAttribute('user_id');
 
     if (!isset($data['old_password']) || !isset($data['new_password'])) {
         return getJsonMessageResponse($response, 400, 'The format of the request body is invalid.');
@@ -156,7 +173,7 @@ $app->put('/account/password', function (Request $request, Response $response) u
 
     try {
         $stmt = $pdo->prepare("SELECT password FROM users WHERE id = :id");
-        $stmt->bindParam(":id", $request->getAttribute('user_id'), PDO::PARAM_STR);
+        $stmt->bindParam(":id", $user_id, PDO::PARAM_STR);
         $stmt->execute();
         if ($stmt->rowCount() == 1) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -167,7 +184,7 @@ $app->put('/account/password', function (Request $request, Response $response) u
 
                 $stmt = $pdo->prepare("UPDATE users SET password = :password WHERE id = :id");
                 $stmt->bindParam(":password", $hashed_new_password, PDO::PARAM_STR);
-                $stmt->bindParam(":id", $request->getAttribute('user_id'), PDO::PARAM_STR);
+                $stmt->bindParam(":id", $user_id, PDO::PARAM_STR);
                 $stmt->execute();
 
                 return getJsonMessageResponse($response, 200, 'Password updated successfully.');
