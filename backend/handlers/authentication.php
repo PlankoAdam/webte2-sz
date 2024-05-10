@@ -4,7 +4,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Firebase\JWT\JWT;
 
-function getErrorResponse(Response $response, int $code, string $message) {
+function getJsonMessageResponse(Response $response, int $code, string $message) {
     $response->getBody()->write(json_encode(['message' => $message]));
     return $response
         ->withHeader('Content-Type', 'application/json')
@@ -12,13 +12,13 @@ function getErrorResponse(Response $response, int $code, string $message) {
 }
 
 
-// POST route to sing up (obtain a JWT token)
-$app->post('/user/login', function (Request $request, Response $response) use ($pdo, $secretKey) {
+// PUT route for user to login
+$app->post('/account/login', function (Request $request, Response $response) use ($pdo, $secretKey) {
     $body = $request->getBody()->getContents();
     $data = json_decode($body, true);
 
     if (!isset($data['email']) || !isset($data['password'])) {
-        return getErrorResponse($response, 400, 'The format of the request body is invalid.');
+        return getJsonMessageResponse($response, 400, 'The format of the request body is invalid.');
     }
 
     try {
@@ -49,24 +49,24 @@ $app->post('/user/login', function (Request $request, Response $response) use ($
                     ->withHeader('Content-Type', 'application/json')
                     ->withStatus(200);
             } else {
-                return getErrorResponse($response, 400, 'Invalid email or password.');
+                return getJsonMessageResponse($response, 400, 'Invalid email or password.');
             }
         } else {
-            return getErrorResponse($response, 400, 'Invalid email or password.');
+            return getJsonMessageResponse($response, 400, 'Invalid email or password.');
         }
     } catch (PDOException $e) {
-        return getErrorResponse($response, 500, 'Database error.');
+        return getJsonMessageResponse($response, 500, 'Database error.');
     }
 });
 
 
-// POST route to register a new user
-$app->post('/user/register', function (Request $request, Response $response) use ($pdo) {
+// PUT route for user to register
+$app->post('/account/register', function (Request $request, Response $response) use ($pdo) {
     $body = $request->getBody()->getContents();
     $data = json_decode($body, true);
 
     if (!isset($data['email']) || !isset($data['name']) || !isset($data['surname']) || !isset($data['password'])) {
-        return getErrorResponse($response, 400, 'The format of the request body is invalid.');
+        return getJsonMessageResponse($response, 400, 'The format of the request body is invalid.');
     }
 
     $hashed_password = password_hash($data['password'], PASSWORD_ARGON2ID);
@@ -76,7 +76,7 @@ $app->post('/user/register', function (Request $request, Response $response) use
         $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
-            return getErrorResponse($response, 400, 'Email already in use.');
+            return getJsonMessageResponse($response, 400, 'Email already in use.');
         }
 
         $stmt = $pdo->prepare("INSERT INTO users (name, surname, email, password, admin) VALUES (:name, :surname, :email, :password, 0)");
@@ -91,18 +91,67 @@ $app->post('/user/register', function (Request $request, Response $response) use
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(201);
     } catch (PDOException $e) {
-        return getErrorResponse($response, 500, 'Database error.');
+        return getJsonMessageResponse($response, 500, 'Database error.');
     }
 });
 
 
-// PUT route to change user's password
-$app->put('/user/password', function (Request $request, Response $response) use ($pdo) {
+// PUT route for user to change their account details
+$app->put('/account', function (Request $request, Response $response) use ($pdo) {
+    $body = $request->getBody()->getContents();
+    $data = json_decode($body, true);
+    $user_id = $request->getAttribute('user_id');
+
+    if (!isset($data['email']) && !isset($data['name']) && !isset($data['surname'])) {
+        $response->getBody()->write(json_encode(['message' => 'Nothing to update.']));
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+    }
+
+    try {
+        if (isset($data['email'])) {
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email AND id != :id");
+            $stmt->bindParam(":email", $data['email'], PDO::PARAM_STR);
+            $stmt->bindParam(":id", $user_id, PDO::PARAM_STR);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return getJsonMessageResponse($response, 400, 'Email already in use.');
+            }
+        }
+
+        $query = "UPDATE users SET ";
+        $params = [];
+
+        addUpdateAttr($data, $query, $params, "email");
+        addUpdateAttr($data, $query, $params, "name");
+        addUpdateAttr($data, $query, $params, "surname");
+
+        $query = rtrim($query, ", ");
+        $query .= " WHERE id = :id";
+        $stmt = $pdo->prepare($query);
+
+        foreach ($params as $param => $value) {
+            $stmt->bindValue($param, $value);
+        }
+        $stmt->bindParam(':id', $user_id);
+
+        $stmt->execute();
+        
+        return getJsonMessageResponse($response, 200, 'Account info updated.');
+    } catch (PDOException $e) {
+        return getJsonMessageResponse($response, 500, 'Database error.' . $e->getMessage());
+    }
+})->add(new JWTAuthMiddleware());
+
+
+// PUT route for user to change their password
+$app->put('/account/password', function (Request $request, Response $response) use ($pdo) {
     $body = $request->getBody()->getContents();
     $data = json_decode($body, true);
 
     if (!isset($data['old_password']) || !isset($data['new_password'])) {
-        return getErrorResponse($response, 400, 'The format of the request body is invalid.');
+        return getJsonMessageResponse($response, 400, 'The format of the request body is invalid.');
     }
 
     try {
@@ -121,17 +170,23 @@ $app->put('/user/password', function (Request $request, Response $response) use 
                 $stmt->bindParam(":id", $request->getAttribute('user_id'), PDO::PARAM_STR);
                 $stmt->execute();
 
-                $response->getBody()->write(json_encode(['message' => "Password updated successfully."]));
-                return $response
-                    ->withHeader('Content-Type', 'application/json')
-                    ->withStatus(200);
+                return getJsonMessageResponse($response, 200, 'Password updated successfully.');
             } else {
-                return getErrorResponse($response, 400, 'Incorrect old password.');
+                return getJsonMessageResponse($response, 400, 'Incorrect old password.');
             }
         } else {
-            return getErrorResponse($response, 500, 'Internal server error.');
+            return getJsonMessageResponse($response, 500, 'Internal server error.');
         }
     } catch (PDOException $e) {
-        return getErrorResponse($response, 500, 'Database error.');
+        return getJsonMessageResponse($response, 500, 'Database error.');
     }
 })->add(new JWTAuthMiddleware());
+
+
+
+function addUpdateAttr(&$request_body, &$query, &$params, $req_str) {
+    if (isset($request_body[$req_str])) {
+        $query .= "$req_str = :$req_str, ";
+        $params[':' . $req_str] = $request_body[$req_str];
+    }
+}
