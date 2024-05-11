@@ -5,8 +5,26 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 // GET route to retrieve all questions
 $app->get('/question', function (Request $request, Response $response) use ($pdo) {
-    $sql = "SELECT * FROM questions";
-    $stmt = $pdo->query($sql);
+    // Retrieve user ID from the JWT token
+    $userId = $request->getAttribute('user_id');;
+    
+    // Retrieve user's admin status from the database
+    $stmt = $pdo->prepare("SELECT admin FROM users WHERE id = :user_id");
+    $stmt->execute([':user_id' => $userId]);
+    $adminStatus = $stmt->fetchColumn();
+
+    // If the user is not an admin, retrieve questions filtered by user_id
+    if ($adminStatus == 0) {
+        $sql = "SELECT * FROM questions WHERE user_id = :user_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':user_id' => $userId]);
+    } else {
+        // If the user is an admin, retrieve all questions
+        $sql = "SELECT * FROM questions";
+        $stmt = $pdo->query($sql);
+    }
+
+    // Fetch the questions
     $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Return response as JSON
