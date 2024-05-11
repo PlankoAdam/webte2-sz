@@ -123,14 +123,20 @@ function generateUniqueCode($pdo) {
     return $code;
 }
 
-// Function to generate a random string of specified length consisting of letters and numbers
+// Function to generate a random string of specified length consisting of numbers, with the first character not being '0'
 function generateRandomString($length) {
-    $characters = '0123456789';
-    $randomString = '';
-    $max = strlen($characters) - 1;
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[mt_rand(0, $max)];
+    // The characters to use for generating the random string (excluding '0' for the first character)
+    $characters = '123456789';
+
+    // Generate the first character randomly from the characters 1-9
+    $randomString = $characters[mt_rand(0, strlen($characters) - 1)];
+
+    // Generate the rest of the characters randomly from the characters 0-9
+    $characters .= '0123456789';
+    for ($i = 1; $i < $length; $i++) {
+        $randomString .= $characters[mt_rand(0, strlen($characters) - 1)];
     }
+
     return $randomString;
 }
 
