@@ -31,6 +31,7 @@ $app->delete('/question/{id}', function (Request $request, Response $response, $
         ->withStatus(200);
 })->add(new JWTAuthMiddleware());
 
+
 // POST route to create a new question
 $app->post('/question', function (Request $request, Response $response) use ($pdo) {
     $body = $request->getBody()->getContents();
@@ -38,30 +39,46 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-    // Set current time as date_start
-    $date_start = date('Y-m-d H:i:s');
-
-    // Set dummy value for date_end
-    $date_end = '9999-12-31 23:59:59';
+    // Set current time as date_created
+    $date_created = date('Y-m-d H:i:s');
 
     // Generate a unique 5-character code
     $code = generateUniqueCode($pdo);
 
+    // Determine the value of is_open_ended based on the presence of answers
+    $is_open_ended = empty($data['answers']) ? 1 : 0;
+
     // Insert new question into the database
-    $sql = "INSERT INTO questions (code, subject_id, user_id, question, date_start, date_end) 
-            VALUES (:code, :subject_id, :user_id, :question, :date_start, :date_end)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
+    $sqlQuestion = "INSERT INTO questions (code, subject_id, user_id, question, date_created, is_open_ended) 
+                    VALUES (:code, :subject_id, :user_id, :question, :date_created, :is_open_ended)";
+    $stmtQuestion = $pdo->prepare($sqlQuestion);
+    $stmtQuestion->execute([
         ':code' => $code,
         ':subject_id' => $data['subject_id'],
         ':user_id' => $data['user_id'],
         ':question' => $data['question'],
-        ':date_start' => $date_start,
-        ':date_end' => $date_end
+        ':date_created' => $date_created,
+        ':is_open_ended' => $is_open_ended
     ]);
 
     // Get the ID of the newly inserted question
     $newQuestionId = $pdo->lastInsertId();
+
+    // Insert answers into the answers table if available
+    if (!empty($data['answers'])) {
+        foreach ($data['answers'] as $answer) {
+            $sqlAnswer = "INSERT INTO answers (question_code, answer, is_correct, count, date_created, date_archived) 
+                          VALUES (:question_code, :answer, :is_correct, :count, :date_created, NULL)";
+            $stmtAnswer = $pdo->prepare($sqlAnswer);
+            $stmtAnswer->execute([
+                ':question_code' => $code,
+                ':answer' => $answer['answer'],
+                ':is_correct' => 0, // Assuming is_correct is always 0 for now
+                ':count' => 0,
+                ':date_created' => $date_created
+            ]);
+        }
+    }
 
     // Return a message with the ID of the newly inserted question
     $responseData = [
@@ -92,7 +109,7 @@ function generateUniqueCode($pdo) {
 
 // Function to generate a random string of specified length consisting of letters and numbers
 function generateRandomString($length) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789';
     $randomString = '';
     $max = strlen($characters) - 1;
     for ($i = 0; $i < $length; $i++) {
@@ -100,7 +117,6 @@ function generateRandomString($length) {
     }
     return $randomString;
 }
-
 
 
 
