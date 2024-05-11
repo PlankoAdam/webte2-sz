@@ -186,4 +186,4 @@ $app->get('/question/{code}', function (Request $request, Response $response, $a
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-})->add(new JWTAuthMiddleware());
+});
