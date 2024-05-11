@@ -27,6 +27,11 @@ $app->get('/question', function (Request $request, Response $response) use ($pdo
     // Fetch the questions
     $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+       // Convert the "code" field to string
+       foreach ($questions as &$question) {
+        $question['code'] = (string)$question['code'];
+    }
+
     // Return response as JSON
     $response->getBody()->write(json_encode($questions));
     return $response
