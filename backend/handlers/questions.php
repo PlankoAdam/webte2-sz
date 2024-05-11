@@ -29,7 +29,7 @@ $app->delete('/question/{id}', function (Request $request, Response $response, $
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-})->add(new JWTAuthMiddleware());
+})->add(new JWTAuthMiddleware()); 
 
 
 // POST route to create a new question
@@ -65,6 +65,7 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     $newQuestionId = $pdo->lastInsertId();
 
     // Insert answers into the answers table if available
+    $insertedAnswers = [];
     if (!empty($data['answers'])) {
         foreach ($data['answers'] as $answer) {
             $sqlAnswer = "INSERT INTO answers (question_code, answer, is_correct, count, date_created, date_archived) 
@@ -77,20 +78,35 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
                 ':count' => 0,
                 ':date_created' => $date_created
             ]);
+
+            // Retrieve the ID of the newly inserted answer
+            $newAnswerId = $pdo->lastInsertId();
+
+            // Add the inserted answer to the list
+            $insertedAnswers[] = [
+                'id' => $newAnswerId,
+                'question_code' => $code,
+                'answer' => $answer['answer'],
+                'is_correct' => 0, // Assuming is_correct is always 0 for now
+                'count' => 0,
+                'date_created' => $date_created,
+                'date_archived' => null
+            ];
         }
     }
 
-    // Return a message with the ID of the newly inserted question
+    // Return a message with the ID of the newly inserted question and the inserted answers
     $responseData = [
         'id' => $newQuestionId,
-        'code' => $code
+        'code' => $code,
+        'answers' => $insertedAnswers
     ];
     $response->getBody()->write(json_encode($responseData));
     
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new JWTAuthMiddleware()); 
 
 // Function to generate a unique 5-character code consisting of letters and numbers
 function generateUniqueCode($pdo) {

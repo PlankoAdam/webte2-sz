@@ -67,4 +67,4 @@ $app->post('/archive/{code}', function (Request $request, Response $response, $a
         $response->getBody()->write(json_encode(["updated_data" => $updatedData]));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
-});
+})->add(new JWTAuthMiddleware());
