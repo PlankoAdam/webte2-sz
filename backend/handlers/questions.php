@@ -14,7 +14,7 @@ $app->get('/question', function (Request $request, Response $response) use ($pdo
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new JWTAuthMiddleware());
 
 // DELETE route to delete a question by ID
 $app->delete('/question/{id}', function (Request $request, Response $response, $args) use ($pdo) {
@@ -29,7 +29,7 @@ $app->delete('/question/{id}', function (Request $request, Response $response, $
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new JWTAuthMiddleware());
 
 // POST route to create a new question
 $app->post('/question', function (Request $request, Response $response) use ($pdo) {
@@ -131,7 +131,7 @@ $app->put('/question/{id}', function (Request $request, Response $response, $arg
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new JWTAuthMiddleware());
 
 
 // GET route to retrieve a question by code
@@ -154,4 +154,4 @@ $app->get('/question/{code}', function (Request $request, Response $response, $a
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new JWTAuthMiddleware());

@@ -30,10 +30,9 @@ $app->post('/users', function (Request $request, Response $response) use ($pdo) 
 
     // Set the response headers and status code
     return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus(200);
-});
-
+    ->withHeader('Content-Type', 'application/json')
+    ->withStatus(200);
+})->add(new AdminAuthMiddleware())->add(new JWTAuthMiddleware());
 
 // Get all users
 $app->get('/users', function (Request $request, Response $response) use ($pdo) {
@@ -46,7 +45,7 @@ $app->get('/users', function (Request $request, Response $response) use ($pdo) {
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 
-});
+})->add(new AdminAuthMiddleware())->add(new JWTAuthMiddleware());
 
 // Get a single user by ID
 $app->get('/users/{id}', function (Request $request, Response $response, $args) use ($pdo) {
@@ -59,7 +58,7 @@ $app->get('/users/{id}', function (Request $request, Response $response, $args) 
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new AdminAuthMiddleware())->add(new JWTAuthMiddleware());
 
 // Update a user
 $app->put('/users/{id}', function (Request $request, Response $response, $args) use ($pdo) {
@@ -83,7 +82,7 @@ $app->put('/users/{id}', function (Request $request, Response $response, $args) 
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new AdminAuthMiddleware())->add(new JWTAuthMiddleware());
 
 // Delete a user
 $app->delete('/users/{id}', function (Request $request, Response $response, $args) use ($pdo) {
@@ -98,4 +97,4 @@ $app->delete('/users/{id}', function (Request $request, Response $response, $arg
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-});
+})->add(new AdminAuthMiddleware())->add(new JWTAuthMiddleware());

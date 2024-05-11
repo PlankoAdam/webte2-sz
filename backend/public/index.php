@@ -11,6 +11,7 @@ $secretKey = $_ENV['SECRET_JWT_KEY'];
 
 require __DIR__ . '/../db/connection.php';
 require __DIR__ . '/../middleware/auth_middleware.php';
+require __DIR__ . '/../middleware/admin_auth_middleware.php';
 
 JWTAuthMiddleware::$secretKey = $secretKey;
 
@@ -21,7 +22,7 @@ require __DIR__ . '/../handlers/users.php';
 require __DIR__ . '/../handlers/answers.php';
 require __DIR__ . '/../handlers/questions.php';
 require __DIR__ . '/../handlers/subjects.php';
-require __DIR__ . '/../handlers/authentication.php';
+require __DIR__ . '/../handlers/account.php';
 require __DIR__ . '/../handlers/archive.php';
 
 $app->run();
