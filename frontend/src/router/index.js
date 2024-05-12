@@ -11,6 +11,7 @@ import QuestionView from '@/views/QuestionView.vue'
 import QuestionDetailsView from '@/views/question-views/QuestionDetailsView.vue'
 import UserProfileView from '@/views/dashboard-views/UserProfileView.vue'
 import UsersListView from '@/views/dashboard-views/UsersListView.vue'
+import UserEditView from '@/views/dashboard-views/UserEditView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -70,6 +71,10 @@ const router = createRouter({
         {
           path: 'users',
           component: UsersListView
+        },
+        {
+          path: 'users/:id',
+          component: UserEditView
         }
       ]
     }
