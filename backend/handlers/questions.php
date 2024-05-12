@@ -165,9 +165,9 @@ function generateRandomString($length) {
 
 
 
-// PUT route to update the date_end and question of a question by ID
-$app->put('/question/{id}', function (Request $request, Response $response, $args) use ($pdo) {
-    $id = $args['id'];
+// PUT route to update the question by code
+$app->put('/question/{code}', function (Request $request, Response $response, $args) use ($pdo) {
+    $code = $args['code'];
 
     // Get the request body contents
     $body = $request->getBody()->getContents();
@@ -175,20 +175,22 @@ $app->put('/question/{id}', function (Request $request, Response $response, $arg
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-    // Set current time as date_end
-    $date_end = date('Y-m-d H:i:s');
-
-    // Update the question and date_end in the database
-    $sql = "UPDATE questions SET question = :question, date_end = :date_end WHERE id = :id";
+    // Update the question in the database
+    $sql = "UPDATE questions SET question = :question WHERE code = :code";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':question' => $data['question'], // Updated question
-        ':date_end' => $date_end, // Updated date_end
-        ':id' => $id
+        ':code' => $code
     ]);
 
-    // Return success message
-    $response->getBody()->write(json_encode(['message' => 'Question and date_end updated!']));
+    // Fetch the updated row from the database
+    $sql = "SELECT * FROM questions WHERE code = :code";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':code' => $code]);
+    $updatedQuestion = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Return the updated row
+    $response->getBody()->write(json_encode($updatedQuestion));
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
