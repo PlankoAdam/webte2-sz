@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.1deb1+jammy2
 -- https://www.phpmyadmin.net/
 --
--- Host: mysql
--- Generation Time: May 05, 2024 at 03:09 PM
--- Server version: 8.0.32
--- PHP Version: 8.2.8
+-- Host: localhost:3306
+-- Generation Time: May 10, 2024 at 01:45 PM
+-- Server version: 8.0.36-0ubuntu0.22.04.1
+-- PHP Version: 8.3.2-1+ubuntu22.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `webte2_sz`
+-- Database: `zaverecne_zadanie`
 --
 
 -- --------------------------------------------------------
@@ -28,20 +28,37 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `answers` (
-  `code` varchar(5) NOT NULL,
+  `id` int NOT NULL,
+  `question_code` int NOT NULL,
   `answer` varchar(255) NOT NULL,
-  `date_created` datetime NOT NULL
+  `is_correct` tinyint(1) DEFAULT NULL,
+  `count` int NOT NULL DEFAULT '0',
+  `date_created` datetime NOT NULL,
+  `date_archived` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `answers`
 --
 
-INSERT INTO `answers` (`code`, `answer`, `date_created`) VALUES
-('asdfg', '[value-2]', '2024-05-05 00:43:30'),
-('qwert', 'answer baby', '2024-05-04 22:49:38'),
-('qwery', 'answer baby 2', '2024-05-05 00:52:52'),
-('qwery', 'answer baby 2', '2024-05-05 13:41:58');
+INSERT INTO `answers` (`id`, `question_code`, `answer`, `is_correct`, `count`, `date_created`, `date_archived`) VALUES
+(1, 12345, '[value-2]', 0, 1, '2024-05-05 00:43:30', NULL),
+(2, 12345, 'answer baby', NULL, 1, '2024-05-04 22:49:38', NULL),
+(3, 54321, 'answer baby 2', 0, 1, '2024-05-05 00:52:52', NULL),
+(4, 10000, 'answer baby 2', 0, 1, '2024-05-05 13:41:58', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `multi_choice_answer_archives`
+--
+
+CREATE TABLE `multi_choice_answer_archives` (
+  `id` int NOT NULL,
+  `answer_id` int NOT NULL,
+  `count` int NOT NULL DEFAULT '0',
+  `date_archived` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -50,23 +67,22 @@ INSERT INTO `answers` (`code`, `answer`, `date_created`) VALUES
 --
 
 CREATE TABLE `questions` (
-  `id` int NOT NULL,
-  `code` varchar(5) NOT NULL,
+  `code` int NOT NULL,
   `subject_id` int NOT NULL,
   `user_id` int NOT NULL,
   `question` varchar(255) NOT NULL,
-  `date_start` datetime NOT NULL,
-  `date_end` datetime NOT NULL
+  `date_created` datetime NOT NULL,
+  `is_open_ended` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`id`, `code`, `subject_id`, `user_id`, `question`, `date_start`, `date_end`) VALUES
-(4, 'abcde', 1, 1, '[value-4]', '2000-01-01 00:00:00', '2000-01-01 00:00:00'),
-(5, 'abcde', 1, 1, '[value-4]', '2000-01-01 00:00:00', '2024-05-05 15:58:21'),
-(6, 'qwert', 2, 3, 'preco ja?', '2024-05-05 15:21:43', '9999-12-31 23:59:59');
+INSERT INTO `questions` (`code`, `subject_id`, `user_id`, `question`, `date_created`, `is_open_ended`) VALUES
+(10000, 1, 1, '[value-4]', '2000-01-01 00:00:00', 0),
+(12345, 1, 1, '[value-4]', '2000-01-01 00:00:00', 0),
+(54321, 2, 3, 'preco ja?', '2024-05-05 15:21:43', 0);
 
 -- --------------------------------------------------------
 
@@ -109,19 +125,35 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `name`, `surname`, `password`, `admin`) VALUES
-(1, 'eyo', 'John', 'Doe', 'hashed_heslo1', 1),
-(3, '[value-1]', '[value-3]', '[value-4]', 'hashed_heslo2', 0),
-(4, 'example@example.com', 'John', 'Doe', 'hashed_heslo3', 0);
+(1, 'eyo', 'John', 'Doe', '', 1),
+(3, '[value-1]', '[value-3]', '[value-4]', '', 0),
+(4, 'example@example.com', 'John', 'Doe', '', 0);
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `answers`
+--
+ALTER TABLE `answers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `question_code` (`question_code`);
+
+--
+-- Indexes for table `multi_choice_answer_archives`
+--
+ALTER TABLE `multi_choice_answer_archives`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `answer_id` (`answer_id`);
+
+--
 -- Indexes for table `questions`
 --
 ALTER TABLE `questions`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`code`),
+  ADD KEY `subject_id` (`subject_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `subjects`
@@ -140,10 +172,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `answers`
+--
+ALTER TABLE `answers`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `multi_choice_answer_archives`
+--
+ALTER TABLE `multi_choice_answer_archives`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `code` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54322;
 
 --
 -- AUTO_INCREMENT for table `subjects`
@@ -156,6 +200,29 @@ ALTER TABLE `subjects`
 --
 ALTER TABLE `users`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `answers`
+--
+ALTER TABLE `answers`
+  ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_code`) REFERENCES `questions` (`code`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `multi_choice_answer_archives`
+--
+ALTER TABLE `multi_choice_answer_archives`
+  ADD CONSTRAINT `multi_choice_answer_archives_ibfk_1` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `questions`
+--
+ALTER TABLE `questions`
+  ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `questions_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

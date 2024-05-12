@@ -10,12 +10,7 @@
           :actions="false"
           #default="{ state: { valid } }"
         >
-          <FormKit
-            name="username"
-            type="text"
-            validation="required"
-            :label="langStore.t('User name', 'Používateľské meno')"
-          ></FormKit>
+          <FormKit name="email" type="text" validation="required" label="E-mail"></FormKit>
           <FormKit
             name="password"
             type="password"

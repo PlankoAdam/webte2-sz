@@ -21,10 +21,6 @@ services:
   php:
     build: ./backend
     working_dir: /var/www/php
-    # ports:
-    #   - 8087:8888
-    # volumes:
-    #   - ./backend:/var/www/php
     depends_on:
       mysql:
         condition: service_healthy
