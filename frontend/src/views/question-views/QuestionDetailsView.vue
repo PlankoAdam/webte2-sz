@@ -34,7 +34,7 @@
           {{ data.code }}
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="$router.push(`/questions/edit/${data.id}`)">{{ 'Edit' }}</button>
+          <button @click="$router.push(`/questions/edit/${data.code}`)">{{ 'Edit' }}</button>
           <button class="btn-danger">{{ 'Delete' }}</button>
         </div>
       </div>
@@ -62,10 +62,10 @@ import { useRoute } from 'vue-router'
 import http from '@/http'
 
 // import { useLanguageStore } from '@/stores/language'
-import { useUserStore } from '@/stores/user'
+// import { useUserStore } from '@/stores/user'
 
 // const langStore = useLanguageStore()
-const userStore = useUserStore()
+// const userStore = useUserStore()
 
 const route = useRoute()
 
@@ -73,13 +73,7 @@ const data = ref({})
 const showModal = ref(false)
 
 const getData = async () => {
-  const question = (
-    await http.get(`/question/${route.params.code}`, {
-      headers: {
-        Authorization: `Bearer ${userStore.user.token}`
-      }
-    })
-  ).data
+  const question = (await http.get(`/question/${route.params.code}`)).data[0]
   const answers = (await http.get(`/answer/${question.code}`)).data.map((el) => el.answer) // waiting for fix
   question.answers = answers ? answers : []
   question.subject = (await http.get(`/subject/${question.subject_id}`)).data.name
@@ -90,12 +84,7 @@ const getData = async () => {
 
 getData(route.params.code)
 
-watch(
-  () => route.params.code,
-  (newId) => {
-    getData(newId)
-  }
-)
+watch(() => route.params.code, getData)
 </script>
 
 <style scoped>

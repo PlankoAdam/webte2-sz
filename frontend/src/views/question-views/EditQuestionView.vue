@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="flex flex-col">
-        <FormKit type="form" @submit="() => {}" :actions="false" #default="{ state: { valid } }">
+        <FormKit type="form" @submit="formHandler" :actions="false" #default="{ state: { valid } }">
           <FormKit
             name="question"
             label="Question"
@@ -40,12 +40,22 @@
             validation="required"
           ></FormKit>
           <FormKit
-            name="subject"
+            name="subject_id"
             label="Subject"
-            v-model="data.subject"
+            type="select"
+            placeholder="Select a subject"
+            v-model="data.subject_id"
+            :options="
+              subjects.map((el) => {
+                return {
+                  label: el.subject,
+                  value: el.id
+                }
+              })
+            "
             validation="required"
           ></FormKit>
-          <h1 class="mb-2">Answers:</h1>
+          <!-- <h1 class="mb-2">Answers:</h1>
           <div class="flex flex-row space-x-2 mb-4">
             <button @click.prevent="data.answers.pop()" class="mt-0 flex-1">
               <v-icon name="fa-minus" scale="2"></v-icon>
@@ -70,7 +80,7 @@
               validation="required"
               validation-label="Answer"
             ></FormKit>
-          </FormKit>
+          </FormKit> -->
           <FormKit label="Save" type="submit" :disabled="!valid" />
         </FormKit>
       </div>
@@ -83,39 +93,35 @@ import { watch } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import http from '@/http'
-// TODO get data from server
 
 const route = useRoute()
 
-// TODO update data on route change
-
-const data = ref({
-  answers: []
-})
 const showModal = ref(false)
 
-const getData = async (id) => {
-  const allQuestions = (await http.get('/question')).data
-  const newData = allQuestions.filter((el) => el.id == id)[0]
-  const answers = (await http.get(`/answer/${newData.code}`)).data.map((el) => el.answer)
-  newData.answers = answers ? answers : []
+const data = ref({})
+const subjects = ref([])
 
-  newData.subject = 'TODO'
+http.get('/subject').then((res) => {
+  subjects.value = res.data
+  console.log(subjects.value)
+})
 
-  newData.active = Date.parse(newData.date_end) > Date.now()
-  newData.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${newData.code}`
+const getData = async () => {
+  const question = (await http.get(`/question/${route.params.code}`)).data[0]
+  question.subject = (await http.get(`/subject/${question.subject_id}`)).data.name
+  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
 
-  data.value = newData
+  data.value = question
 }
 
-getData(route.params.id)
+const formHandler = (formData) => {
+  console.log(formData)
+  // TODO waiting for put endpoint
+}
 
-watch(
-  () => route.params.id,
-  (newId) => {
-    getData(newId)
-  }
-)
+getData(route.params.code)
+
+watch(() => route.params.code, getData)
 </script>
 
 <style scoped>
