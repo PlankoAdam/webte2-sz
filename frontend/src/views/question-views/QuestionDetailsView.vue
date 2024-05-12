@@ -34,9 +34,6 @@
           {{ data.code }}
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="data.active = !data.active">
-            {{ data.active ? 'Deactivate' : 'Activate' }}
-          </button>
           <button @click="$router.push(`/questions/edit/${data.id}`)">{{ 'Edit' }}</button>
           <button class="btn-danger">{{ 'Delete' }}</button>
         </div>
@@ -63,40 +60,38 @@ import { watch } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import http from '@/http'
-// TODO get data from server
+
+// import { useLanguageStore } from '@/stores/language'
+import { useUserStore } from '@/stores/user'
+
+// const langStore = useLanguageStore()
+const userStore = useUserStore()
 
 const route = useRoute()
 
-// const dummyData = {
-//   code: route.params.id,
-//   question: 'Is this a really long question for testing?',
-//   qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-//   active: false,
-//   answers: ['answer 1', 'ans2', 'ans3']
-// }
-
-// TODO update data on route change
 const data = ref({})
 const showModal = ref(false)
 
-const getData = async (id) => {
-  const allQuestions = (await http.get('/question')).data
-  const newData = allQuestions.filter((el) => el.id == id)[0]
-  const answers = (await http.get(`/answer/${newData.code}`)).data.map((el) => el.answer)
-  newData.answers = answers ? answers : []
+const getData = async () => {
+  const question = (
+    await http.get(`/question/${route.params.code}`, {
+      headers: {
+        Authorization: `Bearer ${userStore.user.token}`
+      }
+    })
+  ).data
+  const answers = (await http.get(`/answer/${question.code}`)).data.map((el) => el.answer) // waiting for fix
+  question.answers = answers ? answers : []
+  question.subject = (await http.get(`/subject/${question.subject_id}`)).data.name
+  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
 
-  newData.subject = 'TODO'
-
-  newData.active = Date.parse(newData.date_end) > Date.now()
-  newData.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${newData.code}`
-
-  data.value = newData
+  data.value = question
 }
 
-getData(route.params.id)
+getData(route.params.code)
 
 watch(
-  () => route.params.id,
+  () => route.params.code,
   (newId) => {
     getData(newId)
   }

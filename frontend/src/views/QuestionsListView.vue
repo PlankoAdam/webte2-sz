@@ -18,7 +18,7 @@
         </div>
       </RouterLink>
       <div class="flex flex-col space-y-4">
-        <RouterLink v-for="q in questions" :key="q.code" :to="`/questions/${q.id}`">
+        <RouterLink v-for="q in questions" :key="q.code" :to="`/questions/${q.code}`">
           <QuestionListItem
             :code="q.code"
             :question="q.question"
@@ -33,37 +33,24 @@
 
 <script setup>
 import { useLanguageStore } from '@/stores/language'
+import { useUserStore } from '@/stores/user'
 import QuestionListItem from '@/components/QuestionListItem.vue'
 import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import http from '@/http'
 
 const langStore = useLanguageStore()
-
-// const dummyData = [
-//   {
-//     code: 'abc12',
-//     question: 'Lorem ipsum?',
-//     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-//     active: true
-//   },
-//   {
-//     code: 'gdr34',
-//     question: 'Dolor sit amet?',
-//     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-//     active: false
-//   },
-//   {
-//     code: '1594f',
-//     question: 'Qsdohsdgsdf?',
-//     qrsrc: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example',
-//     active: true
-//   }
-// ]
+const userStore = useUserStore()
 
 const questions = ref([])
 
-http.get('/question').then((res) => {
-  questions.value = res.data
-})
+http
+  .get('/question', {
+    headers: {
+      Authorization: `Bearer ${userStore.user.token}`
+    }
+  })
+  .then((res) => {
+    questions.value = res.data
+  })
 </script>

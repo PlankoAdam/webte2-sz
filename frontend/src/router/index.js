@@ -41,7 +41,7 @@ const router = createRouter({
       component: QuestionsListView,
       children: [
         {
-          path: '/questions/:id',
+          path: '/questions/:code',
           component: QuestionDetailsView
         },
         {
@@ -49,7 +49,7 @@ const router = createRouter({
           component: CreateQuestionView
         },
         {
-          path: '/questions/edit/:id',
+          path: '/questions/edit/:code',
           component: EditQuestionView
         }
       ]
