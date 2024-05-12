@@ -18,41 +18,96 @@ $app->get('/answer', function (Request $request, Response $response) use ($pdo) 
 });
 
 // POST route to create a new answer
-$app->post('/answer', function (Request $request, Response $response) use ($pdo) {
+$app->post('/answer/{code}', function (Request $request, Response $response, $args) use ($pdo) {
+    $code = $args['code'];
     $body = $request->getBody()->getContents();
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-    // Check if the code already exists in the database
-    $existingDate = getCodeDate($pdo, $data['code']);
+    // Check if the question code exists in the database
+    $existingQuestion = getQuestion($pdo, $code);
 
-    // If a date exists for the code, use it; otherwise, generate a new date
-    $data['date_created'] = $existingDate ? $existingDate : date('Y-m-d H:i:s');
+    // If a question exists, check if the answer already exists for that question
+    if ($existingQuestion) {
+        $existingAnswer = getAnswer($pdo, $code, $data['answer']);
+        
+        // If answer exists, update the count; otherwise, insert a new answer
+        if ($existingAnswer) {
+            incrementAnswerCount($pdo, $code, $data['answer']);
+            $responseData = [
+                'message' => 'Count incremented for existing answer',
+                'question_code' => $code,
+                'answer' => $data['answer']
+            ];
+        } else {
+            // Set default values if some fields are missing
+            $data['date_created'] = isset($data['date_created']) ? $data['date_created'] : date('Y-m-d H:i:s');
+            $data['is_correct'] = isset($data['is_correct']) ? $data['is_correct'] : 0;
+            $data['date_archived'] = isset($data['date_archived']) ? $data['date_archived'] : null;
 
-    $sql = "INSERT INTO answers (question_code, answer, date_created) VALUES (:code, :answer, :date_created)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':code' => $data['code'],
-        ':answer' => $data['answer'],
-        ':date_created' => $data['date_created']
-    ]);
+            $sql = "INSERT INTO answers (question_code, answer, is_correct, count, date_created, date_archived) 
+                    VALUES (:question_code, :answer, :is_correct, 1, :date_created, :date_archived)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':question_code' => $code,
+                ':answer' => $data['answer'],
+                ':is_correct' => $data['is_correct'],
+                ':date_created' => $data['date_created'],
+                ':date_archived' => $data['date_archived']
+            ]);
 
-    // Encode the response data as JSON
-    $response->getBody()->write(json_encode(['message' => 'Answer created']));
+            $responseData = [
+                'message' => 'New answer created',
+                'question_code' => $code,
+                'answer' => $data['answer'],
+                'is_correct' => $data['is_correct'],
+                'count' => 1,
+                'date_created' => $data['date_created'],
+                'date_archived' => $data['date_archived']
+            ];
+        }
+        
+        // Encode the response data as JSON
+        $response->getBody()->write(json_encode($responseData));
 
-    // Set the response headers and status code
-    return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus(200);
+        // Set the response headers and status code
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+    } else {
+        // Return an error response if the question code doesn't exist
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(404)
+            ->getBody()
+            ->write(json_encode(['error' => 'Question code not found']));
+    }
 });
 
-// Function to get the date associated with a code from the database
-function getCodeDate($pdo, $code) {
-    $sql = "SELECT date_created FROM answers WHERE question_code = :code LIMIT 1";
+
+// Function to check if a question exists in the database
+function getQuestion($pdo, $question_code) {
+    $sql = "SELECT * FROM questions WHERE code = :question_code";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':code' => $code]);
-    $result = $stmt->fetchColumn();
-    return $result ? $result : null;
+    $stmt->execute([':question_code' => $question_code]);
+    $question = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $question;
+}
+
+// Function to check if an answer exists for a question in the database
+function getAnswer($pdo, $question_code, $answer) {
+    $sql = "SELECT * FROM answers WHERE question_code = :question_code AND answer = :answer";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':question_code' => $question_code, ':answer' => $answer]);
+    $existingAnswer = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $existingAnswer;
+}
+
+// Function to increment the count of an existing answer
+function incrementAnswerCount($pdo, $question_code, $answer) {
+    $sql = "UPDATE answers SET count = count + 1 WHERE question_code = :question_code AND answer = :answer";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':question_code' => $question_code, ':answer' => $answer]);
 }
 
 // GET route to retrieve all answers with a specific code
