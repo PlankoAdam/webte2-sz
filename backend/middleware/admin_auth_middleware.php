@@ -18,19 +18,23 @@ class AdminAuthMiddleware
         global $pdo;
         $user_id = $request->getAttribute('user_id');
 
-        $stmt = $pdo->prepare("SELECT admin FROM users WHERE id = :id");
-        $stmt->bindParam(":id", $user_id, PDO::PARAM_STR);
-        $stmt->execute();
+        try {
+            $stmt = $pdo->prepare("SELECT admin FROM users WHERE id = :id");
+            $stmt->bindParam(":id", $user_id, PDO::PARAM_STR);
+            $stmt->execute();
 
-        if ($stmt->rowCount() == 1) {
-            $is_admin = $stmt->fetch(PDO::FETCH_ASSOC)['admin'] == 1;
-            if ($is_admin) {
-                return $handler->handle($request);
+            if ($stmt->rowCount() == 1) {
+                $is_admin = $stmt->fetch(PDO::FETCH_ASSOC)['admin'] == 1;
+                if ($is_admin) {
+                    return $handler->handle($request);
+                } else {
+                    return JWTAuthMiddleware::getErrorResponse(401, "Admins only.");
+                }
             } else {
-                return JWTAuthMiddleware::getErrorResponse(401, "Admins only.");
+                return JWTAuthMiddleware::getErrorResponse(500, "Databse error.");
             }
-        } else {
-            return JWTAuthMiddleware::getErrorResponse(500, "Databse error.");
+        } catch (PDOException $e) {
+            return JWTAuthMiddleware::getErrorResponse(500, 'Database error.');
         }
 
     }
