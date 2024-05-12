@@ -32,7 +32,7 @@ class JWTAuthMiddleware
                 }
                 $request = $request->withAttribute('user_id', $decoded_jwt['user_id']);
                 return $handler->handle($request);
-            } catch (\Exception $e) {
+            } catch (UnexpectedValueException $e) {
                 return self::getErrorResponse(401, 'Authentication token is invalid');
             }
         } else {
