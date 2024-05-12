@@ -3,6 +3,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
+function getJsonMessageResponse(Response $response, int $code, string $message) {
+    $response->getBody()->write(json_encode(['message' => $message]));
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus($code);
+}
+
 require __DIR__ . '/../vendor/autoload.php';
 
 date_default_timezone_set('Europe/Bratislava');

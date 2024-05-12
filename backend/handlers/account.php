@@ -4,13 +4,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Firebase\JWT\JWT;
 
-function getJsonMessageResponse(Response $response, int $code, string $message) {
-    $response->getBody()->write(json_encode(['message' => $message]));
-    return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus($code);
-}
-
 
 // PUT route for user to login
 $app->post('/account/login', function (Request $request, Response $response) use ($pdo, $secretKey) {
