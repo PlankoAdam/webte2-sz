@@ -23,8 +23,11 @@ $app->post('/answer', function (Request $request, Response $response) use ($pdo)
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-    // Automatically set the current date and time
-    $data['date_created'] = date('Y-m-d H:i:s');
+    // Check if the code already exists in the database
+    $existingDate = getCodeDate($pdo, $data['code']);
+
+    // If a date exists for the code, use it; otherwise, generate a new date
+    $data['date_created'] = $existingDate ? $existingDate : date('Y-m-d H:i:s');
 
     $sql = "INSERT INTO answers (code, answer, date_created) VALUES (:code, :answer, :date_created)";
     $stmt = $pdo->prepare($sql);
@@ -42,6 +45,15 @@ $app->post('/answer', function (Request $request, Response $response) use ($pdo)
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 });
+
+// Function to get the date associated with a code from the database
+function getCodeDate($pdo, $code) {
+    $sql = "SELECT date_created FROM answers WHERE code = :code LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':code' => $code]);
+    $result = $stmt->fetchColumn();
+    return $result ? $result : null;
+}
 
 // GET route to retrieve all answers with a specific code
 $app->get('/answer/{code}', function (Request $request, Response $response, $args) use ($pdo) {

@@ -4,7 +4,7 @@
 $host = 'mysql'; // Docker service name
 $username = 'root';
 $password = 'root';
-$database = 'webte2_sz';
+$database = 'zaverecne_zadanie';
 $port = '3306';
 
 // Create PDO connection
