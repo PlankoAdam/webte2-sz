@@ -55,7 +55,7 @@ $app->delete('/question/{id}', function (Request $request, Response $response, $
 })->add(new JWTAuthMiddleware()); 
 
 
-// POST route to create a new question
+/// POST route to create a new question
 $app->post('/question', function (Request $request, Response $response) use ($pdo) {
     $body = $request->getBody()->getContents();
 
@@ -71,6 +71,9 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     // Determine the value of is_open_ended based on the presence of answers
     $is_open_ended = empty($data['answers']) ? 1 : 0;
 
+    // Extract user_id from request if provided, otherwise extract it from JWT token
+    $user_id = $data['user_id'] ?? $request->getAttribute('user_id');
+
     // Insert new question into the database
     $sqlQuestion = "INSERT INTO questions (code, subject_id, user_id, question, date_created, is_open_ended) 
                     VALUES (:code, :subject_id, :user_id, :question, :date_created, :is_open_ended)";
@@ -78,7 +81,7 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     $stmtQuestion->execute([
         ':code' => $code,
         ':subject_id' => $data['subject_id'],
-        ':user_id' => $data['user_id'],
+        ':user_id' => $user_id,
         ':question' => $data['question'],
         ':date_created' => $date_created,
         ':is_open_ended' => $is_open_ended
@@ -129,7 +132,7 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-})->add(new JWTAuthMiddleware()); 
+})->add(new JWTAuthMiddleware());  
 
 // Function to generate a unique 5-character code consisting of letters and numbers
 function generateUniqueCode($pdo) {
