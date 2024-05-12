@@ -92,29 +92,17 @@ const data = reactive({
 })
 
 const submitHandler = (formData) => {
-  const testCode = 'TODO1'
-  const testUserId = 1
-
   const parsed = {
     question: formData.question,
     subject_id: formData.subject_id,
-    code: testCode,
-    user_id: testUserId
-  }
-  http.post('/question', parsed)
-  console.log(parsed)
-
-  const answers = Object.keys(formData.answers).map((key) => formData.answers[key])
-  answers.forEach((ans) => {
-    http.post('/answer', {
-      code: testCode,
-      answer: ans
+    answers: Object.keys(formData.answers).map((key) => {
+      return {
+        answer: formData.answers[key]
+      }
     })
-    console.log(ans)
-  })
-
-  // TODO get unique code from server
-  // TODO get QR code from server
+  }
+  // http.post('/question', parsed)
+  console.log(parsed)
 }
 </script>
 
