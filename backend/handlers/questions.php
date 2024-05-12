@@ -165,7 +165,7 @@ function generateRandomString($length) {
 
 
 
-// PUT route to update the question by code
+// PUT route to update the question and subject_id by code
 $app->put('/question/{code}', function (Request $request, Response $response, $args) use ($pdo) {
     $code = $args['code'];
 
@@ -175,11 +175,12 @@ $app->put('/question/{code}', function (Request $request, Response $response, $a
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-    // Update the question in the database
-    $sql = "UPDATE questions SET question = :question WHERE code = :code";
+    // Update the question and subject_id in the database
+    $sql = "UPDATE questions SET question = :question, subject_id = :subject_id WHERE code = :code";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':question' => $data['question'], // Updated question
+        ':subject_id' => $data['subject'], // Updated subject_id
         ':code' => $code
     ]);
 
@@ -195,6 +196,7 @@ $app->put('/question/{code}', function (Request $request, Response $response, $a
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 })->add(new JWTAuthMiddleware());
+
 
 
 // GET route to retrieve a question by code
