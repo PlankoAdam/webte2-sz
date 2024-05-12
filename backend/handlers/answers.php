@@ -29,7 +29,7 @@ $app->post('/answer', function (Request $request, Response $response) use ($pdo)
     // If a date exists for the code, use it; otherwise, generate a new date
     $data['date_created'] = $existingDate ? $existingDate : date('Y-m-d H:i:s');
 
-    $sql = "INSERT INTO answers (code, answer, date_created) VALUES (:code, :answer, :date_created)";
+    $sql = "INSERT INTO answers (question_code, answer, date_created) VALUES (:code, :answer, :date_created)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':code' => $data['code'],
@@ -48,7 +48,7 @@ $app->post('/answer', function (Request $request, Response $response) use ($pdo)
 
 // Function to get the date associated with a code from the database
 function getCodeDate($pdo, $code) {
-    $sql = "SELECT date_created FROM answers WHERE code = :code LIMIT 1";
+    $sql = "SELECT date_created FROM answers WHERE question_code = :code LIMIT 1";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':code' => $code]);
     $result = $stmt->fetchColumn();
@@ -58,7 +58,7 @@ function getCodeDate($pdo, $code) {
 // GET route to retrieve all answers with a specific code
 $app->get('/answer/{code}', function (Request $request, Response $response, $args) use ($pdo) {
     $code = $args['code'];
-    $sql = "SELECT * FROM answers WHERE code = :code";
+    $sql = "SELECT * FROM answers WHERE question_code = :code";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':code' => $code]);
     $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);

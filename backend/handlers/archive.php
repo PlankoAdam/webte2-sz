@@ -50,12 +50,13 @@ $app->post('/archive/{code}', function (Request $request, Response $response, $a
         // If the question is open-ended, just update the date_archived column in the answers table
         $date_archived = date('Y-m-d H:i:s');
 
-        $sqlUpdate = "UPDATE answers SET date_archived = :date_archived WHERE question_code = :question_code";
-        $stmtUpdate = $pdo->prepare($sqlUpdate);
-        $stmtUpdate->execute([
-            ':date_archived' => $date_archived,
-            ':question_code' => $code
-        ]);
+       // Update date_archived only if it's NULL
+       $sqlUpdate = "UPDATE answers SET date_archived = :date_archived WHERE question_code = :question_code AND date_archived IS NULL";
+       $stmtUpdate = $pdo->prepare($sqlUpdate);
+       $stmtUpdate->execute([
+           ':date_archived' => $date_archived,
+           ':question_code' => $code
+       ]);
 
         // Retrieve the updated data from the answers table
         $sqlUpdatedData = "SELECT * FROM answers WHERE question_code = :question_code";
@@ -67,4 +68,4 @@ $app->post('/archive/{code}', function (Request $request, Response $response, $a
         $response->getBody()->write(json_encode(["updated_data" => $updatedData]));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
-})->add(new JWTAuthMiddleware());
+})/*->add(new JWTAuthMiddleware())*/;
