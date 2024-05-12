@@ -13,6 +13,20 @@ import UserProfileView from '@/views/dashboard-views/UserProfileView.vue'
 import UsersListView from '@/views/dashboard-views/UsersListView.vue'
 import UserEditView from '@/views/dashboard-views/UserEditView.vue'
 
+import { useUserStore } from '@/stores/user'
+
+const userAccess = (to, from, next) => {
+  const userStore = useUserStore()
+  if (userStore.isLoggedIn()) next()
+  else next('/')
+}
+
+const adminAccess = (to, from, next) => {
+  const userStore = useUserStore()
+  if (userStore.isLoggedIn() && userStore.user.admin) next()
+  else next('/')
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,6 +54,7 @@ const router = createRouter({
       path: '/questions',
       name: 'questions',
       component: QuestionsListView,
+      beforeEnter: userAccess,
       children: [
         {
           path: '/questions/:code',
@@ -59,6 +74,7 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
+      beforeEnter: userAccess,
       children: [
         {
           path: 'change-password',
@@ -70,11 +86,13 @@ const router = createRouter({
         },
         {
           path: 'users',
-          component: UsersListView
+          component: UsersListView,
+          beforeEnter: adminAccess
         },
         {
           path: 'users/:id',
-          component: UserEditView
+          component: UserEditView,
+          beforeEnter: adminAccess
         }
       ]
     }
