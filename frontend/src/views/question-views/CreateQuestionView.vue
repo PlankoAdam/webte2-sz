@@ -55,6 +55,8 @@
 
 <script setup>
 import http from '@/http'
+import router from '@/router'
+import { useUserStore } from '@/stores/user'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { reactive } from 'vue'
@@ -101,8 +103,14 @@ const submitHandler = (formData) => {
       }
     })
   }
-  // http.post('/question', parsed)
-  console.log(parsed)
+  http
+    .post('/question', parsed, {
+      headers: { Authorization: `Bearer ${useUserStore().user.token}` }
+    })
+    .then(() => {
+      router.push(`/questions`)
+    })
+    .catch((err) => console.error(err))
 }
 </script>
 
