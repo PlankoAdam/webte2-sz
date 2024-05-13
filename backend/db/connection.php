@@ -4,7 +4,7 @@
 $host = 'mysql'; // Docker service name
 $username = 'root';
 $password = 'root';
-$database = 'zaverecne_zadanie';
+$database = 'webte2_sz';
 $port = '3306';
 
 // Create PDO connection
@@ -13,6 +13,6 @@ try {
     $pdo = new PDO($dsn, $username, $password);
     // Set PDO error mode to exception
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
