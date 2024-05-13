@@ -32,6 +32,20 @@
             })
           "
         ></FormKit>
+        <FormKit
+          v-if="userStore.user.admin"
+          type="select"
+          v-model="userFilter"
+          label="User"
+          :options="
+            users.map((el) => {
+              return {
+                label: `${el.name} ${el.surname}`,
+                value: el.id
+              }
+            })
+          "
+        ></FormKit>
       </div>
 
       <div class="flex flex-col space-y-4">
@@ -67,18 +81,18 @@ const langStore = useLanguageStore()
 const userStore = useUserStore()
 
 const questions = ref([])
-const subjects = ref([
-  {
-    subject: 'All',
-    id: null
-  }
-])
+const users = ref([])
+const subjects = ref([])
 
-const subjectFilter = ref(subjects.value[0].id)
+const userFilter = ref()
+const subjectFilter = ref()
+
 const filteredQuestions = computed(() => {
   return questions.value.filter((el) => {
-    if (!subjectFilter.value) return true
-    return el.subject_id == subjectFilter.value
+    return (
+      (subjectFilter.value ? el.subject_id == subjectFilter.value : true) &&
+      (userStore.user.admin && userFilter.value ? el.user_id == userFilter.value : true)
+    )
   })
 })
 
@@ -93,9 +107,22 @@ const getData = () => {
         }
       ]
       subjects.value.push(...res.data)
-      console.log(subjects.value)
     })
     .catch((err) => console.error(err))
+
+  if (userStore.user.admin)
+    http
+      .get('/users', { headers: { Authorization: `Bearer ${userStore.user.token}` } })
+      .then((res) => {
+        users.value = [
+          {
+            name: 'All',
+            surname: '',
+            id: null
+          }
+        ]
+        users.value.push(...res.data)
+      })
 
   http
     .get('/question', {
