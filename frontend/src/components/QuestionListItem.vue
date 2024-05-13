@@ -6,6 +6,7 @@
     }"
   >
     <div class="flex flex-col justify-center">
+      <span>{{ props.subject }} </span>
       <span class="text-3xl font-light">{{ props.question }} </span>
       <div class="text-lg mb-2 flex flex-row space-x-2">
         <div class="">
@@ -28,6 +29,7 @@ const langStore = useLanguageStore()
 const props = defineProps({
   code: String,
   question: String,
+  subject: String,
   qrsrc: String,
   active: Boolean
 })

@@ -22,7 +22,8 @@
           <QuestionListItem
             :code="q.code"
             :question="q.question"
-            :active="Date.parse(q.date_end) > Date.now()"
+            :subject="q.subject"
+            active
           ></QuestionListItem>
         </RouterLink>
       </div>
@@ -38,19 +39,31 @@ import QuestionListItem from '@/components/QuestionListItem.vue'
 import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import http from '@/http'
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const langStore = useLanguageStore()
 const userStore = useUserStore()
 
 const questions = ref([])
 
-http
-  .get('/question', {
-    headers: {
-      Authorization: `Bearer ${userStore.user.token}`
-    }
-  })
-  .then((res) => {
-    questions.value = res.data
-  })
+const getData = () => {
+  http
+    .get('/question', {
+      headers: {
+        Authorization: `Bearer ${userStore.user.token}`
+      }
+    })
+    .then((res) => {
+      questions.value = res.data
+      questions.value.forEach((q) => {
+        http.get(`/subject/${q.subject_id}`).then((res) => (q.subject = res.data.subject))
+      })
+    })
+}
+
+watch(() => route.params, getData)
+getData()
 </script>

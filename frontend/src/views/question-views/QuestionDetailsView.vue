@@ -11,25 +11,13 @@
     <div class="flex flex-col xl:flex-row xl:space-x-20 xl:justify-center items-center p-8">
       <div class="flex flex-col items-center mb-16 xl:m-0">
         <div
-          @click="
-            () => {
-              if (data.active) showModal = true
-            }
-          "
-          class="size-fit bg-white p-2 rounded-md mb-2 transition-all ease-out"
-          :class="{
-            'hover:cursor-pointer hover:scale-110': data.active,
-            'opacity-40': !data.active
-          }"
+          @click="showModal = true"
+          class="size-fit bg-white p-2 rounded-md mb-2 transition-all ease-out hover:cursor-pointer hover:scale-110"
         >
           <img :src="data.qrsrc" alt="QR code" class="size-full" />
         </div>
         <h1
-          class="text-center text-4xl font-mono font-bold transition-colors"
-          :class="{
-            'text-[var(--color-heading)]': data.active,
-            'text-[var(--color-bg-mute)]': !data.active
-          }"
+          class="text-center text-4xl font-mono font-bold transition-colors text-[var(--color-heading)]"
         >
           {{ data.code }}
         </h1>
@@ -39,7 +27,8 @@
         </div>
       </div>
       <div class="flex flex-col">
-        <h1 class="text-6xl font-light mb-8 max-w-[32rem] min-w-fit">{{ data.question }}</h1>
+        <h1 class="text-xl mb-4">{{ data.subject }}</h1>
+        <h1 class="text-5xl font-light mb-8 w-[32rem]">{{ data.question }}</h1>
         <ul class="flex flex-col space-y-2 max-w-96">
           <li
             v-for="ans in data.answers"
@@ -74,9 +63,9 @@ const showModal = ref(false)
 
 const getData = async () => {
   const question = (await http.get(`/question/${route.params.code}`)).data[0]
-  const answers = (await http.get(`/answer/${question.code}`)).data.map((el) => el.answer) // waiting for fix
+  const answers = (await http.get(`/answer/${question.code}`)).data.map((el) => el.answer)
   question.answers = answers ? answers : []
-  question.subject = (await http.get(`/subject/${question.subject_id}`)).data.name
+  question.subject = (await http.get(`/subject/${question.subject_id}`)).data.subject
   question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
 
   data.value = question

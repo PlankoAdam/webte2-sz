@@ -4,31 +4,16 @@
   >
     <div class="flex flex-col xl:flex-row xl:space-x-20 xl:justify-center items-center p-8">
       <div class="flex flex-col items-center mb-16 xl:m-0">
-        <div
-          @click="
-            () => {
-              if (data.active) showModal = true
-            }
-          "
-          class="size-fit bg-white p-2 rounded-md mb-2 transition-all ease-out"
-          :class="{
-            'hover:cursor-pointer hover:scale-110': data.active,
-            'opacity-40': !data.active
-          }"
-        >
+        <div class="size-fit bg-white p-2 rounded-md mb-2">
           <img :src="data.qrsrc" alt="QR code" class="size-full" />
         </div>
         <h1
-          class="text-center text-4xl font-mono font-bold transition-colors"
-          :class="{
-            'text-[var(--color-heading)]': data.active,
-            'text-[var(--color-bg-mute)]': !data.active
-          }"
+          class="text-center text-4xl font-mono font-bold transition-colors text-[var(--color-heading)]"
         >
           {{ data.code }}
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="$router.push(`/questions/${data.id}`)">{{ 'Cancel' }}</button>
+          <button @click="$router.push(`/questions/${data.code}`)">{{ 'Cancel' }}</button>
         </div>
       </div>
       <div class="flex flex-col">
@@ -55,32 +40,6 @@
             "
             validation="required"
           ></FormKit>
-          <!-- <h1 class="mb-2">Answers:</h1>
-          <div class="flex flex-row space-x-2 mb-4">
-            <button @click.prevent="data.answers.pop()" class="mt-0 flex-1">
-              <v-icon name="fa-minus" scale="2"></v-icon>
-            </button>
-            <h1 class="content-center px-2 text-2xl">{{ data.answers.length }}</h1>
-            <button
-              @click.prevent="
-                () => {
-                  if (data.answers.length < 6) data.answers.push('')
-                }
-              "
-              class="mt-0 flex-1"
-            >
-              <v-icon name="fa-plus" scale="2"></v-icon>
-            </button>
-          </div>
-          <FormKit type="group" label="Answers">
-            <FormKit
-              v-for="ans in data.answers"
-              :key="ans"
-              :value="ans"
-              validation="required"
-              validation-label="Answer"
-            ></FormKit>
-          </FormKit> -->
           <FormKit label="Save" type="submit" :disabled="!valid" />
         </FormKit>
       </div>
@@ -93,10 +52,10 @@ import { watch } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import http from '@/http'
+import router from '@/router'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
-
-const showModal = ref(false)
 
 const data = ref({})
 const subjects = ref([])
@@ -115,8 +74,17 @@ const getData = async () => {
 }
 
 const formHandler = (formData) => {
-  console.log(formData)
-  // TODO waiting for put endpoint
+  http
+    .put(
+      `/question/${route.params.code}`,
+      {
+        question: formData.question,
+        subject: formData.subject_id
+      },
+      { headers: { Authorization: `Bearer ${useUserStore().user.token}` } }
+    )
+    .then(() => router.push(`/questions/${route.params.code}`))
+    .catch((err) => console.error(err))
 }
 
 getData(route.params.code)
