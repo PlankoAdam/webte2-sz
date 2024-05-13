@@ -23,7 +23,7 @@
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
           <button @click="$router.push(`/questions/edit/${data.code}`)">{{ 'Edit' }}</button>
-          <button class="btn-danger">{{ 'Delete' }}</button>
+          <button @click="delQuestion" class="btn-danger">{{ 'Delete' }}</button>
         </div>
       </div>
       <div class="flex flex-col">
@@ -51,10 +51,11 @@ import { useRoute } from 'vue-router'
 import http from '@/http'
 
 // import { useLanguageStore } from '@/stores/language'
-// import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user'
+import router from '@/router'
 
 // const langStore = useLanguageStore()
-// const userStore = useUserStore()
+const userStore = useUserStore()
 
 const route = useRoute()
 
@@ -69,6 +70,18 @@ const getData = async () => {
   question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
 
   data.value = question
+}
+
+const delQuestion = () => {
+  http
+    .delete(`/question/${route.params.code}`, {
+      headers: { Authorization: `Bearer ${userStore.user.token}` }
+    })
+    .then((res) => {
+      console.log(res)
+      router.push('/questions')
+    })
+    .catch((err) => console.error(err))
 }
 
 getData(route.params.code)
