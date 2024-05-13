@@ -39,20 +39,35 @@ $app->get('/question', function (Request $request, Response $response) use ($pdo
         ->withStatus(200);
 })->add(new JWTAuthMiddleware());
 
-// DELETE route to delete a question by ID
-$app->delete('/question/{id}', function (Request $request, Response $response, $args) use ($pdo) {
-    $id = $args['id'];
-    $sql = "DELETE FROM questions WHERE id = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id' => $id]);
+// DELETE route to delete a question by code
+$app->delete('/question/{code}', function (Request $request, Response $response, $args) use ($pdo) {
+    $code = $args['code'];
 
+    // Step 1: Delete rows in multi_choice_answer_archive where answer_id matches the id in answers table
+    $sqlDeleteMultiChoiceArchive = "DELETE mcaa FROM multi_choice_answer_archives mcaa 
+                                    JOIN answers a ON mcaa.answer_id = a.id
+                                    WHERE a.question_code = :code";
+    $stmtDeleteMultiChoiceArchive = $pdo->prepare($sqlDeleteMultiChoiceArchive);
+    $stmtDeleteMultiChoiceArchive->execute([':code' => $code]);
+
+    // Step 2: Delete rows in answers table where question_code matches the code parameter
+    $sqlDeleteAnswers = "DELETE FROM answers WHERE question_code = :code";
+    $stmtDeleteAnswers = $pdo->prepare($sqlDeleteAnswers);
+    $stmtDeleteAnswers->execute([':code' => $code]);
+
+    // Step 3: Delete the question by code
+    $sqlDeleteQuestion = "DELETE FROM questions WHERE code = :code";
+    $stmtDeleteQuestion = $pdo->prepare($sqlDeleteQuestion);
+    $stmtDeleteQuestion->execute([':code' => $code]);
+
+    // Response message
     $response->getBody()->write(json_encode(['message' => 'question deleted']));
 
     // Set the response headers and status code
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-})->add(new JWTAuthMiddleware()); 
+})->add(new JWTAuthMiddleware());
 
 
 /// POST route to create a new question
