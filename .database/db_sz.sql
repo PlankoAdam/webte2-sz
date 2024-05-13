@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 10, 2024 at 01:45 PM
+-- Generation Time: May 12, 2024 at 02:01 PM
 -- Server version: 8.0.36-0ubuntu0.22.04.1
 -- PHP Version: 8.3.2-1+ubuntu22.04.1+deb.sury.org+1
 
@@ -138,14 +138,14 @@ INSERT INTO `users` (`id`, `email`, `name`, `surname`, `password`, `admin`) VALU
 --
 ALTER TABLE `answers`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `question_code` (`question_code`);
+  ADD KEY `answers_ibfk_1` (`question_code`);
 
 --
 -- Indexes for table `multi_choice_answer_archives`
 --
 ALTER TABLE `multi_choice_answer_archives`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `answer_id` (`answer_id`);
+  ADD KEY `multi_choice_answer_archives_ibfk_1` (`answer_id`);
 
 --
 -- Indexes for table `questions`
@@ -153,7 +153,7 @@ ALTER TABLE `multi_choice_answer_archives`
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`code`),
   ADD KEY `subject_id` (`subject_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `questions_ibfk_2` (`user_id`);
 
 --
 -- Indexes for table `subjects`
@@ -209,20 +209,20 @@ ALTER TABLE `users`
 -- Constraints for table `answers`
 --
 ALTER TABLE `answers`
-  ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_code`) REFERENCES `questions` (`code`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_code`) REFERENCES `questions` (`code`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `multi_choice_answer_archives`
 --
 ALTER TABLE `multi_choice_answer_archives`
-  ADD CONSTRAINT `multi_choice_answer_archives_ibfk_1` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `multi_choice_answer_archives_ibfk_1` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `questions`
 --
 ALTER TABLE `questions`
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `questions_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `questions_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

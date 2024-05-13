@@ -34,9 +34,10 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
-      MYSQL_DATABASE: demo
+      MYSQL_DATABASE: webte2_sz
     volumes:
       - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./.database:/docker-entrypoint-initdb.d
       - ./database:/var/lib/mysql
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
