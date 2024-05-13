@@ -28,7 +28,7 @@
       </div>
       <div class="flex flex-col">
         <h1 class="text-xl mb-4">{{ data.subject }}</h1>
-        <h1 class="text-5xl font-light mb-8 w-[32rem]">{{ data.question }}</h1>
+        <h1 class="text-5xl font-light mb-8 min-w-[32rem] max-w-[32rem]">{{ data.question }}</h1>
         <ul class="flex flex-col space-y-2 max-w-96">
           <li
             v-for="ans in data.answers"

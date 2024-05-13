@@ -7,7 +7,9 @@
   >
     <div class="flex flex-col justify-center">
       <span>{{ props.subject }} </span>
-      <span class="text-3xl font-light">{{ props.question }} </span>
+      <p class="text-2xl font-light max-w-96 text-ellipsis overflow-clip whitespace-nowrap">
+        {{ props.question }}
+      </p>
       <div class="text-lg mb-2 flex flex-row space-x-2">
         <div class="">
           {{ langStore.t('Code', 'Kód') }}
