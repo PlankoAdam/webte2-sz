@@ -78,7 +78,7 @@ const submit = () => {
     .post(`/answer/${route.params.code}`, {
       answer: data.value.is_open_ended ? selAnswer.value.toLowerCase() : selAnswer.value
     })
-    .then((res) => console.log(res))
+    .then(() => router.push(`/results/${route.params.code}`))
     .catch((err) => console.error(err))
 }
 

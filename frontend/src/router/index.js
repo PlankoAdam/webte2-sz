@@ -14,6 +14,7 @@ import UsersListView from '@/views/dashboard-views/UsersListView.vue'
 import UserEditView from '@/views/dashboard-views/UserEditView.vue'
 
 import { useUserStore } from '@/stores/user'
+import ResultsView from '@/views/ResultsView.vue'
 
 const userAccess = (to, from, next) => {
   const userStore = useUserStore()
@@ -39,6 +40,11 @@ const router = createRouter({
       path: '/:code',
       name: 'question',
       component: QuestionView
+    },
+    {
+      path: '/results/:code',
+      name: 'results',
+      component: ResultsView
     },
     {
       path: '/login',
