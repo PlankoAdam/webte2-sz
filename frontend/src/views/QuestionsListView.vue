@@ -23,6 +23,7 @@
             :code="q.code"
             :question="q.question"
             :subject="q.subject"
+            :user="q.user ? `${q.user.name} ${q.user.surname}` : ''"
             active
           ></QuestionListItem>
         </RouterLink>
@@ -59,7 +60,16 @@ const getData = () => {
     .then((res) => {
       questions.value = res.data
       questions.value.forEach((q) => {
+        q.subject = ''
         http.get(`/subject/${q.subject_id}`).then((res) => (q.subject = res.data.subject))
+        if (userStore.user.admin)
+          http
+            .get(`/users/${q.user_id}`, {
+              headers: {
+                Authorization: `Bearer ${userStore.user.token}`
+              }
+            })
+            .then((res) => (q.user = res.data))
       })
     })
 }

@@ -6,17 +6,22 @@
     }"
   >
     <div class="flex flex-col justify-center">
-      <span>{{ props.subject }} </span>
-      <p class="text-2xl font-light max-w-96 text-ellipsis overflow-clip whitespace-nowrap">
+      <p
+        class="text-2xl font-light min-w-96 max-w-96 text-ellipsis overflow-clip whitespace-nowrap"
+      >
         {{ props.question }}
       </p>
-      <div class="text-lg mb-2 flex flex-row space-x-2">
-        <div class="">
-          {{ langStore.t('Code', 'Kód') }}
+      <span>{{ props.subject }} </span>
+      <div class="flex flex-row justify-between mb-2 text-md">
+        <div class="flex flex-row space-x-2">
+          <div>
+            {{ langStore.t('Code', 'Kód') }}
+          </div>
+          <div class="font-mono font-bold">
+            {{ props.code }}
+          </div>
         </div>
-        <div class="font-mono font-bold">
-          {{ props.code }}
-        </div>
+        <p v-if="props.user">{{ props.user }}</p>
       </div>
     </div>
   </div>
@@ -32,6 +37,7 @@ const props = defineProps({
   code: String,
   question: String,
   subject: String,
+  user: String,
   qrsrc: String,
   active: Boolean
 })

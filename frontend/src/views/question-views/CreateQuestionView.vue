@@ -26,6 +26,22 @@
             "
             validation="required"
           ></FormKit>
+          <FormKit
+            v-if="userStore.user.admin"
+            name="user_id"
+            label="User"
+            type="select"
+            placeholder="Select a user"
+            validation="required"
+            :options="
+              users.map((el) => {
+                return {
+                  label: `${el.name} ${el.surname} (${el.email})`,
+                  value: el.id
+                }
+              })
+            "
+          ></FormKit>
           <h1 class="mb-2">Answers:</h1>
           <div class="flex flex-row space-x-2 mb-4">
             <button @click.prevent="nans--" class="mt-0 flex-1">
@@ -60,6 +76,8 @@ import { useUserStore } from '@/stores/user'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { reactive } from 'vue'
+
+const userStore = useUserStore()
 
 const schema = [
   {
@@ -103,15 +121,29 @@ const submitHandler = (formData) => {
       }
     })
   }
+
+  if (userStore.user.admin) parsed.user_id = formData.user_id
+
   http
     .post('/question', parsed, {
-      headers: { Authorization: `Bearer ${useUserStore().user.token}` }
+      headers: { Authorization: `Bearer ${userStore.user.token}` }
     })
     .then(() => {
       router.push(`/questions`)
     })
     .catch((err) => console.error(err))
 }
+
+const users = ref([])
+
+const getUsers = () => {
+  http
+    .get('/users', { headers: { Authorization: `Bearer ${userStore.user.token}` } })
+    .then((res) => (users.value = res.data))
+    .catch((err) => console.error(err))
+}
+
+if (userStore.user.admin) getUsers()
 </script>
 
 <style scoped>

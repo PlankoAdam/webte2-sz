@@ -21,6 +21,9 @@
         >
           {{ data.code }}
         </h1>
+        <h1 v-if="userStore.user.admin && data.user" class="text-xl">
+          {{ `${data.user.name} ${data.user.surname}` }}
+        </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
           <button @click="$router.push(`/questions/edit/${data.code}`)">{{ 'Edit' }}</button>
           <button @click="delQuestion" class="btn-danger">{{ 'Delete' }}</button>
@@ -67,6 +70,12 @@ const getData = async () => {
   const answers = (await http.get(`/answer/${question.code}`)).data.map((el) => el.answer)
   question.answers = answers ? answers : []
   question.subject = (await http.get(`/subject/${question.subject_id}`)).data.subject
+  if (userStore.user.admin)
+    question.user = (
+      await http.get(`/users/${question.user_id}`, {
+        headers: { Authorization: `Bearer ${userStore.user.token}` }
+      })
+    ).data
   question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
 
   data.value = question
