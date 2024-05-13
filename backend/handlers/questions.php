@@ -94,36 +94,42 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     $insertedAnswers = [];
     if (!empty($data['answers'])) {
         foreach ($data['answers'] as $answer) {
-            $sqlAnswer = "INSERT INTO answers (question_code, answer, is_correct, count, date_created, date_archived) 
-                          VALUES (:question_code, :answer, :is_correct, :count, :date_created, NULL)";
-            $stmtAnswer = $pdo->prepare($sqlAnswer);
-            $stmtAnswer->execute([
-                ':question_code' => $code,
-                ':answer' => $answer['answer'],
-                ':is_correct' => 0, // Assuming is_correct is always 0 for now
-                ':count' => 0,
-                ':date_created' => $date_created
-            ]);
+            // Your existing code to insert the answer into the database...
 
-            // Retrieve the ID of the newly inserted answer
-            $newAnswerId = $pdo->lastInsertId();
+    // Set the value of is_correct based on the presence of is_correct in the request body
+    $is_correct = isset($answer['is_correct']) ? $answer['is_correct'] : 0;
 
-            // Add the inserted answer to the list
-            $insertedAnswers[] = [
-                'id' => $newAnswerId,
-                'question_code' => $code,
-                'answer' => $answer['answer'],
-                'is_correct' => 0, // Assuming is_correct is always 0 for now
-                'count' => 0,
-                'date_created' => $date_created,
-                'date_archived' => null
-            ];
+    // Insert answers into the answers table if available
+    $sqlAnswer = "INSERT INTO answers (question_code, answer, is_correct, count, date_created, date_archived) 
+                  VALUES (:question_code, :answer, :is_correct, :count, :date_created, NULL)";
+    $stmtAnswer = $pdo->prepare($sqlAnswer);
+    $stmtAnswer->execute([
+        ':question_code' => $code,
+        ':answer' => $answer['answer'],
+        ':is_correct' => $is_correct, // Set the value of is_correct
+        ':count' => 0,
+        ':date_created' => $date_created
+    ]);
+
+    // Retrieve the ID of the newly inserted answer
+    $newAnswerId = $pdo->lastInsertId();
+
+    // Add the inserted answer to the list
+    $insertedAnswers[] = [
+        'id' => $newAnswerId,
+        'question_code' => $code,
+        'answer' => $answer['answer'],
+        'is_correct' => $is_correct, // Include is_correct in the response
+        'count' => 0,
+        'date_created' => $date_created,
+        'date_archived' => null
+    ];
         }
     }
 
     // Return a message with the ID of the newly inserted question and the inserted answers
     $responseData = [
-        'id' => $newQuestionId,
+    //    'id' => $newQuestionId,
         'code' => $code,
         'answers' => $insertedAnswers
     ];
