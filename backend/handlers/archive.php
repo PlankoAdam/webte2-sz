@@ -68,4 +68,34 @@ $app->post('/archive/{code}', function (Request $request, Response $response, $a
         $response->getBody()->write(json_encode(["updated_data" => $updatedData]));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
-})/*->add(new JWTAuthMiddleware())*/;
+})->add(new JWTAuthMiddleware());
+
+// GET route to retrieve all archived answers by code
+$app->get('/archive/{code}', function (Request $request, Response $response, $args) use ($pdo) {
+    $code = $args['code'];
+
+    // Query the database to get archived answers from multi_choice_answer_archives table
+    $sqlMultiChoice = "SELECT mcaa.*, a.answer
+                      FROM multi_choice_answer_archives mcaa
+                      INNER JOIN answers a ON mcaa.answer_id = a.id
+                      INNER JOIN questions q ON a.question_code = q.code
+                      WHERE q.code = ?";
+    $stmtMultiChoice = $pdo->prepare($sqlMultiChoice);
+    $stmtMultiChoice->execute([$code]);
+    $archivedMultiChoiceAnswers = $stmtMultiChoice->fetchAll(PDO::FETCH_ASSOC);
+
+    // Query the database to get archived answers from answers table
+    $sqlAnswers = "SELECT *
+                   FROM answers
+                   WHERE question_code = ? AND date_archived IS NOT NULL";
+    $stmtAnswers = $pdo->prepare($sqlAnswers);
+    $stmtAnswers->execute([$code]);
+    $archivedOtherAnswers = $stmtAnswers->fetchAll(PDO::FETCH_ASSOC);
+
+    // Combine the results from both queries
+    $archivedAnswers = array_merge($archivedMultiChoiceAnswers, $archivedOtherAnswers);
+
+    // Return response with the archived answers
+    $response->getBody()->write(json_encode(["archived_answers" => $archivedAnswers]));
+    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+})->add(new JWTAuthMiddleware());

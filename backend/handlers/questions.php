@@ -55,7 +55,7 @@ $app->delete('/question/{id}', function (Request $request, Response $response, $
 })->add(new JWTAuthMiddleware()); 
 
 
-// POST route to create a new question
+/// POST route to create a new question
 $app->post('/question', function (Request $request, Response $response) use ($pdo) {
     $body = $request->getBody()->getContents();
 
@@ -71,6 +71,9 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     // Determine the value of is_open_ended based on the presence of answers
     $is_open_ended = empty($data['answers']) ? 1 : 0;
 
+    // Extract user_id from request if provided, otherwise extract it from JWT token
+    $user_id = $data['user_id'] ?? $request->getAttribute('user_id');
+
     // Insert new question into the database
     $sqlQuestion = "INSERT INTO questions (code, subject_id, user_id, question, date_created, is_open_ended) 
                     VALUES (:code, :subject_id, :user_id, :question, :date_created, :is_open_ended)";
@@ -78,7 +81,7 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     $stmtQuestion->execute([
         ':code' => $code,
         ':subject_id' => $data['subject_id'],
-        ':user_id' => $data['user_id'],
+        ':user_id' => $user_id,
         ':question' => $data['question'],
         ':date_created' => $date_created,
         ':is_open_ended' => $is_open_ended
@@ -129,7 +132,7 @@ $app->post('/question', function (Request $request, Response $response) use ($pd
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
-})->add(new JWTAuthMiddleware()); 
+})->add(new JWTAuthMiddleware());  
 
 // Function to generate a unique 5-character code consisting of letters and numbers
 function generateUniqueCode($pdo) {
@@ -165,9 +168,9 @@ function generateRandomString($length) {
 
 
 
-// PUT route to update the date_end and question of a question by ID
-$app->put('/question/{id}', function (Request $request, Response $response, $args) use ($pdo) {
-    $id = $args['id'];
+// PUT route to update the question and subject_id by code
+$app->put('/question/{code}', function (Request $request, Response $response, $args) use ($pdo) {
+    $code = $args['code'];
 
     // Get the request body contents
     $body = $request->getBody()->getContents();
@@ -175,24 +178,28 @@ $app->put('/question/{id}', function (Request $request, Response $response, $arg
     // Decode the JSON data into an associative array
     $data = json_decode($body, true);
 
-    // Set current time as date_end
-    $date_end = date('Y-m-d H:i:s');
-
-    // Update the question and date_end in the database
-    $sql = "UPDATE questions SET question = :question, date_end = :date_end WHERE id = :id";
+    // Update the question and subject_id in the database
+    $sql = "UPDATE questions SET question = :question, subject_id = :subject_id WHERE code = :code";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':question' => $data['question'], // Updated question
-        ':date_end' => $date_end, // Updated date_end
-        ':id' => $id
+        ':subject_id' => $data['subject'], // Updated subject_id
+        ':code' => $code
     ]);
 
-    // Return success message
-    $response->getBody()->write(json_encode(['message' => 'Question and date_end updated!']));
+    // Fetch the updated row from the database
+    $sql = "SELECT * FROM questions WHERE code = :code";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':code' => $code]);
+    $updatedQuestion = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Return the updated row
+    $response->getBody()->write(json_encode($updatedQuestion));
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);
 })->add(new JWTAuthMiddleware());
+
 
 
 // GET route to retrieve a question by code
