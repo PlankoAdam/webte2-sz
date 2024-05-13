@@ -1,13 +1,13 @@
 <template>
   <div
-    class="flex flex-row space-x-8 rounded-lg w-full h-24 p-4 bg-[var(--prim400)] dark:bg-[var(--prim700)] transition-all hover:cursor-pointer hover:scale-[103%] ease-out duration-100"
+    class="flex flex-row space-x-8 rounded-lg w-full h-24 p-2 px-4 bg-[var(--prim400)] dark:bg-[var(--prim700)] transition-all hover:cursor-pointer hover:scale-[103%] ease-out duration-100"
     :class="{
       'opacity-50': !props.active
     }"
   >
-    <div class="flex flex-col justify-center">
+    <div class="flex flex-col justify-center lg:min-w-96 lg:max-w-96 w-full">
       <p
-        class="text-2xl font-light min-w-96 max-w-96 text-ellipsis overflow-clip whitespace-nowrap"
+        class="text-2xl font-light text-ellipsis overflow-clip whitespace-nowrap lg:w-full max-w-96"
       >
         {{ props.question }}
       </p>
