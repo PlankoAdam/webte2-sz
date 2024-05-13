@@ -17,8 +17,25 @@
           </div>
         </div>
       </RouterLink>
+
+      <div>
+        <FormKit
+          type="select"
+          v-model="subjectFilter"
+          label="Subject"
+          :options="
+            subjects.map((el) => {
+              return {
+                label: el.subject,
+                value: el.id
+              }
+            })
+          "
+        ></FormKit>
+      </div>
+
       <div class="flex flex-col space-y-4">
-        <RouterLink v-for="q in questions" :key="q.code" :to="`/questions/${q.code}`">
+        <RouterLink v-for="q in filteredQuestions" :key="q.code" :to="`/questions/${q.code}`">
           <QuestionListItem
             :code="q.code"
             :question="q.question"
@@ -42,6 +59,7 @@ import { ref } from 'vue'
 import http from '@/http'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const route = useRoute()
 
@@ -49,8 +67,36 @@ const langStore = useLanguageStore()
 const userStore = useUserStore()
 
 const questions = ref([])
+const subjects = ref([
+  {
+    subject: 'All',
+    id: null
+  }
+])
+
+const subjectFilter = ref(subjects.value[0].id)
+const filteredQuestions = computed(() => {
+  return questions.value.filter((el) => {
+    if (!subjectFilter.value) return true
+    return el.subject_id == subjectFilter.value
+  })
+})
 
 const getData = () => {
+  http
+    .get('/subject')
+    .then((res) => {
+      subjects.value = [
+        {
+          subject: 'All',
+          id: null
+        }
+      ]
+      subjects.value.push(...res.data)
+      console.log(subjects.value)
+    })
+    .catch((err) => console.error(err))
+
   http
     .get('/question', {
       headers: {
