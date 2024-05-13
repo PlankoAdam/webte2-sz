@@ -10,6 +10,11 @@ $app->get('/answer', function (Request $request, Response $response) use ($pdo) 
     $stmt = $pdo->query($sql);
     $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Convert the "question_code" field to string
+    foreach ($answers as &$answer) {
+        $answer['question_code'] = (string) $answer['question_code'];
+    }
+
     // Return response as JSON
     $response->getBody()->write(json_encode($answers));
     return $response
@@ -117,6 +122,11 @@ $app->get('/answer/{code}', function (Request $request, Response $response, $arg
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':code' => $code]);
     $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+     // Convert the "question_code" field to string
+     foreach ($answers as &$answer) {
+        $answer['question_code'] = (string) $answer['question_code'];
+    }
 
     // Return response as JSON
     $response->getBody()->write(json_encode($answers));

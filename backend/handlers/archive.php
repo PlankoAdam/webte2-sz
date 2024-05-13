@@ -64,6 +64,11 @@ $app->post('/archive/{code}', function (Request $request, Response $response, $a
         $stmtUpdatedData->execute([':question_code' => $code]);
         $updatedData = $stmtUpdatedData->fetchAll(PDO::FETCH_ASSOC);
 
+           // Convert the "question_code" field to string
+      foreach ($updatedData as &$answer) {
+        $answer['question_code'] = (string) $answer['question_code'];
+    }
+
         // Return response with the updated data
         $response->getBody()->write(json_encode(["updated_data" => $updatedData]));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
@@ -94,6 +99,11 @@ $app->get('/archive/{code}', function (Request $request, Response $response, $ar
 
     // Combine the results from both queries
     $archivedAnswers = array_merge($archivedMultiChoiceAnswers, $archivedOtherAnswers);
+
+      // Convert the "question_code" field to string
+      foreach ($archivedAnswers as &$answer) {
+        $answer['question_code'] = (string) $answer['question_code'];
+    }
 
     // Return response with the archived answers
     $response->getBody()->write(json_encode(["archived_answers" => $archivedAnswers]));
