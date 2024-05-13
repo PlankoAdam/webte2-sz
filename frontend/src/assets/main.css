@@ -26,7 +26,10 @@ textarea {
 }
 
 input[type='checkbox'] {
-  @apply min-w-0 max-w-min max-h-min me-2 cursor-pointer;
+  border-radius: 8px;
+  border: 2px solid var(--color-bg-mute);
+
+  @apply size-[37.2px] min-w-0 cursor-pointer;
 }
 
 input:focus,

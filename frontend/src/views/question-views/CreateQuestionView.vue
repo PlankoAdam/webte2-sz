@@ -44,14 +44,14 @@
           ></FormKit>
           <h1 class="mb-2">Answers:</h1>
           <div class="flex flex-row space-x-2 mb-4">
-            <button @click.prevent="nans--" class="mt-0 flex-1">
+            <button @click.prevent="nans.pop()" class="mt-0 flex-1">
               <v-icon name="fa-minus" scale="2"></v-icon>
             </button>
             <h1 class="content-center px-2 text-2xl">{{ data.answers.length }}</h1>
             <button
               @click.prevent="
                 () => {
-                  if (nans < 6) nans++
+                  if (nans.length < 6) nans.push('')
                 }
               "
               class="mt-0 flex-1"
@@ -60,7 +60,13 @@
             </button>
           </div>
           <FormKit name="answers" type="group">
-            <FormKitSchema :schema="schema" :data="data"></FormKitSchema>
+            <!-- <FormKitSchema :schema="schema" :data="data"></FormKitSchema> -->
+            <FormKit v-for="a in nans" :key="a" type="group">
+              <div class="flex flex-row space-x-2">
+                <FormKit name="answer"></FormKit>
+                <FormKit name="is_correct" type="checkbox" :value="false"></FormKit>
+              </div>
+            </FormKit>
           </FormKit>
           <FormKit label="Create" type="submit" :disabled="!valid" />
         </FormKit>
@@ -71,7 +77,7 @@
 
 <script setup>
 import http from '@/http'
-import router from '@/router'
+// import router from '@/router'
 import { useUserStore } from '@/stores/user'
 import { computed } from 'vue'
 import { ref } from 'vue'
@@ -79,21 +85,22 @@ import { reactive } from 'vue'
 
 const userStore = useUserStore()
 
-const schema = [
-  {
-    $el: 'ul',
-    children: [
-      {
-        $formkit: 'text',
-        validation: 'required',
-        validationLabel: 'Answer',
-        for: ['item', 'key', '$answers']
-      }
-    ]
-  }
-]
+// const schema = [
+//   {
+//     $el: 'ul',
+//     children: [
+//       {
+//         $formkit: 'text',
+//         validation: 'required',
+//         validationLabel: 'Answer',
+//         for: ['item', 'key', '$answers'],
+//         children: [{ $formkit: 'checkbox' }]
+//       }
+//     ]
+//   }
+// ]
 
-const nans = ref(0)
+const nans = ref([])
 const subjects = ref([])
 
 http.get('/subject').then((res) => {
@@ -124,14 +131,16 @@ const submitHandler = (formData) => {
 
   if (userStore.user.admin) parsed.user_id = formData.user_id
 
-  http
-    .post('/question', parsed, {
-      headers: { Authorization: `Bearer ${userStore.user.token}` }
-    })
-    .then(() => {
-      router.push(`/questions`)
-    })
-    .catch((err) => console.error(err))
+  console.log(parsed)
+
+  // http
+  //   .post('/question', parsed, {
+  //     headers: { Authorization: `Bearer ${userStore.user.token}` }
+  //   })
+  //   .then(() => {
+  //     router.push(`/questions`)
+  //   })
+  //   .catch((err) => console.error(err))
 }
 
 const users = ref([])
