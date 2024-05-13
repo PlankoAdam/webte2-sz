@@ -9,7 +9,14 @@
         <div class="text-lg font-mono">{{ question.code }}</div>
       </div>
 
-      <MultiChoiceResults :answers="answers"></MultiChoiceResults>
+      <div>
+        <h1 class="uppercase text-2xl font-light mb-8">Answers:</h1>
+        <MultiChoiceResults
+          v-if="question.is_open_ended == 0"
+          :answers="answers"
+        ></MultiChoiceResults>
+        <WordCloud v-if="question.is_open_ended == 1" :answers="answers"></WordCloud>
+      </div>
     </div>
   </main>
 </template>
@@ -19,6 +26,7 @@ import { ref } from 'vue'
 import http from '@/http'
 import { useRoute } from 'vue-router'
 import MultiChoiceResults from '@/components/MultiChoiceResults.vue'
+import WordCloud from '@/components/WordCloud.vue'
 
 const route = useRoute()
 

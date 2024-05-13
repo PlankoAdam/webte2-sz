@@ -4,7 +4,8 @@
       v-for="ans in sortedAnswers"
       :key="ans"
       class="p-1 px-2 rounded-md flex flex-row justify-between min-w-96 bg-gradient-to-r from-[var(--clr),var(--perc)] via-[var(--clr),var(--perc)] to-[var(--color-bg-soft)]"
-      :style="`--perc:${ans.percent}%; --clr:${ans.is_corrcet ? 'var(--color-good)' : 'var(--color-bg-mute)'}`"
+      :style="`--perc:${ans.percent}%; --clr:${ans.is_correct ? 'var(--color-good)' : 'var(--color-bg-mute)'}`"
+      :class="{ 'text-white': ans.is_correct }"
     >
       <p>{{ ans.answer }}</p>
       <p>{{ ans.count }}</p>
@@ -41,8 +42,3 @@ const calcMax = () => {
   })
 }
 </script>
-
-<style scoped>
-.ans {
-}
-</style>
