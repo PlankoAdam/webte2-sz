@@ -21,28 +21,32 @@
         >
           {{ data.code }}
         </h1>
-        <h1 v-if="userStore.user.admin && data.user" class="text-xl">
-          {{ `${data.user.name} ${data.user.surname}` }}
-        </h1>
+
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="$router.push(`/questions/edit/${data.code}`)">
-            {{ ls.t('Edit', 'Upraviť') }}
-          </button>
-          <button @click="delQuestion" class="btn-danger">{{ ls.t('Delete', 'Vymazať') }}</button>
+          <div class="flex flex-col">
+            <button>{{ ls.t('Archive', 'Archivovať') }}</button>
+            <button>{{ ls.t('Duplicate', 'Duplikovať') }}</button>
+          </div>
+          <div class="flex flex-col">
+            <button @click="$router.push(`/questions/edit/${data.code}`)">
+              {{ ls.t('Edit', 'Upraviť') }}
+            </button>
+            <button @click="delQuestion" class="btn-danger">{{ ls.t('Delete', 'Vymazať') }}</button>
+          </div>
         </div>
       </div>
       <div class="flex flex-col">
-        <h1 class="text-xl mb-4">{{ data.subject }}</h1>
-        <h1 class="text-5xl font-light mb-8 min-w-[32rem] max-w-[32rem]">{{ data.question }}</h1>
-        <ul class="flex flex-col space-y-2 max-w-96">
-          <li
-            v-for="ans in data.answers"
-            :key="ans"
-            class="p-1 px-4 rounded-sm bg-[var(--color-bg-soft)]"
-          >
-            {{ ans }}
-          </li>
-        </ul>
+        <h1 v-if="userStore.user.admin && data.user" class="text-xl mb-8">
+          {{ `${data.user.name} ${data.user.surname} [${data.user.email}]` }}
+        </h1>
+        <h1 class="text-xl">{{ data.subject }}</h1>
+        <h1
+          class="text-5xl text-[var(--color-heading)] font-light mb-8 min-w-[32rem] max-w-[32rem]"
+        >
+          {{ data.question }}
+        </h1>
+        <MultiChoiceResults v-if="!data.is_open_ended" :answers="data.answers"></MultiChoiceResults>
+        <WordCloud v-else :answers="data.answers"></WordCloud>
       </div>
     </div>
   </main>
@@ -58,6 +62,8 @@ import { useLanguageStore } from '@/stores/language'
 
 import { useUserStore } from '@/stores/user'
 import router from '@/router'
+import MultiChoiceResults from '@/components/MultiChoiceResults.vue'
+import WordCloud from '@/components/WordCloud.vue'
 
 const ls = useLanguageStore()
 const userStore = useUserStore()
@@ -69,7 +75,7 @@ const showModal = ref(false)
 
 const getData = async () => {
   const question = (await http.get(`/question/${route.params.code}`)).data[0]
-  const answers = (await http.get(`/answer/${question.code}`)).data.map((el) => el.answer)
+  const answers = (await http.get(`/answer/${question.code}`)).data
   question.answers = answers ? answers : []
   question.subject = (await http.get(`/subject/${question.subject_id}`)).data.subject
   if (userStore.user.admin)
@@ -105,7 +111,7 @@ button {
   background-color: var(--color-bg-soft);
   color: var(--color-text);
   border: none;
-  @apply p-1 w-24 xl:w-full;
+  @apply p-1 w-36 xl:w-full;
 }
 
 button:hover {

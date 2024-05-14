@@ -115,7 +115,10 @@ const submitHandler = (formData) => {
     question: formData.question,
     subject_id: formData.subject_id,
     answers: Object.keys(formData.answers).map((key) => {
-      return formData.answers[key]
+      return {
+        answer: formData.answers[key].answer,
+        is_correct: formData.answers[key].is_correct ? 1 : 0
+      }
     })
   }
 
