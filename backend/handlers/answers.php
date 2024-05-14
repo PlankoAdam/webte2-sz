@@ -4,24 +4,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-// GET route to retrieve all answers
-$app->get('/answer', function (Request $request, Response $response) use ($pdo) {
-    $sql = "SELECT * FROM answers";
-    $stmt = $pdo->query($sql);
-    $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Convert the "question_code" field to string
-    foreach ($answers as &$answer) {
-        $answer['question_code'] = (string) $answer['question_code'];
-    }
-
-    // Return response as JSON
-    $response->getBody()->write(json_encode($answers));
-    return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus(200);
-});
-
 // POST route to create a new answer
 $app->post('/answer/{code}', function (Request $request, Response $response, $args) use ($pdo) {
     $code = $args['code'];
