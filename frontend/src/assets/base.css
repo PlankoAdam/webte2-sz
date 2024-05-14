@@ -15,6 +15,18 @@
   --prim900: var(--color-slate-900);
   --prim950: var(--color-slate-950);
 
+  --sec050: var(--color-sky-50);
+  --sec100: var(--color-sky-100);
+  --sec200: var(--color-sky-200);
+  --sec300: var(--color-sky-300);
+  --sec400: var(--color-sky-400);
+  --sec500: var(--color-sky-500);
+  --sec600: var(--color-sky-600);
+  --sec700: var(--color-sky-700);
+  --sec800: var(--color-sky-800);
+  --sec900: var(--color-sky-900);
+  --sec950: var(--color-sky-950);
+
   --acc050: var(--color-amber-50);
   --acc100: var(--color-amber-100);
   --acc200: var(--color-amber-200);
@@ -27,7 +39,19 @@
   --acc900: var(--color-amber-900);
   --acc950: var(--color-amber-950);
 
-  --color-good: var(--color-emerald-600);
+  --good050: var(--color-emerald-50);
+  --good100: var(--color-emerald-100);
+  --good200: var(--color-emerald-200);
+  --good300: var(--color-emerald-300);
+  --good400: var(--color-emerald-400);
+  --good500: var(--color-emerald-500);
+  --good600: var(--color-emerald-600);
+  --good700: var(--color-emerald-700);
+  --good800: var(--color-emerald-800);
+  --good900: var(--color-emerald-900);
+  --good950: var(--color-emerald-950);
+
+  --color-good: var(--good600);
   --color-bad: var(--color-red-500);
 
   --vt-c-white: var(--prim050);

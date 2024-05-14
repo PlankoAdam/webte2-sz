@@ -25,7 +25,7 @@
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
           <div class="flex flex-col">
             <button>{{ ls.t('Archive', 'Archivovať') }}</button>
-            <button>{{ ls.t('Duplicate', 'Duplikovať') }}</button>
+            <button @click="dupQuestion">{{ ls.t('Duplicate', 'Duplikovať') }}</button>
           </div>
           <div class="flex flex-col">
             <button @click="$router.push(`/questions/edit/${data.code}`)">
@@ -97,6 +97,29 @@ const delQuestion = () => {
     .then((res) => {
       console.log(res)
       router.push('/questions')
+    })
+    .catch((err) => console.error(err))
+}
+
+const dupQuestion = () => {
+  const parsed = {
+    subject_id: data.value.subject_id,
+    user_id: data.value.user_id,
+    question: data.value.question,
+    answers: data.value.is_open_ended
+      ? []
+      : data.value.answers.map((a) => {
+          return {
+            answer: a.answer,
+            is_correct: a.is_correct
+          }
+        })
+  }
+
+  http
+    .post('/question', parsed, { headers: { Authorization: `Bearer ${userStore.user.token}` } })
+    .then((res) => {
+      router.push(`/questions/${res.data.code}`)
     })
     .catch((err) => console.error(err))
 }

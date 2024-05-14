@@ -3,11 +3,19 @@
     <div
       v-for="ans in sortedAnswers"
       :key="ans"
-      class="p-2 ps-4 rounded-md flex flex-row justify-between min-w-96 max-w-[32rem] bg-gradient-to-r from-[var(--clr),var(--perc)] via-[var(--clr),var(--perc)] to-[var(--color-bg-soft)]"
-      :style="`--perc:${ans.fill_percent}%; --clr:${ans.is_correct ? 'var(--color-good)' : 'var(--color-bg-mute)'};`"
-      :class="{ 'text-white': ans.is_correct }"
+      class="p-2 ps-4 rounded-md flex flex-row justify-between min-w-96 max-w-[32rem] bg-gradient-to-r from-[var(--clr),var(--perc)] via-[var(--clr),var(--perc)] to-[var(--color-bg-soft)] dark:from-[var(--clr-dark),var(--perc)] dark:via-[var(--clr-dark),var(--perc)] dark:to-[var(--color-bg-soft)]"
+      :style="`--perc:${ans.fill_percent}%; --clr:${ans.is_correct ? 'var(--good500)' : 'var(--sec400)'}; --clr-dark:${ans.is_correct ? 'var(--good700)' : 'var(--sec800)'}`"
     >
-      <p class="overflow-hidden text-ellipsis whitespace-nowrap me-4 text-lg">
+      <v-icon
+        v-if="ans.is_correct"
+        name="fa-check"
+        scale="1.5"
+        class="absolute -translate-x-12"
+      ></v-icon>
+      <p
+        class="overflow-hidden text-ellipsis whitespace-nowrap me-4 text-lg"
+        :class="{ 'font-bold italic': ans.is_correct }"
+      >
         {{ ans.answer }}
       </p>
       <p class="bg-[var(--color-bg)] text-[var(--color-text)] px-3 rounded-md min-w-fit">
