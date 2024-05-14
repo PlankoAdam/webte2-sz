@@ -1,9 +1,9 @@
 <template>
   <main
-    class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
+    class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full min-h-[85vh]"
   >
-    <div class="flex justify-center items-center w-full h-full">
-      <div class="max-w-fit bg-[var(--color-bg-soft)] p-8 rounded-xl">
+    <div class="flex justify-center w-full h-full mt-8 lg:mt-0">
+      <div class="max-w-fit max-h-fit h-fit bg-[var(--color-bg-soft)] p-8 rounded-xl">
         <FormKit
           type="form"
           @submit="submitHandler"
@@ -47,7 +47,7 @@
             <button @click.prevent="nans.pop()" class="mt-0 flex-1">
               <v-icon name="fa-minus" scale="2"></v-icon>
             </button>
-            <h1 class="content-center px-2 text-2xl">{{ data.answers.length }}</h1>
+            <h1 class="content-center px-2 text-2xl">{{ nans.length }}</h1>
             <button
               @click.prevent="
                 () => {
@@ -60,14 +60,19 @@
             </button>
           </div>
           <FormKit name="answers" type="group">
-            <!-- <FormKitSchema :schema="schema" :data="data"></FormKitSchema> -->
             <FormKit v-for="a in nans" :key="a" type="group">
               <div class="flex flex-row space-x-2">
-                <FormKit name="answer"></FormKit>
-                <FormKit name="is_correct" type="checkbox" :value="false"></FormKit>
+                <FormKit
+                  name="is_correct"
+                  type="checkbox"
+                  :value="false"
+                  input-class="size-6 min-w-0 mt-2 mb-2 cursor-pointer"
+                ></FormKit>
+                <FormKit name="answer" input-class="max-w-52 min-w-52 mb-2"></FormKit>
               </div>
             </FormKit>
           </FormKit>
+          <span v-if="nans.length > 0" class="text-sm">Check the correct answer(s).</span>
           <FormKit label="Create" type="submit" :disabled="!valid" />
         </FormKit>
       </div>
@@ -77,28 +82,11 @@
 
 <script setup>
 import http from '@/http'
-// import router from '@/router'
+import router from '@/router'
 import { useUserStore } from '@/stores/user'
-import { computed } from 'vue'
 import { ref } from 'vue'
-import { reactive } from 'vue'
 
 const userStore = useUserStore()
-
-// const schema = [
-//   {
-//     $el: 'ul',
-//     children: [
-//       {
-//         $formkit: 'text',
-//         validation: 'required',
-//         validationLabel: 'Answer',
-//         for: ['item', 'key', '$answers'],
-//         children: [{ $formkit: 'checkbox' }]
-//       }
-//     ]
-//   }
-// ]
 
 const nans = ref([])
 const subjects = ref([])
@@ -108,24 +96,12 @@ http.get('/subject').then((res) => {
   console.log(subjects.value)
 })
 
-const data = reactive({
-  answers: computed(() => {
-    const res = []
-    for (let i = 0; i < nans.value; i++) {
-      res.push('')
-    }
-    return res
-  })
-})
-
 const submitHandler = (formData) => {
   const parsed = {
     question: formData.question,
     subject_id: formData.subject_id,
     answers: Object.keys(formData.answers).map((key) => {
-      return {
-        answer: formData.answers[key]
-      }
+      return formData.answers[key]
     })
   }
 
@@ -133,14 +109,14 @@ const submitHandler = (formData) => {
 
   console.log(parsed)
 
-  // http
-  //   .post('/question', parsed, {
-  //     headers: { Authorization: `Bearer ${userStore.user.token}` }
-  //   })
-  //   .then(() => {
-  //     router.push(`/questions`)
-  //   })
-  //   .catch((err) => console.error(err))
+  http
+    .post('/question', parsed, {
+      headers: { Authorization: `Bearer ${userStore.user.token}` }
+    })
+    .then(() => {
+      router.push(`/questions`)
+    })
+    .catch((err) => console.error(err))
 }
 
 const users = ref([])

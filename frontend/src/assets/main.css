@@ -22,15 +22,15 @@ textarea {
   border: 2px solid var(--color-bg-mute);
   background-color: var(--color-bg);
   border-radius: 8px;
-  @apply p-1 mb-6 transition-colors min-w-60;
+  @apply p-1 mb-6 transition-colors min-w-60 max-w-60;
 }
 
-input[type='checkbox'] {
+/* input[type='checkbox'] {
   border-radius: 8px;
   border: 2px solid var(--color-bg-mute);
 
   @apply size-[37.2px] min-w-0 cursor-pointer;
-}
+} */
 
 input:focus,
 select:focus,

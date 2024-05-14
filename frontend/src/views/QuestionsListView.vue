@@ -31,6 +31,7 @@
               }
             })
           "
+          input-class="min-w-full max-w-full"
         ></FormKit>
         <FormKit
           v-if="userStore.user.admin"
@@ -45,6 +46,7 @@
               }
             })
           "
+          input-class="min-w-full max-w-full"
         ></FormKit>
       </div>
 

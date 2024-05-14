@@ -3,13 +3,13 @@
     <div class="flex flex-col items-center px-8 min-w-72">
       <div class="flex flex-col mb-32">
         <div class="text-6xl font-light text-[var(--color-heading)] mb-4">
-          {{ data.question }}
+          {{ question.question }}
         </div>
-        <div class="text-lg">{{ data.subject }}</div>
-        <div class="text-lg font-mono">{{ data.code }}</div>
+        <div class="text-lg">{{ question.subject }}</div>
+        <div class="text-lg font-mono">{{ question.code }}</div>
       </div>
       <div
-        v-if="answers.length > 0"
+        v-if="!question.is_open_ended"
         class="flex flex-col space-y-4 mb-8 w-full max-w-96 items-center"
       >
         <AnswerOption
@@ -46,7 +46,7 @@ const langStore = useLanguageStore()
 
 const route = useRoute()
 
-const data = ref({})
+const question = ref({})
 const answers = ref([])
 
 const selAnswer = ref('')
@@ -55,13 +55,13 @@ const getData = () => {
   http
     .get(`/question/${route.params.code}`)
     .then((res) => {
-      data.value = res.data[0]
+      question.value = res.data[0]
 
       http
-        .get(`/subject/${data.value.subject_id}`)
-        .then((res) => (data.value.subject = res.data.subject))
+        .get(`/subject/${question.value.subject_id}`)
+        .then((res) => (question.value.subject = res.data.subject))
 
-      if (!data.value.is_open_ended)
+      if (!question.value.is_open_ended)
         http
           .get(`/answer/${route.params.code}`)
           .then((res) => (answers.value = res.data))
@@ -73,10 +73,10 @@ const getData = () => {
 }
 
 const submit = () => {
-  if (!selAnswer.value || !data.value) return
+  if (!selAnswer.value || !question.value) return
   http
     .post(`/answer/${route.params.code}`, {
-      answer: data.value.is_open_ended ? selAnswer.value.toLowerCase() : selAnswer.value
+      answer: question.value.is_open_ended ? selAnswer.value.toLowerCase() : selAnswer.value
     })
     .then(() => router.push(`/results/${route.params.code}`))
     .catch((err) => console.error(err))

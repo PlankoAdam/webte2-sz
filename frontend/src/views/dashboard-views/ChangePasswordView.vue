@@ -19,7 +19,7 @@
           :label="langStore.t('Confirm new password', 'Potvrdenie nového hesla')"
           type="password"
           validation="required|confirm"
-          validation-visibility="live"
+          validation-visibility="blur"
         ></FormKit>
         <FormKit
           :label="langStore.t('Change password', 'Zmeniť heslo')"
