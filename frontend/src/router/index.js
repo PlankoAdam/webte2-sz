@@ -105,4 +105,9 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach(() => {
+  const userStore = useUserStore()
+  userStore.checkExpiration()
+})
+
 export default router

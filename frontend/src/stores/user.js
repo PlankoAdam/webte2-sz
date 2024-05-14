@@ -28,8 +28,8 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const logout = () => {
-    user.value = null
-    router.push('/')
+    user.value = {}
+    router.push('/login')
   }
 
   const register = async (userData) => {
@@ -74,5 +74,17 @@ export const useUserStore = defineStore('user', () => {
     return res
   }
 
-  return { user, login, logout, register, isLoggedIn, changePassword }
+  const checkExpiration = () => {
+    if (isLoggedIn())
+      http
+        .get('/account', { headers: { Authorization: `Bearer ${user.value.token}` } })
+        .then(() => {})
+        .catch((err) => {
+          if (err.response.status == 401) {
+            logout()
+          }
+        })
+  }
+
+  return { user, login, logout, register, isLoggedIn, changePassword, checkExpiration }
 })
