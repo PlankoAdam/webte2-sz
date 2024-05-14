@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row space-x-8 rounded-lg w-full h-24 p-2 px-4 bg-[var(--prim400)] dark:bg-[var(--prim700)] transition-all hover:cursor-pointer hover:scale-[103%] ease-out duration-100"
+    class="flex flex-row space-x-8 rounded-lg w-full h-24 p-2 px-4 bg-[var(--prim100)] dark:bg-[var(--prim700)] transition-all hover:cursor-pointer hover:scale-[103%] ease-out duration-100"
     :class="{
       'opacity-50': !props.active
     }"

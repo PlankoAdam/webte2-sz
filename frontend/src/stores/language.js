@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 
 export const useLanguageStore = defineStore('language', () => {
-  const selectedLang = ref('en')
+  const selectedLang = useStorage('lang', 'en')
 
   const change = () => {
     if (selectedLang.value == 'en') selectedLang.value = 'sk'

@@ -13,16 +13,16 @@
             <v-icon name="fa-plus" scale="3"></v-icon>
           </div>
           <div class="content-center text-3xl font-light">
-            {{ langStore.t('Create new question', 'Vytvoriť novú otázku') }}
+            {{ ls.t('Create new question', 'Vytvoriť novú otázku') }}
           </div>
         </div>
       </RouterLink>
 
-      <div>
+      <div class="mb-8">
         <FormKit
           type="select"
           v-model="subjectFilter"
-          label="Subject"
+          :label="ls.t('Subject', 'Predmet')"
           :options="
             subjects.map((el) => {
               return {
@@ -31,13 +31,13 @@
               }
             })
           "
-          input-class="min-w-full max-w-full"
+          input-class="min-w-full max-w-full mb-2"
         ></FormKit>
         <FormKit
           v-if="userStore.user.admin"
           type="select"
           v-model="userFilter"
-          label="User"
+          :label="ls.t('User', 'Používateľ')"
           :options="
             users.map((el) => {
               return {
@@ -79,7 +79,7 @@ import { computed } from 'vue'
 
 const route = useRoute()
 
-const langStore = useLanguageStore()
+const ls = useLanguageStore()
 const userStore = useUserStore()
 
 const questions = ref([])
@@ -104,7 +104,7 @@ const getData = () => {
     .then((res) => {
       subjects.value = [
         {
-          subject: 'All',
+          subject: ls.t('All', 'Všetky'),
           id: null
         }
       ]
@@ -118,7 +118,7 @@ const getData = () => {
       .then((res) => {
         users.value = [
           {
-            name: 'All',
+            name: ls.t('All', 'Všetky'),
             surname: '',
             id: null
           }

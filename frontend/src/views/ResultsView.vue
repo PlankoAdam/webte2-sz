@@ -5,12 +5,12 @@
         <div class="text-6xl font-light text-[var(--color-heading)] mb-4">
           {{ question.question }}
         </div>
-        <div class="text-lg">{{ question.subject }}</div>
-        <div class="text-lg font-mono">{{ question.code }}</div>
+        <div class="text-2xl">{{ question.subject }}</div>
+        <div class="text-lg font-mono font-bold">{{ question.code }}</div>
       </div>
 
       <div>
-        <h1 class="uppercase text-2xl font-light mb-8">Answers:</h1>
+        <h1 class="uppercase text-2xl font-light mb-8">{{ ls.t('Answers:', 'Odpovede:') }}</h1>
         <MultiChoiceResults
           v-if="question.is_open_ended == 0"
           :answers="answers"
@@ -27,8 +27,10 @@ import http from '@/http'
 import { useRoute } from 'vue-router'
 import MultiChoiceResults from '@/components/MultiChoiceResults.vue'
 import WordCloud from '@/components/WordCloud.vue'
+import { useLanguageStore } from '@/stores/language'
 
 const route = useRoute()
+const ls = useLanguageStore()
 
 const question = ref({})
 const answers = ref([])

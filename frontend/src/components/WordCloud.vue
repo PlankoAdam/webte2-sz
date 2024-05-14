@@ -1,5 +1,7 @@
 <template>
-  <div class="w-[32rem] flex flex-row flex-wrap">
+  <div
+    class="w-[32rem] p-8 flex flex-row flex-wrap justify-center items-center bg-[var(--color-bg-soft)] rounded-full"
+  >
     <p
       v-for="ans in props.answers"
       :key="ans"

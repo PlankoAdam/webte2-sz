@@ -25,8 +25,10 @@
           {{ `${data.user.name} ${data.user.surname}` }}
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="$router.push(`/questions/edit/${data.code}`)">{{ 'Edit' }}</button>
-          <button @click="delQuestion" class="btn-danger">{{ 'Delete' }}</button>
+          <button @click="$router.push(`/questions/edit/${data.code}`)">
+            {{ ls.t('Edit', 'Upraviť') }}
+          </button>
+          <button @click="delQuestion" class="btn-danger">{{ ls.t('Delete', 'Vymazať') }}</button>
         </div>
       </div>
       <div class="flex flex-col">
@@ -52,12 +54,12 @@ import { watch } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import http from '@/http'
+import { useLanguageStore } from '@/stores/language'
 
-// import { useLanguageStore } from '@/stores/language'
 import { useUserStore } from '@/stores/user'
 import router from '@/router'
 
-// const langStore = useLanguageStore()
+const ls = useLanguageStore()
 const userStore = useUserStore()
 
 const route = useRoute()

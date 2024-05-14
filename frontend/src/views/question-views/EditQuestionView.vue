@@ -13,20 +13,22 @@
           {{ data.code }}
         </h1>
         <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <button @click="$router.push(`/questions/${data.code}`)">{{ 'Cancel' }}</button>
+          <button @click="$router.push(`/questions/${data.code}`)">
+            {{ ls.t('Cancel', 'Zrušiť') }}
+          </button>
         </div>
       </div>
       <div class="flex flex-col">
         <FormKit type="form" @submit="formHandler" :actions="false" #default="{ state: { valid } }">
           <FormKit
             name="question"
-            label="Question"
+            :label="ls.t('Question', 'Otázka')"
             v-model="data.question"
             validation="required"
           ></FormKit>
           <FormKit
             name="subject_id"
-            label="Subject"
+            :label="ls.t('Subject', 'Predmet')"
             type="select"
             placeholder="Select a subject"
             v-model="data.subject_id"
@@ -40,7 +42,7 @@
             "
             validation="required"
           ></FormKit>
-          <FormKit label="Save" type="submit" :disabled="!valid" />
+          <FormKit :label="ls.t('Save', 'Uložiť')" type="submit" :disabled="!valid" />
         </FormKit>
       </div>
     </div>
@@ -54,8 +56,11 @@ import { useRoute } from 'vue-router'
 import http from '@/http'
 import router from '@/router'
 import { useUserStore } from '@/stores/user'
+import { useLanguageStore } from '@/stores/language'
 
 const route = useRoute()
+
+const ls = useLanguageStore()
 
 const data = ref({})
 const subjects = ref([])

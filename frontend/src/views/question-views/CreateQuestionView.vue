@@ -10,12 +10,17 @@
           :actions="false"
           #default="{ state: { valid } }"
         >
-          <FormKit name="question" label="Question" type="text" validation="required"></FormKit>
+          <FormKit
+            name="question"
+            :label="ls.t('Question', 'Otázka')"
+            type="text"
+            validation="required"
+          ></FormKit>
           <FormKit
             name="subject_id"
-            label="Subject"
+            :label="ls.t('Subject', 'Predmet')"
             type="select"
-            placeholder="Select a subject"
+            :placeholder="ls.t('Select a subject', 'Vyberte predmet')"
             :options="
               subjects.map((el) => {
                 return {
@@ -29,9 +34,9 @@
           <FormKit
             v-if="userStore.user.admin"
             name="user_id"
-            label="User"
+            :label="ls.t('User', 'Používateľ')"
             type="select"
-            placeholder="Select a user"
+            :placeholder="ls.t('Select a user', 'Vyberte používateľa')"
             validation="required"
             :options="
               users.map((el) => {
@@ -42,7 +47,7 @@
               })
             "
           ></FormKit>
-          <h1 class="mb-2">Answers:</h1>
+          <h1 class="mb-2">{{ ls.t('Answers:', 'Odpovede:') }}</h1>
           <div class="flex flex-row space-x-2 mb-4">
             <button @click.prevent="nans.pop()" class="mt-0 flex-1">
               <v-icon name="fa-minus" scale="2"></v-icon>
@@ -68,12 +73,19 @@
                   :value="false"
                   input-class="size-6 min-w-0 mt-2 mb-2 cursor-pointer"
                 ></FormKit>
-                <FormKit name="answer" input-class="max-w-52 min-w-52 mb-2"></FormKit>
+                <FormKit
+                  name="answer"
+                  input-class="max-w-52 min-w-52 mb-2"
+                  messages-class="hidden"
+                  validation="required"
+                ></FormKit>
               </div>
             </FormKit>
           </FormKit>
-          <span v-if="nans.length > 0" class="text-sm">Check the correct answer(s).</span>
-          <FormKit label="Create" type="submit" :disabled="!valid" />
+          <span v-if="nans.length > 0" class="text-sm">{{
+            ls.t('Check the correct answer(s)', 'Vyberte správnu odpoved(e)')
+          }}</span>
+          <FormKit :label="ls.t('Create', 'Vytvoriť')" type="submit" :disabled="!valid" />
         </FormKit>
       </div>
     </div>
@@ -84,9 +96,11 @@
 import http from '@/http'
 import router from '@/router'
 import { useUserStore } from '@/stores/user'
+import { useLanguageStore } from '@/stores/language'
 import { ref } from 'vue'
 
 const userStore = useUserStore()
+const ls = useLanguageStore()
 
 const nans = ref([])
 const subjects = ref([])

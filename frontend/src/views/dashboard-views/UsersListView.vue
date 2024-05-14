@@ -2,12 +2,14 @@
   <main>
     <table class="table table-auto">
       <thead>
-        <tr class="bg-[var(--color-bg-mute)] text-[var(--color-heading)]">
-          <td>Edit</td>
-          <td>Name</td>
-          <td>Surname</td>
+        <tr
+          class="dark:bg-[var(--color-bg-mute)] bg-[var(--prim700)] dark:text-[var(--color-heading)] text-[var(--prim100)]"
+        >
+          <td>{{ ls.t('Edit', 'Upraviť') }}</td>
+          <td>{{ ls.t('Name', 'Meno') }}</td>
+          <td>{{ ls.t('Surname', 'Priezvisko') }}</td>
           <td>E-mail</td>
-          <td>Role</td>
+          <td>{{ ls.t('Role', 'Rola') }}</td>
         </tr>
       </thead>
       <tbody>
@@ -34,9 +36,7 @@
           <td>{{ user.surname }}</td>
           <td>{{ user.email }}</td>
           <td>
-            {{
-              user.admin ? langStore.t('admin', 'administrátor') : langStore.t('user', 'používateľ')
-            }}
+            {{ user.admin ? ls.t('admin', 'administrátor') : ls.t('user', 'používateľ') }}
           </td>
         </tr>
       </tbody>
@@ -50,7 +50,7 @@ import http from '@/http'
 import { useLanguageStore } from '@/stores/language'
 import { useUserStore } from '@/stores/user'
 
-const langStore = useLanguageStore()
+const ls = useLanguageStore()
 const userStore = useUserStore()
 const users = ref([])
 

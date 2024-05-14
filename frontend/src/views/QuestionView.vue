@@ -5,8 +5,8 @@
         <div class="text-6xl font-light text-[var(--color-heading)] mb-4">
           {{ question.question }}
         </div>
-        <div class="text-lg">{{ question.subject }}</div>
-        <div class="text-lg font-mono">{{ question.code }}</div>
+        <div class="text-2xl">{{ question.subject }}</div>
+        <div class="text-lg font-mono font-bold">{{ question.code }}</div>
       </div>
       <div
         v-if="!question.is_open_ended"
@@ -22,14 +22,16 @@
       </div>
       <div v-else class="w-full max-w-96">
         <FormKit
-          :label="langStore.t('Your answer', 'Vaša odpoveď')"
+          :label="ls.t('Your answer', 'Vaša odpoveď')"
           v-model="selAnswer"
           type="text"
-          input-class="w-full"
+          input-class="w-full max-w-96"
           validation="required"
         ></FormKit>
       </div>
-      <button @click="submit" class="w-full max-w-96" :disabled="!selAnswer">Submit</button>
+      <button @click="submit" class="w-full max-w-96" :disabled="!selAnswer">
+        {{ ls.t('Submit', 'Odoslať') }}
+      </button>
     </div>
   </main>
 </template>
@@ -42,7 +44,7 @@ import AnswerOption from '@/components/AnswerOption.vue'
 import { useLanguageStore } from '@/stores/language'
 import http from '@/http'
 import router from '@/router'
-const langStore = useLanguageStore()
+const ls = useLanguageStore()
 
 const route = useRoute()
 
