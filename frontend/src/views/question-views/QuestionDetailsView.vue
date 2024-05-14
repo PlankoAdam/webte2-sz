@@ -9,30 +9,29 @@
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
     <div class="flex flex-col xl:flex-row xl:space-x-20 xl:justify-center items-center p-8">
-      <div class="flex flex-col items-center mb-16 xl:m-0">
-        <div
-          @click="showModal = true"
-          class="size-fit bg-white p-2 rounded-md mb-2 transition-all ease-out hover:cursor-pointer hover:scale-110"
-        >
-          <img :src="data.qrsrc" alt="QR code" class="size-full" />
+      <div class="flex xl:flex-col flex-row space-x-4 xl:space-x-0 items-center mb-16 xl:m-0">
+        <div class="flex flex-col">
+          <div
+            @click="showModal = true"
+            class="size-fit min-w-36 bg-white p-2 rounded-md mb-2 transition-all ease-out hover:cursor-pointer hover:scale-110"
+          >
+            <img :src="data.qrsrc" alt="QR code" class="size-full" />
+          </div>
+          <h1
+            class="text-center text-4xl font-mono font-bold transition-colors text-[var(--color-heading)]"
+          >
+            {{ data.code }}
+          </h1>
         </div>
-        <h1
-          class="text-center text-4xl font-mono font-bold transition-colors text-[var(--color-heading)]"
-        >
-          {{ data.code }}
-        </h1>
 
-        <div class="flex flex-row xl:flex-col justify-center space-x-2 xl:space-x-0 w-full">
-          <div class="flex flex-col">
-            <button>{{ ls.t('Archive', 'Archivovať') }}</button>
-            <button @click="dupQuestion">{{ ls.t('Duplicate', 'Duplikovať') }}</button>
-          </div>
-          <div class="flex flex-col">
-            <button @click="$router.push(`/questions/edit/${data.code}`)">
-              {{ ls.t('Edit', 'Upraviť') }}
-            </button>
-            <button @click="delQuestion" class="btn-danger">{{ ls.t('Delete', 'Vymazať') }}</button>
-          </div>
+        <div class="flex flex-col justify-center xl:space-x-0 w-full">
+          <button>{{ ls.t('Archive', 'Archivovať') }}</button>
+          <button @click="dupQuestion">{{ ls.t('Duplicate', 'Duplikovať') }}</button>
+          <button @click="exportQuestion">{{ ls.t('Export', 'Exportovať') }}</button>
+          <button @click="$router.push(`/questions/edit/${data.code}`)">
+            {{ ls.t('Edit', 'Upraviť') }}
+          </button>
+          <button @click="delQuestion" class="btn-danger">{{ ls.t('Delete', 'Vymazať') }}</button>
         </div>
       </div>
       <div class="flex flex-col">
@@ -94,8 +93,7 @@ const delQuestion = () => {
     .delete(`/question/${route.params.code}`, {
       headers: { Authorization: `Bearer ${userStore.user.token}` }
     })
-    .then((res) => {
-      console.log(res)
+    .then(() => {
       router.push('/questions')
     })
     .catch((err) => console.error(err))
@@ -124,6 +122,35 @@ const dupQuestion = () => {
     .catch((err) => console.error(err))
 }
 
+const exportQuestion = () => {
+  // eslint-disable-next-line no-unused-vars
+  const { qrsrc, ...parsed } = data.value
+  parsed.answers = parsed.answers.map((a) => {
+    return {
+      answer: a.answer,
+      count: a.count,
+      is_correct: a.is_correct
+    }
+  })
+  console.log(parsed)
+
+  saveJSON(parsed, 'export')
+}
+
+const saveJSON = (data, saveAs) => {
+  let stringified = JSON.stringify(data, null, 2)
+  let blob = new Blob([stringified], { type: 'application/json' })
+  let url = URL.createObjectURL(blob)
+
+  let a = document.createElement('a')
+  a.download = saveAs + '.json'
+  a.href = url
+  a.id = saveAs
+  document.body.appendChild(a)
+  a.click()
+  document.querySelector('#' + a.id).remove()
+}
+
 getData(route.params.code)
 
 watch(() => route.params.code, getData)
@@ -134,7 +161,7 @@ button {
   background-color: var(--color-bg-soft);
   color: var(--color-text);
   border: none;
-  @apply p-1 w-36 xl:w-full;
+  @apply p-1 w-full;
 }
 
 button:hover {

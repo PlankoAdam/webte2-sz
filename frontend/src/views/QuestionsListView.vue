@@ -48,6 +48,7 @@
           "
           input-class="min-w-full max-w-full"
         ></FormKit>
+        <button @click="exportQuestions">{{ ls.t('Export', 'Exportovať') }}</button>
       </div>
 
       <div class="flex flex-col space-y-4">
@@ -149,6 +150,48 @@ const getData = () => {
     })
 }
 
+const exportQuestions = async () => {
+  // eslint-disable-next-line no-unused-vars
+  const parsed = filteredQuestions.value
+  const promises = parsed.map(async (el) => {
+    delete el.user
+    el.answers = (
+      await http.get(`/answer/${el.code}`, {
+        headers: { Authorization: `Bearer ${userStore.user.token}` }
+      })
+    ).data.map((a) => {
+      return {
+        answer: a.answer,
+        count: a.count,
+        is_correct: a.is_correct
+      }
+    })
+    return el
+  })
+  await Promise.all(promises)
+  saveJSON(parsed, 'export')
+}
+
+const saveJSON = (data, saveAs) => {
+  let stringified = JSON.stringify(data, null, 2)
+  let blob = new Blob([stringified], { type: 'application/json' })
+  let url = URL.createObjectURL(blob)
+
+  let a = document.createElement('a')
+  a.download = saveAs + '.json'
+  a.href = url
+  a.id = saveAs
+  document.body.appendChild(a)
+  a.click()
+  document.querySelector('#' + a.id).remove()
+}
+
 watch(() => route.params, getData)
 getData()
 </script>
+
+<style scoped>
+button {
+  @apply w-full m-0 mb-4;
+}
+</style>

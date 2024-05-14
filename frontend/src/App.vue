@@ -14,7 +14,7 @@
           >{{ langStore.t('Questions', 'Otázky') }}</RouterLink
         >
       </div>
-      <div class="flex lg:flex-row flex-col justify-end lg:space-x-6 space-x-2 items-end">
+      <div class="flex lg:flex-row flex-col-reverse justify-end lg:space-x-6 space-x-2 items-end">
         <RouterLink
           v-if="userStore.isLoggedIn()"
           to="/dashboard/profile"

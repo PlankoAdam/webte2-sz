@@ -44,7 +44,6 @@ const sortedAnswers = computed(() => {
     ret.percent = total.value == 0 ? 0 : Math.round((ret.count / total.value) * 100)
     return ret
   })
-  console.log(res)
   return res.sort((a, b) => {
     return a.count < b.count
   })
