@@ -24,23 +24,21 @@ $app->post('/answer/{code}', function (Request $request, Response $response, $ar
             $responseData = [
                 'message' => 'Count incremented for existing answer',
                 'question_code' => $code,
-                'answer' => $data['answer']
+                'answer' => $data['answer'],
+                'is_correct' => $existingAnswer['is_correct'],
+                'count' => $existingAnswer['count'] + 1 // Increment the count in the response
             ];
         } else {
             // Set default values if some fields are missing
-            $data['date_created'] = isset($data['date_created']) ? $data['date_created'] : date('Y-m-d H:i:s');
             $data['is_correct'] = isset($data['is_correct']) ? $data['is_correct'] : 0;
-            $data['date_archived'] = isset($data['date_archived']) ? $data['date_archived'] : null;
 
-            $sql = "INSERT INTO answers (question_code, answer, is_correct, count, date_created, date_archived) 
-                    VALUES (:question_code, :answer, :is_correct, 1, :date_created, :date_archived)";
+            $sql = "INSERT INTO answers (question_code, answer, is_correct, count) 
+                    VALUES (:question_code, :answer, :is_correct, 1)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':question_code' => $code,
                 ':answer' => $data['answer'],
-                ':is_correct' => $data['is_correct'],
-                ':date_created' => $data['date_created'],
-                ':date_archived' => $data['date_archived']
+                ':is_correct' => $data['is_correct']
             ]);
 
             $responseData = [
@@ -48,9 +46,7 @@ $app->post('/answer/{code}', function (Request $request, Response $response, $ar
                 'question_code' => $code,
                 'answer' => $data['answer'],
                 'is_correct' => $data['is_correct'],
-                'count' => 1,
-                'date_created' => $data['date_created'],
-                'date_archived' => $data['date_archived']
+                'count' => 1
             ];
         }
         
@@ -63,14 +59,14 @@ $app->post('/answer/{code}', function (Request $request, Response $response, $ar
             ->withStatus(200);
     } else {
         // Return an error response if the question code doesn't exist
+        $errorData = ['error' => 'Question code not found'];
+        $response->getBody()->write(json_encode($errorData));
+        
         return $response
             ->withHeader('Content-Type', 'application/json')
-            ->withStatus(404)
-            ->getBody()
-            ->write(json_encode(['error' => 'Question code not found']));
+            ->withStatus(404);
     }
 });
-
 
 // Function to check if a question exists in the database
 function getQuestion($pdo, $question_code) {
