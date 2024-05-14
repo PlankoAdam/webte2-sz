@@ -192,6 +192,7 @@ function generateRandomString($length) {
 // PUT route to update the question and subject_id by code
 $app->put('/question/{code}', function (Request $request, Response $response, $args) use ($pdo) {
     $code = $args['code'];
+    
 
     // Get the request body contents
     $body = $request->getBody()->getContents();
@@ -214,6 +215,9 @@ $app->put('/question/{code}', function (Request $request, Response $response, $a
     $stmt->execute([':code' => $code]);
     $updatedQuestion = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // Cast the code field to a string
+$updatedQuestion['code'] = (string) $updatedQuestion['code'];
+
     // Return the updated row
     $response->getBody()->write(json_encode($updatedQuestion));
     return $response
@@ -230,16 +234,19 @@ $app->get('/question/{code}', function (Request $request, Response $response, $a
     $sql = "SELECT * FROM questions WHERE code = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$code]);
-    $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $question = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$questions) {
-        // If no questions with the given code are found, return 404 Not Found
-        $response->getBody()->write(json_encode(["error" => "No questions found with the given code"]));
+    if (!$question) {
+        // If no question with the given code is found, return 404 Not Found
+        $response->getBody()->write(json_encode(["error" => "No question found with the given code"]));
         return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
     }
 
+    // Convert the "code" field to string
+    $question['code'] = (string) $question['code'];
+
     // Return response as JSON
-    $response->getBody()->write(json_encode($questions));
+    $response->getBody()->write(json_encode($question));
     return $response
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(200);

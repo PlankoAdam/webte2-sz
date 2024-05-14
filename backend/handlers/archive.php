@@ -3,99 +3,116 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-// POST route to retrieve question status by code
+// POST route to archive a question by code
 $app->post('/archive/{code}', function (Request $request, Response $response, $args) use ($pdo) {
     $code = $args['code'];
+    $body = $request->getBody()->getContents();
+    $data = json_decode($body, true);
 
-    // Query the database to get the is_open_ended value for the given code
-    $sql = "SELECT is_open_ended FROM questions WHERE code = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$code]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Check if the question exists
+    $existingQuestion = getQuestionn($pdo, $code);
 
-    if (!$result) {
+    if (!$existingQuestion) {
         // If no question with the given code is found, return 404 Not Found
         $response->getBody()->write(json_encode(["error" => "No question found with the given code"]));
         return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
     }
 
-    $is_open_ended = $result['is_open_ended'];
+    // Get the note from the request body
+    $note = isset($data['note']) ? $data['note'] : "No note provided";
 
-    if ($is_open_ended == 0) {
-        // If the question is not open-ended, copy answers to multi_choice_answer_archives table
-        $date_archived = date('Y-m-d H:i:s');
+    // Archive all answers for the given question code
+    $archive_time = date('Y-m-d H:i:s');
 
-        // Insert into multi_choice_answer_archives from answers
-        $sqlInsert = "INSERT INTO multi_choice_answer_archives (answer_id, count, date_archived)
-                      SELECT id, count, :date_archived FROM answers WHERE question_code = :question_code";
-        $stmtInsert = $pdo->prepare($sqlInsert);
-        $stmtInsert->execute([
-            ':date_archived' => $date_archived,
-            ':question_code' => $code
-        ]);
+    // Insert into archive table
+    $sqlInsertArchive = "INSERT INTO archive (question_code, notes, archive_time) VALUES (:question_code, :notes, :archive_time)";
+    $stmtInsertArchive = $pdo->prepare($sqlInsertArchive);
+    $stmtInsertArchive->execute([
+        ':question_code' => $code,
+        ':notes' => $note,
+        ':archive_time' => $archive_time
+    ]);
 
-        // Retrieve the newly inserted data from multi_choice_answer_archives table
-        $sqlNewData = "SELECT mcaa.*, a.answer
-                       FROM multi_choice_answer_archives mcaa
-                       INNER JOIN answers a ON mcaa.answer_id = a.id
-                       WHERE mcaa.date_archived = :date_archived";
-        $stmtNewData = $pdo->prepare($sqlNewData);
-        $stmtNewData->execute([':date_archived' => $date_archived]);
-        $newData = $stmtNewData->fetchAll(PDO::FETCH_ASSOC);
+    // Get the last inserted ID from the archive table
+    $archive_id = $pdo->lastInsertId();
 
-        // Return response with the new data
-        $response->getBody()->write(json_encode(["updated_data" => $newData]));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-    } else {
-        // If the question is open-ended, just update the date_archived column in the answers table
-        $date_archived = date('Y-m-d H:i:s');
+    // Copy answers from answers table to archived_answers table
+    $sqlCopyAnswers = "INSERT INTO archived_answers (archive_id, answer, count, is_correct)
+                       SELECT :archive_id, answer, count, is_correct
+                       FROM answers
+                       WHERE question_code = :question_code";
+    $stmtCopyAnswers = $pdo->prepare($sqlCopyAnswers);
+    $stmtCopyAnswers->execute([
+        ':archive_id' => $archive_id,
+        ':question_code' => $code
+    ]);
 
-       // Update date_archived only if it's NULL
-       $sqlUpdate = "UPDATE answers SET date_archived = :date_archived WHERE question_code = :question_code AND date_archived IS NULL";
-       $stmtUpdate = $pdo->prepare($sqlUpdate);
-       $stmtUpdate->execute([
-           ':date_archived' => $date_archived,
-           ':question_code' => $code
-       ]);
+    // Update the count to 0 in the answers table
+    $sqlUpdateCount = "UPDATE answers SET count = 0 WHERE question_code = :question_code";
+    $stmtUpdateCount = $pdo->prepare($sqlUpdateCount);
+    $stmtUpdateCount->execute([':question_code' => $code]);
 
-        // Retrieve the updated data from the answers table
-        $sqlUpdatedData = "SELECT * FROM answers WHERE question_code = :question_code";
-        $stmtUpdatedData = $pdo->prepare($sqlUpdatedData);
-        $stmtUpdatedData->execute([':question_code' => $code]);
-        $updatedData = $stmtUpdatedData->fetchAll(PDO::FETCH_ASSOC);
+    // Retrieve the newly inserted data from archived_answers table
+    $sqlNewData = "SELECT aa.*, a.notes, a.archive_time
+                   FROM archived_answers aa
+                   INNER JOIN archive a ON aa.archive_id = a.id
+                   WHERE aa.archive_id = :archive_id";
+    $stmtNewData = $pdo->prepare($sqlNewData);
+    $stmtNewData->execute([':archive_id' => $archive_id]);
+    $newData = $stmtNewData->fetchAll(PDO::FETCH_ASSOC);
 
-        // Return response with the updated data
-        $response->getBody()->write(json_encode(["updated_data" => $updatedData]));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-    }
+    // Return response with the new data
+    $response->getBody()->write(json_encode(["updated_data" => $newData]));
+    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 })->add(new JWTAuthMiddleware());
+
+// Function to check if a question exists in the database
+function getQuestionn($pdo, $question_code)
+{
+    $sql = "SELECT * FROM questions WHERE code = :question_code";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':question_code' => $question_code]);
+    $question = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $question;
+}
 
 // GET route to retrieve all archived answers by code
 $app->get('/archive/{code}', function (Request $request, Response $response, $args) use ($pdo) {
     $code = $args['code'];
 
-    // Query the database to get archived answers from multi_choice_answer_archives table
-    $sqlMultiChoice = "SELECT mcaa.*, a.answer
-                      FROM multi_choice_answer_archives mcaa
-                      INNER JOIN answers a ON mcaa.answer_id = a.id
-                      INNER JOIN questions q ON a.question_code = q.code
-                      WHERE q.code = ?";
-    $stmtMultiChoice = $pdo->prepare($sqlMultiChoice);
-    $stmtMultiChoice->execute([$code]);
-    $archivedMultiChoiceAnswers = $stmtMultiChoice->fetchAll(PDO::FETCH_ASSOC);
+    // Query the database to get archived answers from archived_answers table
+    $sqlArchivedAnswers = "SELECT aa.answer, aa.count, aa.is_correct, a.archive_time, a.notes
+                           FROM archived_answers aa
+                           INNER JOIN archive a ON aa.archive_id = a.id
+                           INNER JOIN questions q ON a.question_code = q.code
+                           WHERE q.code = ?";
+    $stmtArchivedAnswers = $pdo->prepare($sqlArchivedAnswers);
+    $stmtArchivedAnswers->execute([$code]);
+    $archivedAnswers = $stmtArchivedAnswers->fetchAll(PDO::FETCH_ASSOC);
 
-    // Query the database to get archived answers from answers table
-    $sqlAnswers = "SELECT *
-                   FROM answers
-                   WHERE question_code = ? AND date_archived IS NOT NULL";
-    $stmtAnswers = $pdo->prepare($sqlAnswers);
-    $stmtAnswers->execute([$code]);
-    $archivedOtherAnswers = $stmtAnswers->fetchAll(PDO::FETCH_ASSOC);
+    // Group archived answers by archive time and notes
+    $groupedArchivedAnswers = [];
+    foreach ($archivedAnswers as $answer) {
+        $archive_key = $answer['archive_time'] . '-' . $answer['notes'];
+        if (!isset($groupedArchivedAnswers[$archive_key])) {
+            $groupedArchivedAnswers[$archive_key] = [
+                "archive_time" => $answer["archive_time"],
+                "notes" => $answer["notes"],
+                "answers" => []
+            ];
+        }
+        // Add only the relevant fields to the answers array
+        $groupedArchivedAnswers[$archive_key]["answers"][] = [
+            "answer" => $answer["answer"],
+            "count" => $answer["count"],
+            "is_correct" => $answer["is_correct"]
+        ];
+    }
 
-    // Combine the results from both queries
-    $archivedAnswers = array_merge($archivedMultiChoiceAnswers, $archivedOtherAnswers);
+    // Convert the associative array to indexed array
+    $formattedResponse = array_values($groupedArchivedAnswers);
 
-    // Return response with the archived answers
-    $response->getBody()->write(json_encode(["archived_answers" => $archivedAnswers]));
+    // Return response with the formatted archived answers
+    $response->getBody()->write(json_encode($formattedResponse, JSON_PRETTY_PRINT));
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 })->add(new JWTAuthMiddleware());
