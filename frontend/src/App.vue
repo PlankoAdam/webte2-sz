@@ -1,6 +1,15 @@
 <template>
   <nav class="h-[var(--nav-h)] w-full fixed top-0 left-0 bg-[var(--color-bg)] z-20">
-    <div class="lg:hidden relative w-full h-full flex flex-row items-center justify-end z-20 px-8">
+    <div
+      class="lg:hidden relative w-full h-full flex flex-row items-center justify-between z-20 px-8"
+    >
+      <div
+        v-if="$route.name != 'home'"
+        class="text-3xl text-center font-light text-[var(--color-heading)] select-none"
+      >
+        interact<span class="text-[var(--acc500)] dark:text-[var(--acc400)]">ED</span>
+      </div>
+      <div v-else></div>
       <v-icon
         name="fa-bars"
         scale="2.5"

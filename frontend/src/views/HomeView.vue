@@ -2,12 +2,11 @@
   <main class="flex justify-center">
     <div class="flex flex-col items-center">
       <div class="mb-16">
-        <h1 class="text-9xl text-center font-light text-[var(--color-heading)] mb-4 select-none">
-          interact<span
-            class="text-[var(--acc500)] dark:text-[var(--acc400)] hover:drop-shadow-[0_0_10px_var(--acc400)] dark:hover:drop-shadow-[0_0_10px_var(--acc500)] transition-all duration-700"
-            >ED</span
-          >
-        </h1>
+        <div
+          class="text-7xl lg:text-9xl text-center font-light text-[var(--color-heading)] mb-4 select-none"
+        >
+          interact<span class="text-[var(--acc500)] dark:text-[var(--acc400)]">ED</span>
+        </div>
         <h2 class="text-2xl text-center italic">
           {{ langStore.t('Where every student has a voice', 'Kde má každý študent svoj hlas') }}
         </h2>
