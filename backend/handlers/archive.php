@@ -52,6 +52,13 @@ $app->post('/archive/{code}', function (Request $request, Response $response, $a
     $stmtUpdateCount = $pdo->prepare($sqlUpdateCount);
     $stmtUpdateCount->execute([':question_code' => $code]);
 
+    // If the question is open-ended, delete the rows from the answers table
+    if ($existingQuestion['is_open_ended'] == 1) {
+        $sqlDeleteAnswers = "DELETE FROM answers WHERE question_code = :question_code";
+        $stmtDeleteAnswers = $pdo->prepare($sqlDeleteAnswers);
+        $stmtDeleteAnswers->execute([':question_code' => $code]);
+    }
+
     // Retrieve the newly inserted data from archived_answers table
     $sqlNewData = "SELECT aa.*, a.notes, a.archive_time
                    FROM archived_answers aa
