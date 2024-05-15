@@ -17,7 +17,10 @@ $app->post('/answer/{code}', function (Request $request, Response $response, $ar
     // If a question exists, check if the answer already exists for that question
     if ($existingQuestion) {
         $existingAnswer = getAnswer($pdo, $code, $data['answer']);
-        
+
+        // Determine the value of is_correct based on is_open_ended
+        $is_correct = $existingQuestion['is_open_ended'] == 1 ? null : (isset($data['is_correct']) ? $data['is_correct'] : 0);
+
         // If answer exists, update the count; otherwise, insert a new answer
         if ($existingAnswer) {
             incrementAnswerCount($pdo, $code, $data['answer']);
@@ -29,27 +32,24 @@ $app->post('/answer/{code}', function (Request $request, Response $response, $ar
                 'count' => $existingAnswer['count'] + 1 // Increment the count in the response
             ];
         } else {
-            // Set default values if some fields are missing
-            $data['is_correct'] = isset($data['is_correct']) ? $data['is_correct'] : 0;
-
             $sql = "INSERT INTO answers (question_code, answer, is_correct, count) 
                     VALUES (:question_code, :answer, :is_correct, 1)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':question_code' => $code,
                 ':answer' => $data['answer'],
-                ':is_correct' => $data['is_correct']
+                ':is_correct' => $is_correct
             ]);
 
             $responseData = [
                 'message' => 'New answer created',
                 'question_code' => $code,
                 'answer' => $data['answer'],
-                'is_correct' => $data['is_correct'],
+                'is_correct' => $is_correct,
                 'count' => 1
             ];
         }
-        
+
         // Encode the response data as JSON
         $response->getBody()->write(json_encode($responseData));
 
@@ -61,7 +61,7 @@ $app->post('/answer/{code}', function (Request $request, Response $response, $ar
         // Return an error response if the question code doesn't exist
         $errorData = ['error' => 'Question code not found'];
         $response->getBody()->write(json_encode($errorData));
-        
+
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(404);
@@ -69,7 +69,8 @@ $app->post('/answer/{code}', function (Request $request, Response $response, $ar
 });
 
 // Function to check if a question exists in the database
-function getQuestion($pdo, $question_code) {
+function getQuestion($pdo, $question_code)
+{
     $sql = "SELECT * FROM questions WHERE code = :question_code";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':question_code' => $question_code]);
@@ -78,7 +79,8 @@ function getQuestion($pdo, $question_code) {
 }
 
 // Function to check if an answer exists for a question in the database
-function getAnswer($pdo, $question_code, $answer) {
+function getAnswer($pdo, $question_code, $answer)
+{
     $sql = "SELECT * FROM answers WHERE question_code = :question_code AND answer = :answer";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':question_code' => $question_code, ':answer' => $answer]);
@@ -87,7 +89,8 @@ function getAnswer($pdo, $question_code, $answer) {
 }
 
 // Function to increment the count of an existing answer
-function incrementAnswerCount($pdo, $question_code, $answer) {
+function incrementAnswerCount($pdo, $question_code, $answer)
+{
     $sql = "UPDATE answers SET count = count + 1 WHERE question_code = :question_code AND answer = :answer";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':question_code' => $question_code, ':answer' => $answer]);
@@ -101,8 +104,8 @@ $app->get('/answer/{code}', function (Request $request, Response $response, $arg
     $stmt->execute([':code' => $code]);
     $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-     // Convert the "question_code" field to string
-     foreach ($answers as &$answer) {
+    // Convert the "question_code" field to string
+    foreach ($answers as &$answer) {
         $answer['question_code'] = (string) $answer['question_code'];
     }
 
