@@ -22,11 +22,18 @@
         {{ `${ans.percent}% (${ans.count})` }}
       </p>
     </div>
+    <div class="flex flex-row justify-between w-full ps-2 pe-5 text-xl">
+      <p>{{ ls.t('Total:', 'Celkom:') }}</p>
+      <p class="font-bold">{{ total }}</p>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useLanguageStore } from '@/stores/language'
+
+const ls = useLanguageStore()
 
 const props = defineProps({
   answers: Array

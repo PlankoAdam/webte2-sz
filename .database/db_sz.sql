@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1deb1+jammy2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: May 12, 2024 at 02:01 PM
--- Server version: 8.0.36-0ubuntu0.22.04.1
--- PHP Version: 8.3.2-1+ubuntu22.04.1+deb.sury.org+1
+-- Host: mysql
+-- Generation Time: May 14, 2024 at 02:09 PM
+-- Server version: 8.0.32
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `zaverecne_zadanie`
+-- Database: `test`
 --
 
 -- --------------------------------------------------------
@@ -32,33 +32,45 @@ CREATE TABLE `answers` (
   `question_code` int NOT NULL,
   `answer` varchar(255) NOT NULL,
   `is_correct` tinyint(1) DEFAULT NULL,
-  `count` int NOT NULL DEFAULT '0',
-  `date_created` datetime NOT NULL,
-  `date_archived` datetime DEFAULT NULL
+  `count` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `answers`
 --
 
-INSERT INTO `answers` (`id`, `question_code`, `answer`, `is_correct`, `count`, `date_created`, `date_archived`) VALUES
-(1, 12345, '[value-2]', 0, 1, '2024-05-05 00:43:30', NULL),
-(2, 12345, 'answer baby', NULL, 1, '2024-05-04 22:49:38', NULL),
-(3, 54321, 'answer baby 2', 0, 1, '2024-05-05 00:52:52', NULL),
-(4, 10000, 'answer baby 2', 0, 1, '2024-05-05 13:41:58', NULL);
+INSERT INTO `answers` (`id`, `question_code`, `answer`, `is_correct`, `count`) VALUES
+(1, 12345, '[value-2]', 0, 1),
+(2, 12345, 'answer baby', NULL, 1),
+(3, 54321, 'answer baby 2', 0, 1),
+(4, 10000, 'answer baby 2', 0, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `multi_choice_answer_archives`
+-- Table structure for table `archive`
 --
 
-CREATE TABLE `multi_choice_answer_archives` (
-  `id` int NOT NULL,
-  `answer_id` int NOT NULL,
-  `count` int NOT NULL DEFAULT '0',
-  `date_archived` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `archive` (
+  `id` int UNSIGNED NOT NULL,
+  `question_code` int NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `archive_time` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `archived_answers`
+--
+
+CREATE TABLE `archived_answers` (
+  `id` int UNSIGNED NOT NULL,
+  `archive_id` int UNSIGNED NOT NULL,
+  `answer` varchar(255) NOT NULL,
+  `count` int NOT NULL,
+  `is_correct` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -141,11 +153,18 @@ ALTER TABLE `answers`
   ADD KEY `answers_ibfk_1` (`question_code`);
 
 --
--- Indexes for table `multi_choice_answer_archives`
+-- Indexes for table `archive`
 --
-ALTER TABLE `multi_choice_answer_archives`
+ALTER TABLE `archive`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `multi_choice_answer_archives_ibfk_1` (`answer_id`);
+  ADD KEY `question_code` (`question_code`);
+
+--
+-- Indexes for table `archived_answers`
+--
+ALTER TABLE `archived_answers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `archive_id` (`archive_id`);
 
 --
 -- Indexes for table `questions`
@@ -178,10 +197,16 @@ ALTER TABLE `answers`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `multi_choice_answer_archives`
+-- AUTO_INCREMENT for table `archive`
 --
-ALTER TABLE `multi_choice_answer_archives`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `archive`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `archived_answers`
+--
+ALTER TABLE `archived_answers`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `questions`
@@ -212,10 +237,16 @@ ALTER TABLE `answers`
   ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_code`) REFERENCES `questions` (`code`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
--- Constraints for table `multi_choice_answer_archives`
+-- Constraints for table `archive`
 --
-ALTER TABLE `multi_choice_answer_archives`
-  ADD CONSTRAINT `multi_choice_answer_archives_ibfk_1` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+ALTER TABLE `archive`
+  ADD CONSTRAINT `archive_ibfk_1` FOREIGN KEY (`question_code`) REFERENCES `questions` (`code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `archived_answers`
+--
+ALTER TABLE `archived_answers`
+  ADD CONSTRAINT `archived_answers_ibfk_1` FOREIGN KEY (`archive_id`) REFERENCES `archive` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `questions`

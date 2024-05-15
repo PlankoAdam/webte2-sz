@@ -1,18 +1,33 @@
 <template>
   <QRModal
-    v-if="showModal"
-    @close="showModal = false"
+    v-if="showQRModal"
+    @close="showQRModal = false"
     :qrsrc="data.qrsrc"
     :code="data.code"
   ></QRModal>
+  <ConfirmModal
+    v-if="showConfirmModal"
+    :message="ls.t('Are you sure?', 'Ste si istý?')"
+    :description="
+      ls.t(
+        'Would you like to archive the answers to this question? After archiving, the counter will be reset.',
+        'Chcete archivovať odpovede na túto otázku? Po archivácii sa počítadlo vynuluje.'
+      )
+    "
+    allow-notes
+    @cancel="showConfirmModal = false"
+    @confirm="(notes) => confirmHandler(notes)"
+  ></ConfirmModal>
   <main
     class="mt-[var(--nav-h)] lg:mt-0 bg-[var(--color-bg)] fixed top-0 bottom-0 overflow-y-scroll lg:relative lg:ms-[28rem] z-10 w-full lg:h-full h-[100vh]"
   >
-    <div class="flex flex-col xl:flex-row xl:space-x-20 xl:justify-center items-center p-8">
+    <div
+      class="flex flex-col xl:flex-row xl:items-start xl:space-x-20 xl:justify-center items-center p-8"
+    >
       <div class="flex xl:flex-col flex-row space-x-4 xl:space-x-0 items-center mb-16 xl:m-0">
         <div class="flex flex-col">
           <div
-            @click="showModal = true"
+            @click="showQRModal = true"
             class="size-fit min-w-36 bg-white p-2 rounded-md mb-2 transition-all ease-out hover:cursor-pointer hover:scale-110"
           >
             <img :src="data.qrsrc" alt="QR code" class="size-full" />
@@ -25,7 +40,7 @@
         </div>
 
         <div class="flex flex-col justify-center xl:space-x-0 w-full">
-          <button>{{ ls.t('Archive', 'Archivovať') }}</button>
+          <button @click="archiveQuestion">{{ ls.t('Archive', 'Archivovať') }}</button>
           <button @click="dupQuestion">{{ ls.t('Duplicate', 'Duplikovať') }}</button>
           <button @click="exportQuestion">{{ ls.t('Export', 'Exportovať') }}</button>
           <button @click="$router.push(`/questions/edit/${data.code}`)">
@@ -35,17 +50,36 @@
         </div>
       </div>
       <div class="flex flex-col">
-        <h1 v-if="userStore.user.admin && data.user" class="text-xl mb-8">
-          {{ `${data.user.name} ${data.user.surname} [${data.user.email}]` }}
-        </h1>
-        <h1 class="text-xl">{{ data.subject }}</h1>
-        <h1
-          class="text-5xl text-[var(--color-heading)] font-light mb-8 min-w-[32rem] max-w-[32rem]"
-        >
-          {{ data.question }}
-        </h1>
-        <MultiChoiceResults v-if="!data.is_open_ended" :answers="data.answers"></MultiChoiceResults>
-        <WordCloud v-else :answers="data.answers"></WordCloud>
+        <div class="mb-28">
+          <h1 v-if="userStore.user.admin && data.user" class="text-xl mb-8">
+            {{ `${data.user.name} ${data.user.surname} [${data.user.email}]` }}
+          </h1>
+          <h1 class="text-xl">{{ data.subject }}</h1>
+          <h1
+            class="text-5xl text-[var(--color-heading)] font-light mb-8 min-w-[32rem] max-w-[32rem]"
+          >
+            {{ data.question }}
+          </h1>
+          <MultiChoiceResults
+            v-if="!data.is_open_ended"
+            :answers="data.answers"
+          ></MultiChoiceResults>
+          <WordCloud v-else :answers="data.answers"></WordCloud>
+        </div>
+        <div v-if="data.archived">
+          <h1 class="text-4xl font-light mb-16">
+            {{ ls.t('Archived answers:', 'Archivované odpovede:') }}
+          </h1>
+          <div v-for="arch in data.archived" :key="arch" class="flex flex-col mb-12">
+            <div class="grid grid-cols-[10rem,1fr] mb-4 max-w-[32rem]">
+              <p class="font-bold">{{ ls.t('Time archived:', 'Čas archivácie:') }}</p>
+              <p>{{ arch.archive_time }}</p>
+              <p class="font-bold">{{ ls.t('Notes:', 'Poznámky:') }}</p>
+              <p class="italic">{{ arch.notes }}</p>
+            </div>
+            <MultiChoiceResults :answers="arch.answers"></MultiChoiceResults>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -63,6 +97,7 @@ import { useUserStore } from '@/stores/user'
 import router from '@/router'
 import MultiChoiceResults from '@/components/MultiChoiceResults.vue'
 import WordCloud from '@/components/WordCloud.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const ls = useLanguageStore()
 const userStore = useUserStore()
@@ -70,7 +105,11 @@ const userStore = useUserStore()
 const route = useRoute()
 
 const data = ref({})
-const showModal = ref(false)
+const showQRModal = ref(false)
+const showConfirmModal = ref(false)
+const confirmHandler = ref(() => {
+  showConfirmModal.value = false
+})
 
 const getData = async () => {
   const question = (await http.get(`/question/${route.params.code}`)).data
@@ -86,6 +125,8 @@ const getData = async () => {
   question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
 
   data.value = question
+
+  getArchived()
 }
 
 const delQuestion = () => {
@@ -124,7 +165,7 @@ const dupQuestion = () => {
 
 const exportQuestion = () => {
   // eslint-disable-next-line no-unused-vars
-  const { qrsrc, ...parsed } = data.value
+  const { qrsrc, user, ...parsed } = data.value
   parsed.answers = parsed.answers.map((a) => {
     return {
       answer: a.answer,
@@ -151,7 +192,51 @@ const saveJSON = (data, saveAs) => {
   document.querySelector('#' + a.id).remove()
 }
 
-getData(route.params.code)
+const archiveQuestion = () => {
+  showConfirmModal.value = true
+  confirmHandler.value = (notes) => {
+    showConfirmModal.value = false
+
+    http
+      .post(
+        `/archive/${route.params.code}`,
+        {
+          note: notes
+        },
+        {
+          headers: { Authorization: `Bearer ${userStore.user.token}` }
+        }
+      )
+      .then(() => router.go())
+      .catch((err) => console.log(err))
+
+    resetHandler()
+  }
+}
+
+const resetHandler = () => {
+  confirmHandler.value = () => {
+    showConfirmModal.value = false
+  }
+}
+
+const getArchived = () => {
+  http
+    .get(`/archive/${route.params.code}`, {
+      headers: { Authorization: `Bearer ${userStore.user.token}` }
+    })
+    .then((res) => {
+      data.value.archived = res.data.length > 0 ? res.data : null
+      if (data.value.archived) {
+        data.value.archived.sort((a, b) => {
+          return Date.parse(a.archive_time) < Date.parse(b.archive_time)
+        })
+      }
+    })
+    .catch((err) => console.error(err))
+}
+
+getData()
 
 watch(() => route.params.code, getData)
 </script>
