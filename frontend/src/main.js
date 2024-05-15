@@ -5,9 +5,17 @@ import { createPinia } from 'pinia'
 import { plugin, defaultConfig } from '@formkit/vue'
 
 import { OhVueIcon, addIcons } from 'oh-vue-icons'
-import { FaPlus, FaMinus, FaRegularUserCircle, FaTrash, FaEdit, FaCheck } from 'oh-vue-icons/icons'
+import {
+  FaPlus,
+  FaMinus,
+  FaRegularUserCircle,
+  FaTrash,
+  FaEdit,
+  FaCheck,
+  FaBars
+} from 'oh-vue-icons/icons'
 
-addIcons(FaPlus, FaMinus, FaRegularUserCircle, FaTrash, FaEdit, FaCheck)
+addIcons(FaPlus, FaMinus, FaRegularUserCircle, FaTrash, FaEdit, FaCheck, FaBars)
 
 import App from './App.vue'
 import router from './router'
