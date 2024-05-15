@@ -24,34 +24,50 @@
     <div
       class="flex flex-col xl:flex-row xl:items-start xl:space-x-20 xl:justify-center items-center p-8"
     >
-      <div class="flex xl:flex-col flex-row space-x-4 xl:space-x-0 items-center mb-16 xl:m-0">
-        <div class="flex flex-col">
-          <div
-            @click="showQRModal = true"
-            class="size-fit min-w-36 bg-white p-2 rounded-md mb-2 transition-all ease-out hover:cursor-pointer hover:scale-110"
-          >
-            <img :src="data.qrsrc" alt="QR code" class="size-full" />
+      <div class="flex flex-col mb-16 xl:m-0">
+        <div class="flex xl:flex-col flex-row space-x-4 xl:space-x-0 items-center">
+          <div class="flex flex-col">
+            <div
+              @click="showQRModal = true"
+              class="size-fit min-w-36 bg-white p-2 rounded-md mb-2 transition-all ease-out hover:cursor-pointer hover:scale-110"
+            >
+              <img :src="data.qrsrc" alt="QR code" class="size-full" />
+            </div>
+            <h1
+              class="text-center text-4xl font-mono font-bold transition-colors text-[var(--color-heading)]"
+            >
+              {{ data.code }}
+            </h1>
           </div>
-          <h1
-            class="text-center text-4xl font-mono font-bold transition-colors text-[var(--color-heading)]"
-          >
-            {{ data.code }}
-          </h1>
+          <div class="flex flex-col justify-center xl:space-x-0 w-full mb-8">
+            <button @click="archiveQuestion">{{ ls.t('Archive', 'Archivovať') }}</button>
+            <button @click="dupQuestion">{{ ls.t('Duplicate', 'Duplikovať') }}</button>
+            <button @click="exportQuestion">{{ ls.t('Export', 'Exportovať') }}</button>
+            <button @click="$router.push(`/questions/edit/${data.code}`)">
+              {{ ls.t('Edit', 'Upraviť') }}
+            </button>
+            <button @click="delQuestion" class="btn-danger">{{ ls.t('Delete', 'Vymazať') }}</button>
+          </div>
         </div>
-
-        <div class="flex flex-col justify-center xl:space-x-0 w-full">
-          <button @click="archiveQuestion">{{ ls.t('Archive', 'Archivovať') }}</button>
-          <button @click="dupQuestion">{{ ls.t('Duplicate', 'Duplikovať') }}</button>
-          <button @click="exportQuestion">{{ ls.t('Export', 'Exportovať') }}</button>
-          <button @click="$router.push(`/questions/edit/${data.code}`)">
-            {{ ls.t('Edit', 'Upraviť') }}
-          </button>
-          <button @click="delQuestion" class="btn-danger">{{ ls.t('Delete', 'Vymazať') }}</button>
-        </div>
+        <label
+          v-if="data.is_open_ended"
+          class="inline-flex justify-center items-center cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            v-model="wordCloudView"
+            :checked="wordCloudView"
+            class="sr-only peer"
+          />
+          <div
+            class="relative w-11 h-6 bg-[var(--color-bg-mute)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--acc500)]"
+          ></div>
+          <span class="ms-3 text-lg">WordCloud</span>
+        </label>
       </div>
       <div class="flex flex-col">
         <div class="mb-28">
-          <h1 v-if="userStore.user.admin && data.user" class="text-xl mb-8">
+          <h1 v-if="userStore.user.admin && data.user" class="text-xl mb-4">
             {{ `${data.user.name} ${data.user.surname} [${data.user.email}]` }}
           </h1>
           <h1 class="text-xl">{{ data.subject }}</h1>
@@ -60,24 +76,22 @@
           >
             {{ data.question }}
           </h1>
-          <MultiChoiceResults
-            v-if="!data.is_open_ended"
-            :answers="data.answers"
-          ></MultiChoiceResults>
-          <WordCloud v-else :answers="data.answers"></WordCloud>
+          <WordCloud v-if="wordCloudView" :answers="data.answers"></WordCloud>
+          <MultiChoiceResults v-else :answers="data.answers"></MultiChoiceResults>
         </div>
         <div v-if="data.archived">
           <h1 class="text-4xl font-light mb-16">
             {{ ls.t('Archived answers:', 'Archivované odpovede:') }}
           </h1>
-          <div v-for="arch in data.archived" :key="arch" class="flex flex-col mb-12">
+          <div v-for="arch in data.archived" :key="arch" class="flex flex-col mb-16">
             <div class="grid grid-cols-[10rem,1fr] mb-4 max-w-[32rem]">
               <p class="font-bold">{{ ls.t('Time archived:', 'Čas archivácie:') }}</p>
               <p>{{ arch.archive_time }}</p>
               <p class="font-bold">{{ ls.t('Notes:', 'Poznámky:') }}</p>
               <p class="italic">{{ arch.notes }}</p>
             </div>
-            <MultiChoiceResults :answers="arch.answers"></MultiChoiceResults>
+            <WordCloud v-if="wordCloudView" :answers="arch.answers"></WordCloud>
+            <MultiChoiceResults v-else :answers="arch.answers"></MultiChoiceResults>
           </div>
         </div>
       </div>
@@ -111,6 +125,8 @@ const confirmHandler = ref(() => {
   showConfirmModal.value = false
 })
 
+const wordCloudView = ref(false)
+
 const getData = async () => {
   const question = (await http.get(`/question/${route.params.code}`)).data
   const answers = (await http.get(`/answer/${question.code}`)).data
@@ -125,6 +141,8 @@ const getData = async () => {
   question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
 
   data.value = question
+
+  wordCloudView.value = data.value.is_open_ended ? true : false
 
   getArchived()
 }
