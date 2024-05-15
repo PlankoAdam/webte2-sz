@@ -44,7 +44,7 @@ const total = ref(0)
 const sortedAnswers = computed(() => {
   calcMax()
   calcTotal()
-  let res = props.answers ? props.answers : []
+  let res = props.answers ? JSON.parse(JSON.stringify(props.answers)) : []
   res.map((a) => {
     let ret = a
     ret.fill_percent = max.value == 0 ? 0 : Math.round((ret.count / max.value) * 100)

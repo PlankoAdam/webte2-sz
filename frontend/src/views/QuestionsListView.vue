@@ -166,6 +166,13 @@ const exportQuestions = async () => {
         is_correct: a.is_correct
       }
     })
+
+    el.archived = (
+      await http.get(`/archive/${el.code}`, {
+        headers: { Authorization: `Bearer ${userStore.user.token}` }
+      })
+    ).data
+
     return el
   })
   await Promise.all(promises)

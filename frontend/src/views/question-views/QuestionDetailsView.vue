@@ -173,7 +173,6 @@ const exportQuestion = () => {
       is_correct: a.is_correct
     }
   })
-  console.log(parsed)
 
   saveJSON(parsed, 'export')
 }
