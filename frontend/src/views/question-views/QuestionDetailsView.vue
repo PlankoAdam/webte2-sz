@@ -73,7 +73,7 @@ const data = ref({})
 const showModal = ref(false)
 
 const getData = async () => {
-  const question = (await http.get(`/question/${route.params.code}`)).data[0]
+  const question = (await http.get(`/question/${route.params.code}`)).data
   const answers = (await http.get(`/answer/${question.code}`)).data
   question.answers = answers ? answers : []
   question.subject = (await http.get(`/subject/${question.subject_id}`)).data.subject

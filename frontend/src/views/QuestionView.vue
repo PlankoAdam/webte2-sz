@@ -57,7 +57,7 @@ const getData = () => {
   http
     .get(`/question/${route.params.code}`)
     .then((res) => {
-      question.value = res.data[0]
+      question.value = res.data
 
       http
         .get(`/subject/${question.value.subject_id}`)
