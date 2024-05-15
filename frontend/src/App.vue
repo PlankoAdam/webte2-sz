@@ -5,7 +5,8 @@
     >
       <div
         v-if="$route.name != 'home'"
-        class="text-3xl text-center font-light text-[var(--color-heading)] select-none"
+        class="text-3xl text-center font-light text-[var(--color-heading)] select-none cursor-pointer"
+        @click="$router.push('/')"
       >
         interact<span class="text-[var(--acc500)] dark:text-[var(--acc400)]">ED</span>
       </div>
@@ -36,6 +37,12 @@
           to="/questions"
           class="inline-block hover:text-[var(--color-heading)] hover:-translate-y-1 hover:drop-shadow-[0_0_10px_var(--color-text)] transition-all"
           >{{ langStore.t('Questions', 'Otázky') }}</RouterLink
+        >
+        <RouterLink
+          v-if="userStore.user.admin"
+          to="/users"
+          class="inline-block hover:text-[var(--color-heading)] hover:-translate-y-1 hover:drop-shadow-[0_0_10px_var(--color-text)] transition-all"
+          >{{ langStore.t('Users', 'Používatelia') }}</RouterLink
         >
       </div>
       <div

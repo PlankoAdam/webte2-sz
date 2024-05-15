@@ -57,6 +57,16 @@ const router = createRouter({
       component: SignupView
     },
     {
+      path: '/users',
+      component: UsersListView,
+      beforeEnter: adminAccess
+    },
+    {
+      path: '/users/:id',
+      component: UserEditView,
+      beforeEnter: adminAccess
+    },
+    {
       path: '/questions',
       name: 'questions',
       component: QuestionsListView,
@@ -89,16 +99,6 @@ const router = createRouter({
         {
           path: 'profile',
           component: UserProfileView
-        },
-        {
-          path: 'users',
-          component: UsersListView,
-          beforeEnter: adminAccess
-        },
-        {
-          path: 'users/:id',
-          component: UserEditView,
-          beforeEnter: adminAccess
         }
       ]
     }

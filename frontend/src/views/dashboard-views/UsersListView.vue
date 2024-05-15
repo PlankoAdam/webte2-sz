@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="flex justify-center">
     <table class="table table-auto">
       <thead>
         <tr
@@ -28,7 +28,7 @@
               <v-icon
                 class="hover:text-[var(--color-heading)] transition-all cursor-pointer"
                 name="fa-edit"
-                @click="$router.push(`/dashboard/users/${user.id}`)"
+                @click="$router.push(`/users/${user.id}`)"
               />
             </div>
           </td>

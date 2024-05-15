@@ -1,10 +1,10 @@
 <template>
   <main>
     <div class="text-center">
-      <div class="mb-8">
+      <div class="mb-8 text-start">
         <v-icon name="fa-regular-user-circle" scale="4"></v-icon>
       </div>
-      <div class="grid grid-cols-2 gap-x-2 text-start">
+      <div class="grid grid-cols-[6rem,1fr] gap-x-2 text-start">
         <p class="uppercase">{{ ls.t('Name:', 'Meno:') }}</p>
         <p class="font-bold">{{ userStore.user.name }}</p>
         <p class="uppercase">{{ ls.t('Surname:', 'Priezvisko:') }}</p>
