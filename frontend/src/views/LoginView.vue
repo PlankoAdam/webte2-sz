@@ -24,7 +24,7 @@
         <span class="text-slate-500 me-2">{{
           langStore.t(`Don't have an account?`, 'Nemáte konto?')
         }}</span>
-        <RouterLink to="/signup" class="hover:text-[var(--color-heading)] transition-all">{{
+        <RouterLink to="/signup" class="font-bold hover:text-[var(--sec500)] transition-all">{{
           langStore.t('Sign up', 'Zaregistrujte sa')
         }}</RouterLink>
       </div>

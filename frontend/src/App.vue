@@ -29,19 +29,19 @@
       >
         <RouterLink
           to="/"
-          class="inline-block hover:text-[var(--color-heading)] hover:-translate-y-1 hover:drop-shadow-[0_0_10px_var(--color-text)] transition-all"
+          class="inline-block hover:text-[var(--color-heading)] hover:tracking-widest transition-all"
           >{{ langStore.t('Home', 'Domov') }}</RouterLink
         >
         <RouterLink
           v-if="userStore.isLoggedIn()"
           to="/questions"
-          class="inline-block hover:text-[var(--color-heading)] hover:-translate-y-1 hover:drop-shadow-[0_0_10px_var(--color-text)] transition-all"
+          class="inline-block hover:text-[var(--color-heading)] hover:tracking-widest transition-all"
           >{{ langStore.t('Questions', 'Otázky') }}</RouterLink
         >
         <RouterLink
           v-if="userStore.user.admin"
           to="/users"
-          class="inline-block hover:text-[var(--color-heading)] hover:-translate-y-1 hover:drop-shadow-[0_0_10px_var(--color-text)] transition-all"
+          class="inline-block hover:text-[var(--color-heading)] hover:tracking-widest transition-all"
           >{{ langStore.t('Users', 'Používatelia') }}</RouterLink
         >
       </div>
@@ -51,26 +51,26 @@
         <RouterLink
           v-if="userStore.isLoggedIn()"
           to="/dashboard/profile"
-          class="min-w-8 text-center cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
+          class="min-w-8 text-center cursor-pointer uppercase hover:scale-105 transition-all"
         >
           {{ userStore.user.name }}
         </RouterLink>
         <RouterLink
           v-if="!userStore.isLoggedIn()"
           to="/login"
-          class="inline-block uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
+          class="inline-block uppercase hover:scale-105 transition-all"
           >{{ langStore.t('log in', 'prihlásenie') }}</RouterLink
         >
         <h1
           v-if="userStore.isLoggedIn()"
           @click="userStore.logout"
-          class="min-w-8 text-center cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
+          class="min-w-8 text-center cursor-pointer uppercase hover:scale-105 transition-all"
         >
           {{ langStore.t('log out', 'odhlásiť sa') }}
         </h1>
         <h1
           @click="langStore.change"
-          class="min-w-8 text-center cursor-pointer uppercase hover:text-[var(--color-heading)] hover:drop-shadow-[0_0_5px_var(--color-text)] transition-all"
+          class="min-w-8 text-center cursor-pointer uppercase hover:scale-105 transition-all"
         >
           {{ langStore.t('sk', 'en') }}
         </h1>
