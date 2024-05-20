@@ -530,44 +530,19 @@
             </li>
           </ul>
         </div>
-        <button
-          @click="generatePDF"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8"
+        <a
+          :href="ls.t('/UserGuide.pdf', '/Prirucka.pdf')"
+          download="UserGuide.pdf"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8 mb-8"
         >
           {{ ls.t('Save as PDF', 'Stiahnuť ako PDF') }}
-        </button>
+        </a>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import html2canvas from 'html2canvas'
-import { jsPDF } from 'jspdf'
 import { useLanguageStore } from '@/stores/language'
-
 const ls = useLanguageStore()
-
-function generatePDF() {
-  const pdfContent = document.getElementById('pdf-content')
-
-  // Save the original background color
-  const originalBackgroundColor = pdfContent.style.backgroundColor
-
-  // Set the background color to black
-  pdfContent.style.backgroundColor = 'black'
-
-  // Use html2canvas to capture the entire content of pdfContent
-  html2canvas(pdfContent, { scrollY: -window.scrollY }).then((canvas) => {
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF()
-    const pdfWidth = pdf.internal.pageSize.getWidth()
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-    pdf.save('document.pdf')
-
-    // Restore the original background color after generating PDF
-    pdfContent.style.backgroundColor = originalBackgroundColor
-  })
-}
 </script>
