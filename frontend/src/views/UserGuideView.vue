@@ -1,8 +1,8 @@
 <template>
-  <main class="flex justify-center">
+  <main class="flex flex-col items-center mb-16 justify-center">
     <div id="pdf-content">
       <div class="flex flex-col items-center">
-        <div class="max-w-4xl mx-auto p-6 rounded-lg shadow-lg">
+        <div class="max-w-4xl mx-auto p-6">
           <h1 class="text-3xl font-bold mb-6 text-[var(--color-heading)]">
             {{ ls.t('Guest', 'Neprihlásený používateľ') }}
           </h1>
@@ -530,44 +530,44 @@
             </li>
           </ul>
         </div>
-        <button
-          @click="generatePDF"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8"
-        >
-          {{ ls.t('Save as PDF', 'Stiahnuť ako PDF') }}
-        </button>
       </div>
     </div>
+    <button
+      @click="generatePDF"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8 max-w-36"
+    >
+      {{ ls.t('Save as PDF', 'Stiahnuť ako PDF') }}
+    </button>
   </main>
 </template>
 
 <script setup>
-import html2canvas from 'html2canvas'
-import { jsPDF } from 'jspdf'
+import { ref } from 'vue'
+import jsPDF from 'jspdf'
+
 import { useLanguageStore } from '@/stores/language'
 
 const ls = useLanguageStore()
 
-function generatePDF() {
-  const pdfContent = document.getElementById('pdf-content')
+const generatePDF = () => {
+  const content = document.getElementById('pdf-content')
 
-  // Save the original background color
-  const originalBackgroundColor = pdfContent.style.backgroundColor
+  // Get the dimensions of the content
+  const width = content.offsetWidth
+  const height = content.offsetHeight
 
-  // Set the background color to black
-  pdfContent.style.backgroundColor = 'black'
+  // Create a new jsPDF instance
+  const pdf = new jsPDF('p', 'px', [width, height])
 
-  // Use html2canvas to capture the entire content of pdfContent
-  html2canvas(pdfContent, { scrollY: -window.scrollY }).then((canvas) => {
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF()
-    const pdfWidth = pdf.internal.pageSize.getWidth()
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-    pdf.save('document.pdf')
-
-    // Restore the original background color after generating PDF
-    pdfContent.style.backgroundColor = originalBackgroundColor
+  // Generate the PDF from the content
+  pdf.html(content, {
+    callback: () => {
+      // Save the PDF
+      pdf.save('download.pdf')
+    }
   })
 }
+
+// Expose the function to the template
+defineExpose({ generatePDF })
 </script>

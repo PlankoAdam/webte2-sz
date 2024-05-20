@@ -15,10 +15,12 @@
     "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
+    "vue-html2pdf": "^1.8.0",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
