@@ -1,8 +1,8 @@
 <template>
-  <main class="flex justify-center">
+  <main class="flex flex-col items-center mb-16 justify-center">
     <div id="pdf-content">
       <div class="flex flex-col items-center">
-        <div class="max-w-4xl mx-auto p-6 rounded-lg shadow-lg">
+        <div class="max-w-4xl mx-auto p-6">
           <h1 class="text-3xl font-bold mb-6 text-[var(--color-heading)]">
             {{ ls.t('Guest', 'Neprihlásený používateľ') }}
           </h1>
@@ -530,19 +530,44 @@
             </li>
           </ul>
         </div>
-        <a
-          :href="ls.t('/UserGuide.pdf', '/Prirucka.pdf')"
-          download="UserGuide.pdf"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8 mb-8"
-        >
-          {{ ls.t('Save as PDF', 'Stiahnuť ako PDF') }}
-        </a>
       </div>
     </div>
+    <button
+      @click="generatePDF"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8 max-w-36"
+    >
+      {{ ls.t('Save as PDF', 'Stiahnuť ako PDF') }}
+    </button>
   </main>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import jsPDF from 'jspdf'
+
 import { useLanguageStore } from '@/stores/language'
+
 const ls = useLanguageStore()
+
+const generatePDF = () => {
+  const content = document.getElementById('pdf-content')
+
+  // Get the dimensions of the content
+  const width = content.offsetWidth
+  const height = content.offsetHeight
+
+  // Create a new jsPDF instance
+  const pdf = new jsPDF('p', 'px', [width, height])
+
+  // Generate the PDF from the content
+  pdf.html(content, {
+    callback: () => {
+      // Save the PDF
+      pdf.save('download.pdf')
+    }
+  })
+}
+
+// Expose the function to the template
+defineExpose({ generatePDF })
 </script>
