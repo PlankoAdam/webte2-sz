@@ -12,7 +12,7 @@
           >
             <v-icon name="fa-plus" scale="3"></v-icon>
           </div>
-          <div class="content-center text-3xl font-light">
+          <div class="content-center lg:text-3xl text-2xl font-light">
             {{ ls.t('Create new question', 'Vytvoriť novú otázku') }}
           </div>
         </div>

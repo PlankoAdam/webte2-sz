@@ -8,8 +8,8 @@
           <td>{{ ls.t('Edit', 'Upraviť') }}</td>
           <td>{{ ls.t('Name', 'Meno') }}</td>
           <td>{{ ls.t('Surname', 'Priezvisko') }}</td>
-          <td>E-mail</td>
-          <td>{{ ls.t('Role', 'Rola') }}</td>
+          <td class="hidden lg:visible">E-mail</td>
+          <td class="hidden lg:visible">{{ ls.t('Role', 'Rola') }}</td>
         </tr>
       </thead>
       <tbody>
@@ -34,8 +34,8 @@
           </td>
           <td>{{ user.name }}</td>
           <td>{{ user.surname }}</td>
-          <td>{{ user.email }}</td>
-          <td>
+          <td class="hidden lg:visible">{{ user.email }}</td>
+          <td class="hidden lg:visible">
             {{ user.admin ? ls.t('admin', 'administrátor') : ls.t('user', 'používateľ') }}
           </td>
         </tr>

@@ -13,7 +13,7 @@
       <div v-else></div>
       <v-icon
         name="fa-bars"
-        scale="2.5"
+        scale="2"
         @click="showMobileMenu = !showMobileMenu"
         class="transition-all"
         :class="{ 'rotate-90': showMobileMenu }"

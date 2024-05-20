@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[32rem] p-8 flex flex-row flex-wrap justify-center items-center rounded-bl-[4rem] rounded-tr-[4rem] bg-gradient-to-br from-[var(--color-bg)] via-[var(--color-bg-soft)] to-[var(--color-bg)]"
+    class="w-[90vw] lg:w-[32rem] p-8 flex flex-row flex-wrap justify-center items-center rounded-bl-[4rem] rounded-tr-[4rem] bg-gradient-to-br from-[var(--color-bg)] via-[var(--color-bg-soft)] to-[var(--color-bg)]"
   >
     <p
       v-for="ans in props.answers"

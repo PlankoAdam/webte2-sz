@@ -2,11 +2,11 @@
   <main class="flex justify-center">
     <div class="flex flex-col items-center px-8 min-w-72">
       <div class="flex flex-col mb-8">
-        <div class="text-6xl font-light text-[var(--color-heading)] mb-4">
+        <div class="text-3xl lg:text-6xl font-light text-[var(--color-heading)] mb-4">
           {{ question.question }}
         </div>
-        <div class="text-2xl">{{ question.subject }}</div>
-        <div class="text-lg font-mono font-bold">{{ question.code }}</div>
+        <div class="lg:text-2xl">{{ question.subject }}</div>
+        <div class="lg:text-lg font-mono font-bold">{{ question.code }}</div>
       </div>
 
       <label

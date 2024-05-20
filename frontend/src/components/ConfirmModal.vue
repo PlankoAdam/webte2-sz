@@ -2,7 +2,7 @@
   <div
     class="fixed z-50 min-w-[100vw] min-h-[100vh] bg-black bg-opacity-70 top-0 left-0 flex flex-col justify-center items-center"
   >
-    <div class="p-8 rounded-md min-w-96 bg-[var(--color-bg-soft)] max-w-96">
+    <div class="p-8 rounded-md min-w-80 max-w-[90vw] bg-[var(--color-bg-soft)] lg:max-w-96">
       <div class="mb-8">
         <h1 class="text-[var(--color-heading)] font-light text-4xl mb-4">{{ props.message }}</h1>
         <p>{{ props.description }}</p>

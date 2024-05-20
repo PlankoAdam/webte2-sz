@@ -67,12 +67,12 @@
       </div>
       <div class="flex flex-col">
         <div class="mb-28">
-          <h1 v-if="userStore.user.admin && data.user" class="text-xl mb-4">
+          <h1 v-if="userStore.user.admin && data.user" class="lg:text-xl lg:mb-4">
             {{ `${data.user.name} ${data.user.surname} [${data.user.email}]` }}
           </h1>
-          <h1 class="text-xl">{{ data.subject }}</h1>
+          <h1 class="lg:text-xl">{{ data.subject }}</h1>
           <h1
-            class="text-5xl text-[var(--color-heading)] font-light mb-8 min-w-[32rem] max-w-[32rem]"
+            class="text-3xl lg:text-5xl text-[var(--color-heading)] font-light mb-8 max-w-[90vw] lg:max-w-[32rem]"
           >
             {{ data.question }}
           </h1>
@@ -84,7 +84,7 @@
             {{ ls.t('Archived answers:', 'Archivované odpovede:') }}
           </h1>
           <div v-for="arch in data.archived" :key="arch" class="flex flex-col mb-16">
-            <div class="grid grid-cols-[10rem,1fr] mb-4 max-w-[32rem]">
+            <div class="grid grid-cols-[10rem,1fr] mb-4 max-w-96 lg:max-w-[32rem]">
               <p class="font-bold">{{ ls.t('Time archived:', 'Čas archivácie:') }}</p>
               <p>{{ arch.archive_time }}</p>
               <p class="font-bold">{{ ls.t('Notes:', 'Poznámky:') }}</p>
