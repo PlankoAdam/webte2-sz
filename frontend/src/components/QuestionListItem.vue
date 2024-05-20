@@ -6,11 +6,11 @@
     }"
   >
     <div class="flex flex-col justify-center lg:min-w-96 lg:max-w-96 w-full">
-      <p
-        class="text-2xl font-light text-ellipsis overflow-clip whitespace-nowrap lg:w-full max-w-96"
+      <div
+        class="text-2xl font-light text-ellipsis overflow-x-clip whitespace-nowrap lg:w-full max-w-96"
       >
         {{ props.question }}
-      </p>
+      </div>
       <span>{{ props.subject }} </span>
       <div class="flex flex-row justify-between mb-2 text-md">
         <div class="flex flex-row space-x-2">
