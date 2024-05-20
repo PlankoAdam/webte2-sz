@@ -5,7 +5,10 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - 8087:80
+      - 8088:80
+    volumes:
+      - ./frontend/nginx:/etc/nginx/conf.d
+
   # Nginx Service
   nginx:
     image: nginx:1.21
@@ -40,7 +43,7 @@ services:
       - ./.database:/docker-entrypoint-initdb.d
       - ./database:/var/lib/mysql
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      test: mysqladmin ping -h 127.0.0.1 -u root
       interval: 5s
       retries: 10
 
