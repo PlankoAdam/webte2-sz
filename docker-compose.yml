@@ -4,14 +4,8 @@ version: "3.8"
 services:
   frontend:
     build: ./frontend
-    environment:
-      - BACKEND_BASE_URL=http://localhost:8086
-      - FRONTEND_BASE_URL=http://localhost:8088
     ports:
-      - 8088:80
-    volumes:
-      - ./frontend/nginx/dev:/etc/nginx/conf.d
-      
+      - 8087:80
   # Nginx Service
   nginx:
     image: nginx:1.21
@@ -48,13 +42,13 @@ services:
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
       interval: 5s
-      retries: 20
+      retries: 10
 
   # PhpMyAdmin Service
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5
     ports:
-      - 8087:80
+      - 8080:80
     environment:
       PMA_HOST: mysql
     depends_on:

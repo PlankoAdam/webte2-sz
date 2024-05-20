@@ -15,7 +15,6 @@ import UserEditView from '@/views/dashboard-views/UserEditView.vue'
 
 import { useUserStore } from '@/stores/user'
 import ResultsView from '@/views/ResultsView.vue'
-import UserGuideView from '@/views/UserGuideView.vue'
 
 const userAccess = (to, from, next) => {
   const userStore = useUserStore()
@@ -102,11 +101,6 @@ const router = createRouter({
           component: UserProfileView
         }
       ]
-    },
-    {
-      path: '/guide',
-      name: 'guide',
-      component: UserGuideView
     }
   ]
 })

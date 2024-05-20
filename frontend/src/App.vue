@@ -39,11 +39,6 @@
           >{{ langStore.t('Questions', 'Otázky') }}</RouterLink
         >
         <RouterLink
-          to="/guide"
-          class="inline-block hover:text-[var(--color-heading)] hover:tracking-widest transition-all"
-          >{{ langStore.t('Guide', 'Príručka') }}</RouterLink
-        >
-        <RouterLink
           v-if="userStore.user.admin"
           to="/users"
           class="inline-block hover:text-[var(--color-heading)] hover:tracking-widest transition-all"
