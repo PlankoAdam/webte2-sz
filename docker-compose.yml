@@ -43,7 +43,7 @@ services:
       - ./.database:/docker-entrypoint-initdb.d
       - ./database:/var/lib/mysql
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      test: mysqladmin ping -h 127.0.0.1 -u root
       interval: 5s
       retries: 20
 
