@@ -58,6 +58,8 @@ import router from '@/router'
 import { useUserStore } from '@/stores/user'
 import { useLanguageStore } from '@/stores/language'
 
+import serverBaseUrl from '@/serverBaseUrl'
+
 const route = useRoute()
 
 const ls = useLanguageStore()
@@ -73,7 +75,7 @@ http.get('/subject').then((res) => {
 const getData = async () => {
   const question = (await http.get(`/question/${route.params.code}`)).data
   question.subject = (await http.get(`/subject/${question.subject_id}`)).data.name
-  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://node92.webte.fei.stuba.sk:8087/${question.code}`
+  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${serverBaseUrl}/${question.code}`
 
   data.value = question
 }

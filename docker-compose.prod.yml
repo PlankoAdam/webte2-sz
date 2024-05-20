@@ -1,0 +1,8 @@
+#setting for deploying on webte.fei.stuba.sk
+
+services:
+  frontend:
+    volumes:
+      - ./frontend/nginx/prod:/etc/nginx/conf.d
+      #path to ssl certs
+      - /etc/ssl:/etc/ssl
