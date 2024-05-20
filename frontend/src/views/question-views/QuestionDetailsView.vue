@@ -138,7 +138,7 @@ const getData = async () => {
         headers: { Authorization: `Bearer ${userStore.user.token}` }
       })
     ).data
-  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${import.meta.env.FRONTEND_BASE_URL}/${question.code}`
+  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${import.meta.env.VITE_FRONTEND_BASE_URL}/${question.code}`
 
   data.value = question
 
