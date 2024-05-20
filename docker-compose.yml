@@ -4,6 +4,9 @@ version: "3.8"
 services:
   frontend:
     build: ./frontend
+    environment:
+      - BACKEND_BASE_URL=http://localhost:8086
+      - FRONTEND_BASE_URL=http://localhost:8088
     ports:
       - 8088:80
     volumes:

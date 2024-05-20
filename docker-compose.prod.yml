@@ -2,6 +2,9 @@
 
 services:
   frontend:
+    environment:
+      - BACKEND_BASE_URL=https://node92.webte.fei.stuba.sk:8086
+      - FRONTEND_BASE_URL=https://node92.webte.fei.stuba.sk:8088
     volumes:
       - ./frontend/nginx/prod:/etc/nginx/conf.d
       #path to ssl certs

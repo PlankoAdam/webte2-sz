@@ -113,8 +113,6 @@ import MultiChoiceResults from '@/components/MultiChoiceResults.vue'
 import WordCloud from '@/components/WordCloud.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
-import serverBaseUrl from '@/serverBaseUrl'
-
 const ls = useLanguageStore()
 const userStore = useUserStore()
 
@@ -140,7 +138,7 @@ const getData = async () => {
         headers: { Authorization: `Bearer ${userStore.user.token}` }
       })
     ).data
-  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${serverBaseUrl}/${question.code}`
+  question.qrsrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${import.meta.env.FRONTEND_BASE_URL}/${question.code}`
 
   data.value = question
 
