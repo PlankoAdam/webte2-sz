@@ -542,7 +542,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import jsPDF from 'jspdf'
 
 import { useLanguageStore } from '@/stores/language'
